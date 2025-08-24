@@ -1,0 +1,517 @@
+/* RTL Support for Dari Language */
+/* Base RTL Support */
+[dir="rtl"] {
+    direction: rtl;
+}
+
+[dir="ltr"] {
+    direction: ltr;
+}
+
+/* Body and HTML RTL */
+body.rtl {
+    direction: rtl;
+    text-align: right;
+}
+
+body.rtl * {
+    direction: rtl;
+}
+
+body.ltr {
+    direction: ltr;
+    text-align: left;
+}
+
+body.ltr * {
+    direction: ltr;
+}
+
+/* Bootstrap RTL Overrides */
+.rtl .container,
+.rtl .container-fluid {
+    direction: rtl;
+}
+
+/* Flexbox RTL Adjustments */
+.rtl .d-flex {
+    flex-direction: row-reverse;
+}
+
+.rtl .flex-row {
+    flex-direction: row-reverse;
+}
+
+.rtl .flex-wrap {
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+}
+
+/* Text Alignment */
+.rtl .text-start {
+    text-align: right !important;
+}
+
+.rtl .text-end {
+    text-align: left !important;
+}
+
+.rtl .text-left {
+    text-align: right !important;
+}
+
+.rtl .text-right {
+    text-align: left !important;
+}
+
+/* Margin and Padding RTL */
+.rtl .ms-auto {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+}
+
+.rtl .me-auto {
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+.rtl .ms-1 { margin-right: 0.25rem !important; margin-left: 0 !important; }
+.rtl .ms-2 { margin-right: 0.5rem !important; margin-left: 0 !important; }
+.rtl .ms-3 { margin-right: 1rem !important; margin-left: 0 !important; }
+.rtl .ms-4 { margin-right: 1.5rem !important; margin-left: 0 !important; }
+.rtl .ms-5 { margin-right: 3rem !important; margin-left: 0 !important; }
+
+.rtl .me-1 { margin-left: 0.25rem !important; margin-right: 0 !important; }
+.rtl .me-2 { margin-left: 0.5rem !important; margin-right: 0 !important; }
+.rtl .me-3 { margin-left: 1rem !important; margin-right: 0 !important; }
+.rtl .me-4 { margin-left: 1.5rem !important; margin-right: 0 !important; }
+.rtl .me-5 { margin-left: 3rem !important; margin-right: 0 !important; }
+
+.rtl .ps-1 { padding-right: 0.25rem !important; padding-left: 0 !important; }
+.rtl .ps-2 { padding-right: 0.5rem !important; padding-left: 0 !important; }
+.rtl .ps-3 { padding-right: 1rem !important; padding-left: 0 !important; }
+.rtl .ps-4 { padding-right: 1.5rem !important; padding-left: 0 !important; }
+.rtl .ps-5 { padding-right: 3rem !important; padding-left: 0 !important; }
+
+.rtl .pe-1 { padding-left: 0.25rem !important; padding-right: 0 !important; }
+.rtl .pe-2 { padding-left: 0.5rem !important; padding-right: 0 !important; }
+.rtl .pe-3 { padding-left: 1rem !important; padding-right: 0 !important; }
+.rtl .pe-4 { padding-left: 1.5rem !important; padding-right: 0 !important; }
+.rtl .pe-5 { padding-left: 3rem !important; padding-right: 0 !important; }
+
+/* Float RTL */
+.rtl .float-start {
+    float: right !important;
+}
+
+.rtl .float-end {
+    float: left !important;
+}
+
+.rtl .float-left {
+    float: right !important;
+}
+
+.rtl .float-right {
+    float: left !important;
+}
+
+/* Sidebar RTL Support - Critical Fixes */
+.rtl #sidebar {
+    right: 0 !important;
+    left: auto !important;
+    transform: translateX(100%) !important;
+}
+
+.rtl #sidebar.active {
+    transform: translateX(0) !important;
+}
+
+.rtl #main {
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.rtl .sidebar-wrapper {
+    direction: rtl !important;
+}
+
+.rtl .sidebar-header {
+    flex-direction: row-reverse !important;
+}
+
+.rtl .sidebar-menu {
+    text-align: right !important;
+    direction: rtl !important;
+}
+
+.rtl .sidebar-menu .menu {
+    padding-right: 0 !important;
+    padding-left: 1rem !important;
+    list-style: none;
+}
+
+.rtl .sidebar-menu .menu li {
+    text-align: right !important;
+}
+
+.rtl .sidebar-menu .menu li a,
+.rtl .sidebar-menu .menu li span {
+    justify-content: flex-end !important;
+    flex-direction: row-reverse !important;
+    padding-right: 1rem !important;
+    padding-left: 0.5rem !important;
+    text-align: right !important;
+}
+
+.rtl .sidebar-menu .submenu {
+    padding-right: 2rem !important;
+    padding-left: 0 !important;
+}
+
+.rtl .sidebar-menu .submenu li a {
+    text-align: right !important;
+    padding-right: 2rem !important;
+    padding-left: 0.5rem !important;
+}
+
+.rtl .sidebar-item.has-sub .sidebar-link {
+    flex-direction: row-reverse !important;
+}
+
+/* Navbar RTL Support */
+.rtl .navbar {
+    direction: rtl !important;
+    flex-direction: row-reverse !important;
+}
+
+.rtl .navbar-nav {
+    flex-direction: row-reverse !important;
+}
+
+.rtl .navbar-brand {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+
+/* Form RTL Support */
+.rtl .form-control,
+.rtl .form-select,
+.rtl .form-check-input {
+    text-align: right;
+    direction: rtl;
+}
+
+.rtl .form-check {
+    padding-right: 1.25rem;
+    padding-left: 0;
+    text-align: right;
+}
+
+.rtl .form-check-input {
+    margin-right: -1.25rem;
+    margin-left: 0;
+}
+
+.rtl .form-check-label {
+    padding-right: 0.25rem;
+    padding-left: 0;
+}
+
+.rtl .input-group {
+    flex-direction: row-reverse;
+}
+
+.rtl .input-group .form-control:not(:last-child) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+.rtl .input-group .form-control:not(:first-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+/* Table RTL Support */
+.rtl table {
+    direction: rtl;
+}
+
+.rtl .table th,
+.rtl .table td {
+    text-align: right;
+}
+
+.rtl .table thead th {
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Modal RTL Support */
+.rtl .modal-header {
+    flex-direction: row-reverse;
+}
+
+.rtl .modal-title {
+    text-align: right;
+}
+
+.rtl .modal-footer {
+    justify-content: flex-start;
+}
+
+.rtl .modal-footer > * {
+    margin-left: 0;
+    margin-right: 0.25rem;
+}
+
+.rtl .modal-footer > *:first-child {
+    margin-right: 0;
+}
+
+/* Button Group RTL */
+.rtl .btn-group {
+    flex-direction: row-reverse;
+}
+
+.rtl .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.rtl .btn-group > .btn:not(:first-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-right: -1px;
+    margin-left: 0;
+}
+
+/* Dropdown RTL Support */
+.rtl .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+
+.rtl .dropdown-toggle::after {
+    margin-right: 0.255em;
+    margin-left: 0;
+}
+
+.rtl .dropdown-item {
+    text-align: right;
+}
+
+/* Pagination RTL Support */
+.rtl .pagination {
+    flex-direction: row-reverse;
+}
+
+.rtl .page-item:first-child .page-link {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+}
+
+.rtl .page-item:last-child .page-link {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+}
+
+/* Breadcrumb RTL Support */
+.rtl .breadcrumb {
+    flex-direction: row-reverse;
+}
+
+.rtl .breadcrumb-item + .breadcrumb-item::before {
+    content: "‹";
+    transform: scaleX(-1);
+}
+
+/* Alert RTL Support */
+.rtl .alert-dismissible .btn-close {
+    left: 0;
+    right: auto;
+    padding-left: 0.75rem;
+    padding-right: 1.25rem;
+}
+
+/* Toast RTL Support */
+.rtl .toast {
+    direction: rtl;
+}
+
+.rtl .toast-header {
+    flex-direction: row-reverse;
+}
+
+/* Progress Bar RTL Support */
+.rtl .progress-bar {
+    right: 0;
+    left: auto;
+}
+
+/* Card RTL Support */
+.rtl .card-header {
+    text-align: right;
+}
+
+.rtl .card-body {
+    text-align: right;
+}
+
+.rtl .card-footer {
+    text-align: right;
+}
+
+/* List Group RTL Support */
+.rtl .list-group-item {
+    text-align: right;
+}
+
+/* Badge RTL Support */
+.rtl .badge {
+    direction: rtl;
+}
+
+/* Custom Component RTL Support */
+.rtl .page-top-box {
+    flex-direction: row-reverse;
+}
+
+.rtl .page-heading-actions {
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+.rtl .dashboard-top-stats {
+    direction: rtl;
+}
+
+.rtl .top-nav-dropdown {
+    right: auto;
+    left: 0;
+}
+
+.rtl .top-nav-dropdown-item {
+    flex-direction: row-reverse;
+    text-align: right;
+}
+
+/* Icon RTL Adjustments */
+.rtl .icon-left {
+    order: 2;
+    margin-left: 0.5rem;
+    margin-right: 0;
+}
+
+.rtl .icon-right {
+    order: -1;
+    margin-right: 0.5rem;
+    margin-left: 0;
+}
+
+/* Font Adjustments for Dari */
+.rtl {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'Arial Unicode MS';
+}
+
+/* Specific fixes for complex layouts */
+.rtl .dashboard-charts {
+    direction: rtl;
+}
+
+.rtl .form-items {
+    direction: rtl;
+}
+
+.rtl .form-item {
+    text-align: right;
+}
+
+.rtl .form-item label {
+    text-align: right;
+    display: block;
+}
+
+/* Select2 RTL Support (if used) */
+.rtl .select2-container--default .select2-selection--single {
+    text-align: right;
+}
+
+.rtl .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-right: 8px;
+    padding-left: 20px;
+}
+
+.rtl .select2-container--default .select2-selection--single .select2-selection__arrow {
+    left: 1px;
+    right: auto;
+}
+
+/* DataTables RTL Support (if used) */
+.rtl .dataTables_wrapper {
+    direction: rtl;
+}
+
+.rtl .dataTables_length,
+.rtl .dataTables_filter,
+.rtl .dataTables_info,
+.rtl .dataTables_paginate {
+    text-align: right;
+}
+
+/* Responsive RTL Adjustments */
+@media (max-width: 768px) {
+    .rtl #sidebar {
+        transform: translateX(100%);
+    }
+    
+    .rtl #sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .rtl .small-screen-menu-icon {
+        order: -1;
+    }
+}
+
+/* Typography RTL */
+.rtl h1, .rtl h2, .rtl h3, .rtl h4, .rtl h5, .rtl h6 {
+    text-align: right;
+}
+
+.rtl p {
+    text-align: right;
+}
+
+/* Numbers and English text in RTL context */
+.rtl .number,
+.rtl .english-text {
+    direction: ltr;
+    unicode-bidi: embed;
+}
+
+/* Custom scrollbar for RTL */
+.rtl ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.rtl ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.rtl ::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.rtl ::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

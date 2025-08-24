@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps({
     total_pages: Number,
@@ -8,6 +9,7 @@ const props = defineProps({
 });
 
 let item_per_page = ref(props.per_page);
+const { t } = useI18n();
 
 const emit = defineEmits(["perPageChange", "pageChange"]);
 
@@ -25,12 +27,12 @@ function pageChange(perpage) {
                 @change="pageChange(item_per_page)"
                 class="form-select form-select-sm text-uppercase"
             >
-                <option value="5">5 per page</option>
-                <option value="10">10 per page</option>
-                <option value="20">20 per page</option>
-                <option value="30">30 per page</option>
-                <option value="40">40 per page</option>
-                <option value="50">50 per page</option>
+                <option value="5">5 {{ t('general.per_page') }}</option>
+                <option value="10">10 {{ t('general.per_page') }}</option>
+                <option value="20">20 {{ t('general.per_page') }}</option>
+                <option value="30">30 {{ t('general.per_page') }}</option>
+                <option value="40">40 {{ t('general.per_page') }}</option>
+                <option value="50">50 {{ t('general.per_page') }}</option>
             </select>
         </div>
 
@@ -44,7 +46,7 @@ function pageChange(perpage) {
                 class="page-item us-none cursor-pointer"
                 :class="current_page == 1 ? 'd-none' : ''"
             >
-                <span class="page-link"> Prev</span>
+                <span class="page-link"> {{ t('general.prev') }}</span>
             </li>
 
             <!-- 1st page  -->
@@ -140,7 +142,7 @@ function pageChange(perpage) {
                 class="page-item us-none cursor-pointer"
                 :class="current_page == total_pages ? 'd-none' : ''"
             >
-                <span class="page-link"> next </span>
+                <span class="page-link"> {{ t('general.next') }} </span>
             </li>
         </ul>
     </div>

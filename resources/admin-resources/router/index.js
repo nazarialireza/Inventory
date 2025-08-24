@@ -120,6 +120,13 @@ const router = createRouter({
                     path: "new-purchase",
                     component: () => import("../modules/purchase/AddPurchase.vue"),
                 },
+                
+                // I18n Test Route (for debugging)
+                {
+                    name: "i18n_test",
+                    path: "i18n-test",
+                    component: () => import("../components/TestI18n.vue"),
+                },
             ],
         },
     ],

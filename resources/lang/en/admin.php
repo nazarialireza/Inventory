@@ -17,12 +17,28 @@ return [
         'confirm_delete' => 'Do you want to delete selected :item?',
         'next' => 'next',
         'previous' => 'previous',
+        'prev' => 'Prev',
         'active' => 'Active',
         'disabled' => 'Disabled',
         'details' => 'Details',
         'name' => 'Name',
         'status' => 'Status',
         'action' => 'Action',
+        'email' => 'Email',
+        'phone' => 'Phone',
+        'address' => 'Address',
+        'logout' => 'Logout',
+        'demo' => 'Demo',
+        'profile_setting' => 'Profile Setting',
+        'language_changed' => 'Language changed successfully',
+        'invalid_language' => 'Invalid language selected',
+        'per_page' => 'per page',
+        'divide' => 'divide (/)',
+        'multiply' => 'multiply (*)',
+        'entries' => 'entries',
+        'show' => 'Show',
+        'type_name' => 'type name..',
+        'search_placeholder' => 'search',
     ],
 
     // Navigation
@@ -37,15 +53,23 @@ return [
         'sale_list' => 'Sale List',
         'new_sale' => 'New Sale',
         'purchase' => 'Purchase',
+        'purchases' => 'Purchases',
         'purchase_list' => 'Purchase List',
         'new_purchase' => 'New Purchase',
         'customers' => 'Customers',
         'suppliers' => 'Suppliers',
         'warehouses' => 'Warehouses',
         'accounts' => 'Accounts',
+        'account' => 'account',
         'account_adjustments' => 'Account Adjustments',
+        'balance_adjustment' => 'balance adjustment',
         'currencies' => 'Currencies',
         'taxes' => 'Taxes',
+        'settings' => 'settings',
+        'accounting' => 'accounting',
+        'warehouse' => 'warehouse',
+        'currency' => 'currency',
+        'tax' => 'tax',
     ],
 
     // Accounts
@@ -90,7 +114,7 @@ return [
         'exchange_rate' => 'Exchange Rate',
         'placeholder' => [
             'name' => 'type name..',
-            'search' => 'sarch',
+            'search' => 'search',
         ],
     ],
 
@@ -204,8 +228,10 @@ return [
     'warehouses' => [
         'title' => 'Warehouses',
         'add_warehouse' => 'Add Warehouse',
+        'add_new_warehouse' => 'Add New Warehouse',
         'edit_warehouse' => 'Edit Warehouse',
         'view_warehouse' => 'Warehouse Details',
+        'warehouse_details' => 'Warehouse Details',
         'warehouse_name' => 'Warehouse Name',
         'placeholder' => [
             'name' => 'type name..',
@@ -215,14 +241,21 @@ return [
     // Dashboard
     'dashboard' => [
         'title' => 'Dashboard',
+        'total_sale' => 'Total Sale',
+        'total_purchase' => 'Total Purchase',
+        'total_sale_due' => 'Total Sale Due',
+        'total_purchase_due' => 'Total Purchase Due',
         'total_sales' => 'Total Sales',
         'total_purchases' => 'Total Purchases',
         'total_customers' => 'Total Customers',
         'total_suppliers' => 'Total Suppliers',
         'weekly_sale_purchase' => 'Weekly Sale & Purchase',
         'top_selling_products' => 'Top Selling Products',
+        'payment_send_received_week' => 'Payment Send & Received This Week',
         'sale' => 'sale',
         'purchase' => 'purchase',
+        'payment_send' => 'Payment Send',
+        'payment_received' => 'Payment Received',
     ],
 
     // Account Adjustments
@@ -258,5 +291,12 @@ return [
     // Notifications
     'notifications' => [
         'error_occurred' => 'Error Occurred',
+    ],
+
+    // Language
+    'language' => [
+        'select_language' => 'Select Language',
+        'english' => 'English',
+        'dari' => 'Dari',
     ],
 ];

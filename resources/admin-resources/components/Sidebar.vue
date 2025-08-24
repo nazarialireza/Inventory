@@ -2,41 +2,45 @@
 import { useRoute } from "vue-router";
 import SideNavLink from "../components/SideNavLink.vue";
 import crossSvgIcon from "../assets/icons/cross-svg-icon.vue";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useSidebar } from "../stores/sidebar";
+import { useI18n } from "../composables/useI18n";
+
 const sidebarStore = useSidebar();
 const route = useRoute();
+const { t, currentLocale } = useI18n();
 
-const navlinks = [
+// Make navigation links reactive to language changes
+const navlinks = computed(() => [
     {
-        label: "dashboard",
+        label: t("navigation.dashboard"),
         link: "/admin",
         icon_name: "dashboard-svg-icon",
         permission: "view_user",
     },
 
     {
-        label: "products",
+        label: t("navigation.products"),
         link: " ",
         icon_name: "square-svg-icon",
         sub_links: [
             {
-                label: "product list",
+                label: t("navigation.product_list"),
                 link: "/admin/product",
                 permission: "view_product",
             },
             {
-                label: "category",
+                label: t("navigation.category"),
                 link: "/admin/product-category",
                 permission: "view_product_category",
             },
             {
-                label: "brand",
+                label: t("navigation.brand"),
                 link: "/admin/brand",
                 permission: "view_brand",
             },
             {
-                label: "unit",
+                label: t("navigation.unit"),
                 link: "/admin/unit",
                 permission: "view_unit",
             },
@@ -44,17 +48,17 @@ const navlinks = [
     },
 
     {
-        label: "Sales",
+        label: t("navigation.sales"),
         link: " ",
         icon_name: "cart-svg-icon",
         sub_links: [
             {
-                label: "Sale List",
+                label: t("navigation.sale_list"),
                 link: "/admin/sale",
                 permission: "view_sale",
             },
             {
-                label: "New Sale",
+                label: t("navigation.new_sale"),
                 link: "/admin/new-sale",
                 permission: "create_sale",
             },
@@ -62,17 +66,17 @@ const navlinks = [
     },
 
     {
-        label: "Purchases",
+        label: t("navigation.purchases"),
         link: "/admin/purchase",
         icon_name: "beg-svg-icon",
         sub_links: [
             {
-                label: "Purchase List",
+                label: t("navigation.purchase_list"),
                 link: "/admin/purchase",
                 permission: "view_purchase",
             },
             {
-                label: "New Purchase",
+                label: t("navigation.new_purchase"),
                 link: "/admin/new-purchase",
                 permission: "create_purchase",
             },
@@ -80,31 +84,31 @@ const navlinks = [
     },
 
     {
-        label: "Customers",
+        label: t("navigation.customers"),
         link: "/admin/customer",
         icon_name: "customer-svg-icon",
         permission: "view_customer",
     },
 
     {
-        label: "Suppliers",
+        label: t("navigation.suppliers"),
         link: "/admin/supplier",
         icon_name: "supplier-svg-icon",
         permission: "view_supplier",
     },
 
     {
-        label: "accounting",
+        label: t("navigation.accounting"),
         link: " ",
         icon_name: "booklet-svg-icon",
         sub_links: [
             {
-                label: "account",
+                label: t("navigation.account"),
                 link: "/admin/account",
                 permission: "view_account",
             },
             {
-                label: "balance adjustment",
+                label: t("navigation.balance_adjustment"),
                 link: "/admin/account-adjustment",
                 permission: "view_account_adjustment",
             },
@@ -112,28 +116,28 @@ const navlinks = [
     },
 
     {
-        label: "settings",
+        label: t("navigation.settings"),
         link: " ",
         icon_name: "setting-svg-icon",
         sub_links: [
             {
-                label: "warehouse",
+                label: t("navigation.warehouse"),
                 link: "/admin/warehouse",
                 permission: "view_warehouse",
             },
             {
-                label: "currency",
+                label: t("navigation.currency"),
                 link: "/admin/currency",
                 permission: "view_currency",
             },
             {
-                label: "tax",
+                label: t("navigation.tax"),
                 link: "/admin/tax",
                 permission: "view_tax",
             },
         ],
     },
-];
+]);
 </script>
 
 <template>
@@ -158,8 +162,8 @@ const navlinks = [
             <div class="sidebar-menu">
                 <ul class="menu">
                     <SideNavLink
-                        v-for="link in navlinks"
-                        :key="link.link"
+                        v-for="(link, index) in navlinks"
+                        :key="`${currentLocale}-${index}`"
                         :link_details="link"
                     />
                 </ul>

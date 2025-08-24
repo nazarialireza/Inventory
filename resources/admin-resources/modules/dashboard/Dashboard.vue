@@ -9,14 +9,16 @@ import CoinSvgIcon from "../../assets/icons/coin-1-svg-icon.vue";
 import twentyfourSVGICon from "../../assets/icons/twentyfour-svg-icon.vue";
 import HandLoveSVGICon from "../../assets/icons/hand-love-svg-icon.vue";
 import VueApexCharts from "vue3-apexcharts";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const data = ref({});
+const { t } = useI18n();
 
 let weeklySalePurchaseChartData = ref({
     chartOptions: {
         title: {
-            text: "Weekly Sale & Purchase",
+            text: t("dashboard.weekly_sale_purchase"),
             align: "left",
             style: { color: "#475f7b" },
         },
@@ -26,15 +28,15 @@ let weeklySalePurchaseChartData = ref({
         colors: ["#41b1f9", "#3366CC"],
     },
     series: [
-        { name: "sale", data: [] },
-        { name: "purchase", data: [] },
+        { name: t("dashboard.sale"), data: [] },
+        { name: t("dashboard.purchase"), data: [] },
     ],
 });
 
 let topSellingProductChartData = ref({
     chartOptions: {
         title: {
-            text: "Top Selling Products",
+            text: t("dashboard.top_selling_products"),
             align: "left",
             style: { color: "#475f7b" },
         },
@@ -54,7 +56,7 @@ let topSellingProductChartData = ref({
 let weeklyPaymentChartData = ref({
     chartOptions: {
         title: {
-            text: "Payment Send & Received This Week",
+            text: t("dashboard.payment_send_received_week"),
             align: "left",
             style: { color: "#475f7b" },
         },
@@ -74,8 +76,8 @@ let weeklyPaymentChartData = ref({
         },
     },
     series: [
-        { name: "Payment Send", data: [] },
-        { name: "Payment Received", data: [] },
+        { name: t("dashboard.payment_send"), data: [] },
+        { name: t("dashboard.payment_received"), data: [] },
     ],
 });
 
@@ -169,7 +171,7 @@ onMounted(() => {
                                     ? data.total_sale_amount.toFixed(0)
                                     : 0
                             }}</span
-                            ><br /><span>Total Sale</span>
+                            ><br /><span>{{ t('dashboard.total_sale') }}</span>
                         </div>
                     </div>
                 </div>
@@ -186,7 +188,7 @@ onMounted(() => {
                                     ? data.total_purchase_amount.toFixed(0)
                                     : 0
                             }}</span
-                            ><br /><span>Total Purchase</span>
+                            ><br /><span>{{ t('dashboard.total_purchase') }}</span>
                         </div>
                     </div>
                 </div>
@@ -207,7 +209,7 @@ onMounted(() => {
                                     ? data.total_sale_due.toFixed(0)
                                     : 0
                             }}</span
-                            ><br /><span>Total Sale Due</span>
+                            ><br /><span>{{ t('dashboard.total_sale_due') }}</span>
                         </div>
                     </div>
                 </div>
@@ -224,7 +226,7 @@ onMounted(() => {
                                     ? data.total_purchase_due.toFixed(0)
                                     : 0
                             }}</span
-                            ><br /><span>Total Purchase Due</span>
+                            ><br /><span>{{ t('dashboard.total_purchase_due') }}</span>
                         </div>
                     </div>
                 </div>

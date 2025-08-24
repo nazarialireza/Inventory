@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddWarehouse from "./AddWarehouse.vue";
 import EditWarehouse from "./EditWarehouse.vue";
 import ViewWarehouse from "./ViewWarehouse.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -25,6 +26,7 @@ const warehouseStore = useWarehouseStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const warehouses = computed(() => warehouseStore.warehouses);
+const { t } = useI18n();
 const q_name = ref("");
 const selected_warehouses = ref([]);
 const all_selectd = ref(false);
@@ -103,7 +105,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_warehouse')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Warehouses</h3>
+            <h3 class="h3">{{ t('warehouses.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -126,7 +128,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            :placeholder="t('warehouses.placeholder.name')"
                             v-model="q_name"
                             @keyup="
                                 fetchData(1, warehouseStore.per_page, q_name)
@@ -153,11 +155,11 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Address</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('general.name') }}</th>
+                        <th>{{ t('general.email') }}</th>
+                        <th>{{ t('general.phone') }}</th>
+                        <th>{{ t('general.address') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -3,16 +3,24 @@ import menuSvgIcon from "../assets/icons/menu-svg-icon.vue";
 import userSvgIcon from "../assets/icons/user-svg-icon.vue";
 import logoutSvgIcon from "../assets/icons/logout-svg-icon.vue";
 import settingSvgIcon from "../assets/icons/setting-svg-icon.vue";
+import LanguageSwitcher from "./LanguageSwitcher.vue";
 import { useSidebar } from "../stores/sidebar";
+import { useI18n } from "../composables/useI18n";
 import { ref } from "vue";
+
 const sidebarStore = useSidebar();
 const userDropDown = ref(false);
+const { t } = useI18n();
 </script>
 
 <template>
     <nav class="navbar navbar-header navbar-expand navbar-light">
         <menuSvgIcon @click="sidebarStore.toggle()" />
         <ul class="navbar-nav d-flex align-items-center navbar-light ms-auto">
+            <!-- Language Switcher -->
+            <li class="nav-item me-3">
+                <LanguageSwitcher />
+            </li>
             <div class="top-nav-item position-relative">
                 <span @click="userDropDown = !userDropDown">
                     <userSvgIcon width="25px" height="25px" />
@@ -24,7 +32,7 @@ const userDropDown = ref(false);
                             height="16px"
                             color="currentColor"
                         />
-                        <span class="ms-2">Logout </span>
+                        <span class="ms-2">{{ t('general.logout') }}</span>
                     </a>
                     <!-- <a class="top-nav-dropdown-item" href="/logout">
                         <settingSvgIcon
@@ -38,7 +46,7 @@ const userDropDown = ref(false);
             </div>
         </ul>
         <a href="/demo" class="ms-2">
-            <span class="badge bg-danger py-2 px-3">Demo</span>
+            <span class="badge bg-danger py-2 px-3">{{ t('general.demo') }}</span>
         </a>
     </nav>
 </template>
