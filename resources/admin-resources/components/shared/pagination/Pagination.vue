@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { useI18n } from "../../composables/useI18n";
+import { useI18n } from "../../../composables/useI18n.js";
 
 const props = defineProps({
     total_pages: Number,

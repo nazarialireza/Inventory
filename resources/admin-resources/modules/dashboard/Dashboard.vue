@@ -9,7 +9,7 @@ import CoinSvgIcon from "../../assets/icons/coin-1-svg-icon.vue";
 import twentyfourSVGICon from "../../assets/icons/twentyfour-svg-icon.vue";
 import HandLoveSVGICon from "../../assets/icons/hand-love-svg-icon.vue";
 import VueApexCharts from "vue3-apexcharts";
-import { useI18n } from "../../composables/useI18n";
+import { useI18n } from "../../composables/useI18n.js";
 
 const loading = ref(false);
 const data = ref({});

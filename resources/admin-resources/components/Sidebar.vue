@@ -4,7 +4,7 @@ import SideNavLink from "../components/SideNavLink.vue";
 import crossSvgIcon from "../assets/icons/cross-svg-icon.vue";
 import { ref, watch, computed } from "vue";
 import { useSidebar } from "../stores/sidebar";
-import { useI18n } from "../composables/useI18n";
+import { useI18n } from "../composables/useI18n.js";
 
 const sidebarStore = useSidebar();
 const route = useRoute();

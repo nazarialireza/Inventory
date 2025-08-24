@@ -14,7 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddWarehouse from "./AddWarehouse.vue";
 import EditWarehouse from "./EditWarehouse.vue";
 import ViewWarehouse from "./ViewWarehouse.vue";
-import { useI18n } from "../../composables/useI18n";
+import { useI18n } from "../../composables/useI18n.js";
 
 const loading = ref(false);
 const filterTab = ref(true);

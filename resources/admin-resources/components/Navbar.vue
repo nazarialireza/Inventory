@@ -5,7 +5,7 @@ import logoutSvgIcon from "../assets/icons/logout-svg-icon.vue";
 import settingSvgIcon from "../assets/icons/setting-svg-icon.vue";
 import LanguageSwitcher from "./LanguageSwitcher.vue";
 import { useSidebar } from "../stores/sidebar";
-import { useI18n } from "../composables/useI18n";
+import { useI18n } from "../composables/useI18n.js";
 import { ref } from "vue";
 
 const sidebarStore = useSidebar();

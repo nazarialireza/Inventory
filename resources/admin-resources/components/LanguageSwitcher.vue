@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
-import { useI18n } from '../composables/useI18n';
+import { useI18n } from '../composables/useI18n.js';
 
 const { 
     currentLocale, 
