@@ -7,6 +7,7 @@ const availableLocales = ref({});
 const translations = ref({});
 const isRTL = ref(false);
 const translationsLoaded = ref(false);
+const currentCSSLink = ref(null);
 
 // Translation helper function with reactivity
 function trans(key, params = {}) {
@@ -65,9 +66,92 @@ async function loadTranslations(locale = null) {
             await loadTranslations('en');
         } else {
             console.error('Failed to load translations:', error);
-            translationsLoaded.value = false;
         }
     }
+}
+
+// Load CSS based on language direction
+function loadCSS(isRtl = false) {
+    return new Promise((resolve) => {
+        try {
+            // Find and remove existing main CSS links
+            const allLinks = document.querySelectorAll('link[rel="stylesheet"]');
+            allLinks.forEach(link => {
+                // Remove CSS files that are main-related (both LTR and RTL)
+                if (link.href.includes('main') && link.href.includes('.css')) {
+                    link.remove();
+                }
+            });
+            
+            // Create new link element
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.id = 'dynamic-theme-css';
+            
+            // Check if we're in development or production
+            const isDev = import.meta.env.DEV;
+            
+            if (isDev) {
+                // In development, use Vite's dev server paths
+                const cssFileName = isRtl ? 'main-rtl.css' : 'main.css';
+                link.href = `/resources/admin-resources/assets/css/${cssFileName}`;
+                
+                link.onload = () => {
+                    console.log(`CSS loaded successfully: ${link.href}`);
+                    currentCSSLink.value = link;
+                    resolve();
+                };
+                
+                link.onerror = () => {
+                    console.warn(`Failed to load CSS: ${link.href}`);
+                    resolve(); // Don't break the app
+                };
+                
+                document.head.appendChild(link);
+            } else {
+                // In production, use the built CSS files
+                // Try to get the CSS URL from the Vite manifest
+                fetch('/build/manifest.json')
+                    .then(response => response.json())
+                    .then(manifest => {
+                        const cssKey = isRtl 
+                            ? 'resources/admin-resources/assets/css/main-rtl.css'
+                            : 'resources/admin-resources/assets/css/main.css';
+                        
+                        if (manifest[cssKey] && manifest[cssKey].file) {
+                            link.href = `/build/${manifest[cssKey].file}`;
+                            
+                            link.onload = () => {
+                                console.log(`CSS loaded successfully: ${link.href}`);
+                                currentCSSLink.value = link;
+                                resolve();
+                            };
+                            
+                            link.onerror = () => {
+                                console.warn(`Failed to load CSS: ${link.href}`);
+                                resolve();
+                            };
+                            
+                            document.head.appendChild(link);
+                        } else {
+                            console.error(`Could not find CSS file in manifest: ${cssKey}`);
+                            resolve();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Failed to load Vite manifest:', error);
+                        resolve();
+                    });
+            }
+            
+            console.log(`Loading ${isRtl ? 'RTL' : 'LTR'} CSS`);
+            
+        } catch (error) {
+            console.error('Error loading CSS:', error);
+            resolve(); // Don't reject, just resolve to not break the app
+        }
+    });
 }
 
 // Switch language
@@ -91,6 +175,9 @@ async function switchLanguage(locale) {
         
         // Load new translations
         await loadTranslations(locale);
+        
+        // Load appropriate CSS for the language direction
+        await loadCSS(isRTL.value);
         
         // Update document attributes
         document.documentElement.setAttribute('lang', locale);
@@ -128,6 +215,14 @@ async function initializeI18n() {
         // Set initial body class
         document.body.classList.toggle('rtl', isRTL.value);
         document.body.classList.toggle('ltr', !isRTL.value);
+        
+        // Check if we need to load different CSS than what was server-rendered
+        // The blade template loads CSS based on server-side locale
+        const bodyHasRTL = document.body.classList.contains('rtl');
+        if (bodyHasRTL !== isRTL.value) {
+            // Server and client language direction don't match, load correct CSS
+            await loadCSS(isRTL.value);
+        }
         
         // Load initial translations
         await loadTranslations();
@@ -187,6 +282,7 @@ export function useI18n() {
         switchLanguage,
         loadTranslations,
         initializeI18n,
+        loadCSS,
         formatNumber,
         formatCurrency,
         formatDate,

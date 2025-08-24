@@ -1784,3 +1784,7 @@ table {
 
 /* custom bg colors */
 .bg-ass{background-color: #f8f8f8 !important;}
+
+#sidebar.active .sidebar-wrapper {
+    right: 0;
+}

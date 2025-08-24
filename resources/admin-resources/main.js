@@ -2,8 +2,7 @@ import { createApp } from "vue";
 import { createPinia } from "pinia";
 import "./plugins/axios-settings.js";
 import router from "./router";
-import "./assets/css/main.css";
-import "./assets/css/rtl.css";
+// CSS loading is now handled dynamically in useI18n composable
 import { useI18n } from "./composables/useI18n";
 
 import App from "./views/App.vue";

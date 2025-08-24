@@ -93,7 +93,7 @@
 
 ### Issue: RTL not applying
 **Check**:
-- `rtl.css` is being loaded
+- `main-rtl.css` is being loaded
 - Body has the correct class (`rtl` or `ltr`)
 - Document direction attribute is set correctly
 
@@ -124,7 +124,7 @@ curl http://localhost:8000/api/translations/prs
 - ✅ `useI18n.js` - Enhanced reactivity and debugging
 - ✅ `Sidebar.vue` - Made navigation reactive
 - ✅ `LanguageSwitcher.vue` - Improved reliability
-- ✅ `rtl.css` - Enhanced RTL support
+- ✅ `main-rtl.css` - Enhanced RTL support
 - ✅ `main.js` - Better initialization
 - ✅ `TestI18n.vue` - Comprehensive debug component
 

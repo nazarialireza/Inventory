@@ -43,7 +43,7 @@ This implementation adds comprehensive multilingual support to the Invextry Inve
 - Added RTL support to all UI components
 
 #### 3. CSS Support
-- `assets/css/rtl.css` - Comprehensive RTL styling
+- `assets/css/main-rtl.css` - Comprehensive RTL styling
 - Bootstrap RTL overrides
 - Custom component RTL support
 
@@ -194,7 +194,7 @@ resources/
     │   └── LanguageSwitcher.vue
     └── assets/
         └── css/
-            └── rtl.css
+            └── main-rtl.css
 
 app/Http/
 ├── Controllers/Api/
