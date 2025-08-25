@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddUnit from "./AddUnit.vue";
 import EditUnit from "./EditUnit.vue";
 import ViewUnit from "./ViewUnit.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -25,6 +26,7 @@ const unitStore = useUnitStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const units = computed(() => unitStore.units);
+const { t } = useI18n();
 const q_name = ref("");
 const selected_units = ref([]);
 const all_selectd = ref(false);
@@ -44,7 +46,7 @@ function select_all() {
 
 async function deleteData(id) {
     await confirmStore
-        .show_box({ message: "Do you want to delete selected unit?" })
+        .show_box({ message: t('general.confirm_delete', { item: 'unit' }) })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 await unitStore.deleteUnit(id);
@@ -96,7 +98,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_unit')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Units</h3>
+            <h3 class="h3">{{ t('units.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -119,13 +121,13 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            :placeholder="t('units.placeholder.name')"
                             v-model="q_name"
                             @keyup="
                                 fetchData(1, unitStore.per_page, q_name)
                             "
                         />
-                        <label class="input-group-text">sarch</label>
+                        <label class="input-group-text">{{ t('general.search') }}</label>
                     </div>
                 </div>
             </div>
@@ -147,10 +149,9 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>ID</th>
-                        <th>Unit Name</th>
-                        <th>Short Name</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('general.name') }}</th>
+                        <th>{{ t('units.short_name') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -163,7 +164,6 @@ onMounted(() => {
                                 :value="unit.id"
                             />
                         </td>
-                        <td>{{ unit.id }}</td>
                         <td>{{ unit.name }}</td>
                         <td>{{ unit.short_name }}</td>
                         <td class="table-action-btns">

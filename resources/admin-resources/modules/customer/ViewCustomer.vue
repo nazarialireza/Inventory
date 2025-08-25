@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useCustomerStore } from "./customerStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["customer_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const customerStore = useCustomerStore();
@@ -33,7 +35,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Customer Details</h5>
+                    <h5 class="modal-title">{{ t('customers.view_customer') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewCustomerModal" />
                     </button>

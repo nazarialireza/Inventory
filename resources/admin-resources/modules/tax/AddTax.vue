@@ -2,8 +2,10 @@
 import { computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import { useTaxStore } from "./taxStore";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const taxStore = useTaxStore();
 const tax_data = computed(() => taxStore.current_tax_item);
@@ -35,7 +37,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Tax</h5>
+                    <h5 class="modal-title">{{ t('taxes.add_tax') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddTaxModal" />
                     </button>
@@ -44,7 +46,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <form action="">
                         <div class="form-item">
-                            <label class="my-2">Tax Name</label>
+                            <label class="my-2">{{ t('taxes.tax_name') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="taxStore.add_tax_errors.name"
@@ -58,7 +60,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Tax Rate</label>
+                            <label class="my-2">{{ t('taxes.tax_rate') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="taxStore.add_tax_errors.rate"
@@ -79,14 +81,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddTaxModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

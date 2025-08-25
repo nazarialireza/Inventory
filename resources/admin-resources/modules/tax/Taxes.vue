@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddTax from "./AddTax.vue";
 import EditTax from "./EditTax.vue";
 import ViewTax from "./ViewTax.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -21,6 +22,7 @@ const showAddTax = ref(false);
 const showEditTax = ref(false);
 const showViewTax = ref(false);
 
+const { t } = useI18n();
 const taxStore = useTaxStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
@@ -44,7 +46,7 @@ function select_all() {
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected tax?" })
+        .show_box({ message: t('general.delete_confirmation') })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 taxStore.deleteTax(id).then(() => {
@@ -101,7 +103,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_tax')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Taxes</h3>
+            <h3 class="h3">{{ t('taxes.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -124,7 +126,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            placeholder="{{ t('general.search_placeholder') }}"
                             v-model="q_name"
                             @keyup="fetchData(1, taxStore.per_page, q_name)"
                         />
@@ -150,9 +152,9 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Tax Name</th>
-                        <th>Tax Rate (%)</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('taxes.tax_name') }}</th>
+                        <th>{{ t('taxes.tax_rate_percent') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddSupplier from "./AddSupplier.vue";
 import EditSupplier from "./EditSupplier.vue";
 import ViewSupplier from "./ViewSupplier.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -21,6 +22,7 @@ const showAddSupplier = ref(false);
 const showEditSupplier = ref(false);
 const showViewSupplier = ref(false);
 
+const { t } = useI18n();
 const supplierStore = useSupplierStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
@@ -66,7 +68,7 @@ async function fetchData(
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected Supplier?" })
+        .show_box({ message: t('general.delete_confirmation') })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 supplierStore.deleteSupplier(id).then(() => {
@@ -104,7 +106,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_supplier')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Supplier List</h3>
+            <h3 class="h3">{{ t('suppliers.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -127,7 +129,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            placeholder="{{ t('general.search_placeholder') }}"
                             v-model="q_name"
                             @keyup="
                                 fetchData(1, supplierStore.per_page, q_name)
@@ -154,12 +156,12 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Purchase Due</th>
-                        <th>Purchase Return Due</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('general.name') }}</th>
+                        <th>{{ t('general.phone') }}</th>
+                        <th>{{ t('general.email') }}</th>
+                        <th>{{ t('suppliers.purchase_due') }}</th>
+                        <th>{{ t('suppliers.purchase_return_due') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

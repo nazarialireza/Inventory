@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useSupplierStore } from "./supplierStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["supplier_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const supplierStore = useSupplierStore();
@@ -32,7 +34,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Supplier Details</h5>
+                    <h5 class="modal-title">{{ t('suppliers.view_supplier') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewSupplierModal" />
                     </button>
@@ -43,7 +45,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item mt-4">
-                                <label class="my-2">Staus</label>
+                                <label class="my-2">{{ t('general.status') }}</label>
                                 <div class="d-flex">
                                     <span class="form-check">
                                         <input
@@ -61,7 +63,7 @@ onMounted(() => {
                                             class="form-check-label"
                                             for="active"
                                         >
-                                            Active
+                                            {{ t('general.active') }}
                                         </label>
                                     </span>
                                     <span class="form-check ms-2">
@@ -81,13 +83,13 @@ onMounted(() => {
                                             class="form-check-label"
                                             for="disabled"
                                         >
-                                            Disabled
+                                            {{ t('general.disabled') }}
                                         </label>
                                     </span>
                                 </div>
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Name</label>
+                                <label class="my-2">{{ t('general.name') }}</label>
 
                                 <input
                                     disabled
@@ -97,7 +99,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Email</label>
+                                <label class="my-2">{{ t('general.email') }}</label>
 
                                 <input
                                     disabled
@@ -107,7 +109,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Phone</label>
+                                <label class="my-2">{{ t('general.phone') }}</label>
 
                                 <input
                                     disabled
@@ -117,7 +119,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Tax Number</label>
+                                <label class="my-2">{{ t('suppliers.tax_number') }}</label>
 
                                 <input
                                     type="text"
@@ -126,7 +128,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Country</label>
+                                <label class="my-2">{{ t('general.country') }}</label>
 
                                 <input
                                     disabled
@@ -136,7 +138,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">City</label>
+                                <label class="my-2">{{ t('general.city') }}</label>
 
                                 <input
                                     disabled
@@ -146,7 +148,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Postal Code</label>
+                                <label class="my-2">{{ t('general.postal_code') }}</label>
 
                                 <input
                                     disabled
@@ -156,7 +158,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item mt-4">
-                                <label class="my-2">Address</label>
+                                <label class="my-2">{{ t('general.address') }}</label>
                                 <textarea
                                     disabled
                                     v-model="supplier_data.address"
@@ -165,7 +167,7 @@ onMounted(() => {
                                 ></textarea>
                             </div>
                             <div class="form-item mt-4">
-                                <label class="my-2">Billing Address</label>
+                                <label class="my-2">{{ t('suppliers.billing_address') }}</label>
                                 <textarea
                                     disabled
                                     v-model="supplier_data.billing_address"
@@ -174,7 +176,7 @@ onMounted(() => {
                                 ></textarea>
                             </div>
                             <div class="form-item mt-4">
-                                <label class="my-2">Shipping Address</label>
+                                <label class="my-2">{{ t('suppliers.shipping_address') }}</label>
                                 <textarea
                                     disabled
                                     v-model="supplier_data.shipping_address"

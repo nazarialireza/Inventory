@@ -2,8 +2,10 @@
 import { computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import { useUnitStore } from "./unitStore";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const unitStore = useUnitStore();
 const unit_data = computed(() => unitStore.current_unit_item);
@@ -36,7 +38,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Unit</h5>
+                    <h5 class="modal-title">{{ t('units.add_new_unit') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddUnitModal" />
                     </button>
@@ -44,7 +46,7 @@ onMounted(() => {
 
                 <div class="modal-body">
                     <div class="form-item">
-                        <label class="my-2">Unit Name</label>
+                        <label class="my-2">{{ t('units.unit_name') }}</label>
                         <p
                             class="text-danger"
                             v-if="unitStore.add_unit_errors.name"
@@ -59,7 +61,7 @@ onMounted(() => {
                     </div>
 
                     <div class="form-item">
-                        <label class="my-2">Unit Short Name</label>
+                        <label class="my-2">{{ t('units.short_name') }}</label>
                         <p
                             class="text-danger"
                             v-if="unitStore.add_unit_errors.short_name"
@@ -74,7 +76,7 @@ onMounted(() => {
                     </div>
 
                     <div class="form-item">
-                        <label class="my-2">Base Unit</label>
+                        <label class="my-2">{{ t('units.base_unit') }}</label>
                         <p
                             class="text-danger"
                             v-if="unitStore.add_unit_errors.base_unit_id"
@@ -85,7 +87,7 @@ onMounted(() => {
                             class="form-select form-select-sm text-capitalize"
                             v-model="unit_data.base_unit_id"
                         >
-                            <option value="">Select Base Unit</option>
+                            <option value="">{{ t('units.select_base_unit') }}</option>
                             <option
                                 :value="base_unit.id"
                                 v-for="base_unit in unitStore.base_units"
@@ -96,7 +98,7 @@ onMounted(() => {
                     </div>
 
                     <div class="form-item" v-if="unit_data.base_unit_id">
-                        <label class="my-2">Operator</label>
+                        <label class="my-2">{{ t('units.operator') }}</label>
                         <p
                             class="text-danger"
                             v-if="unitStore.add_unit_errors.operator"
@@ -107,13 +109,13 @@ onMounted(() => {
                             class="form-select form-select-sm text-capitalize"
                             v-model="unit_data.operator"
                         >
-                            <option value="divide">divide (/)</option>
-                            <option value="multiply">multuply (*)</option>
+                            <option value="divide">{{ t('general.divide') }}</option>
+                            <option value="multiply">{{ t('general.multiply') }}</option>
                         </select>
                     </div>
 
                     <div class="form-item" v-if="unit_data.base_unit_id">
-                        <label class="my-2">Operation Value</label>
+                        <label class="my-2">{{ t('units.operation_value') }}</label>
                         <p
                             class="text-danger"
                             v-if="unitStore.add_unit_errors.operation_value"
@@ -133,14 +135,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddUnitModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

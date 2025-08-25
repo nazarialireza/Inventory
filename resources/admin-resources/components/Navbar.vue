@@ -40,7 +40,7 @@ const { t } = useI18n();
                             height="16px"
                             color="currentColor"
                         />
-                        <span class="ms-2">Profile Setting</span>
+                        <span class="ms-2">{{ t('general.profile_setting') }}</span>
                     </a> -->
                 </div>
             </div>

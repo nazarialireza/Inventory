@@ -18,6 +18,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddProduct from "./AddProduct.vue";
 import EditProduct from "./EditProduct.vue";
 import ViewProduct from "./ViewProduct.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -27,6 +28,7 @@ const showViewProduct = ref(false);
 
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const productStore = useProductStore();
 const products = computed(() => productStore.products);
@@ -62,7 +64,7 @@ function select_all() {
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected product?" })
+        .show_box({ message: t('general.confirm_delete', { item: 'product' }) })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 productStore.deleteProduct(id).then(() => {
@@ -131,7 +133,7 @@ onBeforeMount(async () => {
 <template>
     <div v-if="authStore.userCan('view_product')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Products</h3>
+            <h3 class="h3">{{ t('products.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -154,7 +156,7 @@ onBeforeMount(async () => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            :placeholder="t('general.type_name')"
                             v-model="q_name"
                             @keyup="fetchData(1, productStore.per_page, q_name)"
                         />
@@ -180,16 +182,16 @@ onBeforeMount(async () => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Image</th>
-                        <th class="max200 min200">Name</th>
+                        <th>{{ t('products.image') }}</th>
+                        <th class="max200 min200">{{ t('general.name') }}</th>
                         <!-- <th class="">Code</th> -->
-                        <th class="min100">Category</th>
-                        <th class="min100">Brand</th>
-                        <th class="min100">Cost</th>
-                        <th class="min100">Price</th>
+                        <th class="min100">{{ t('products.category') }}</th>
+                        <th class="min100">{{ t('navigation.brand') }}</th>
+                        <th class="min100">{{ t('products.cost') }}</th>
+                        <th class="min100">{{ t('products.price') }}</th>
                         <!-- <th>Unit</th> -->
-                        <th class="min100">Stock</th>
-                        <th class="table-action-col">Action</th>
+                        <th class="min100">{{ t('products.stock') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

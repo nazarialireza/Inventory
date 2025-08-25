@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useAccountStore } from "./accountStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["account_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const accountStore = useAccountStore();
@@ -32,7 +34,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Account Details</h5>
+                    <h5 class="modal-title">{{ t('accounts.view_account') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewAccountModal" />
                     </button>
@@ -43,7 +45,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item mt-4">
-                                <label class="my-2">Staus</label>
+                                <label class="my-2">{{ t('general.status') }}</label>
 
                                 <div class="d-flex">
                                     <span class="form-check">
@@ -58,7 +60,7 @@ onMounted(() => {
                                             class="form-check-label"
                                             for="active"
                                         >
-                                            Active
+                                            {{ t('general.active') }}
                                         </label>
                                     </span>
                                     <span class="form-check ms-2">
@@ -73,13 +75,13 @@ onMounted(() => {
                                             class="form-check-label"
                                             for="disabled"
                                         >
-                                            Disabled
+                                            {{ t('general.disabled') }}
                                         </label>
                                     </span>
                                 </div>
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Name</label>
+                                <label class="my-2">{{ t('general.name') }}</label>
                                 <input
                                     disabled
                                     type="text"
@@ -88,7 +90,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Bank Name</label>
+                                <label class="my-2">{{ t('accounts.bank_name') }}</label>
                                 <input
                                     disabled
                                     type="text"
@@ -97,7 +99,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Branch Name</label>
+                                <label class="my-2">{{ t('accounts.branch_name') }}</label>
                                 <input
                                     disabled
                                     type="text"
@@ -106,7 +108,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Account Number</label>
+                                <label class="my-2">{{ t('accounts.account_number') }}</label>
                                 <input
                                 disabled
                                     type="text" 
@@ -115,7 +117,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Balance</label>
+                                <label class="my-2">{{ t('accounts.balance') }}</label>
                                 <input
                                 disabled
                                     type="number"
@@ -125,7 +127,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item mt-4">
-                                <label class="my-2">Details</label>
+                                <label class="my-2">{{ t('general.details') }}</label>
                                 <textarea disabled
                                     v-model="account_data.details"
                                     class="form-control"

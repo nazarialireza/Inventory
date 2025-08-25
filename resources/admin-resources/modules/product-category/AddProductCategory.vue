@@ -4,9 +4,11 @@ import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import { useProductCategoryStore } from "./productCategoryStore";
 import UploadContainer from "../../components/fileUploader/UploadContainer.vue";
 import deleteUploadedFile from "../../utils/file";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
 
+const { t } = useI18n();
 const productCategoryStore = useProductCategoryStore();
 const product_category_data = computed(
     () => productCategoryStore.current_product_category_item
@@ -53,7 +55,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Product Category</h5>
+                    <h5 class="modal-title">{{ t('categories.add_category') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddProductCategoryModal" />
                     </button>
@@ -62,7 +64,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <form action="">
                         <div class="form-item">
-                            <label class="my-2">Category Name</label>
+                            <label class="my-2">{{ t('categories.category_name') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -82,7 +84,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Category Slug</label>
+                            <label class="my-2">{{ t('categories.category_slug') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -102,7 +104,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Category Thumbnail</label>
+                            <label class="my-2">{{ t('categories.category_thumbnail') }}</label>
                             <UploadContainer
                                 @filesUploaded="
                                     (uploadedFiles) =>
@@ -119,14 +121,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddProductCategoryModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

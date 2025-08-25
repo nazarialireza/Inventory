@@ -4,10 +4,12 @@ import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import ImagesBox from "../../components/img/ImagesBox.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useProductStore } from "./productStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["product_id"]);
 const emit = defineEmits(["close"]);
 
+const { t } = useI18n();
 const loading = ref(false);
 const productStore = useProductStore();
 const product_data = computed(() => productStore.current_product_item);
@@ -33,7 +35,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Product Details</h5>
+                    <h5 class="modal-title">{{ t('products.product_details') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewProductModal" />
                     </button>
@@ -44,7 +46,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item">
-                                <label class="my-2">Product Name</label>
+                                <label class="my-2">{{ t('products.product_name') }}</label>
                                 <input
                                     disabled
                                     type="text"
@@ -53,7 +55,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Product Slug</label>
+                                <label class="my-2">{{ t('products.product_slug') }}</label>
                                 <input
                                     disabled
                                     type="text"
@@ -63,7 +65,7 @@ onMounted(() => {
                             </div>
                             <div class="row">
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Code</label>
+                                    <label class="my-2">{{ t('products.code') }}</label>
                                     <input
                                         disabled
                                         type="text"
@@ -72,9 +74,7 @@ onMounted(() => {
                                     />
                                 </div>
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2"
-                                        >Barcode Symbology</label
-                                    >
+                                    <label class="my-2">{{ t('products.barcode_symbology') }}</label>
                                     <input
                                         disabled
                                         type="text"
@@ -85,7 +85,7 @@ onMounted(() => {
                             </div>
                             <div class="row">
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Category</label>
+                                    <label class="my-2">{{ t('categories.category') }}</label>
                                     <input
                                         disabled
                                         type="text"
@@ -94,7 +94,7 @@ onMounted(() => {
                                     />
                                 </div>
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Brand</label>
+                                    <label class="my-2">{{ t('brands.brand') }}</label>
                                     <input
                                         disabled
                                         type="text"
@@ -106,9 +106,7 @@ onMounted(() => {
                             <div class="row">
                                 <!-- stock alert quantity -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2"
-                                        >Stock Alert Quantity</label
-                                    >
+                                    <label class="my-2">{{ t('products.stock_alert_quantity') }}</label>
                                     <input
                                         disabled
                                         type="number"
@@ -120,7 +118,7 @@ onMounted(() => {
                                 </div>
                                 <!-- product unit -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Product Unit</label>
+                                    <label class="my-2">{{ t('products.product_unit') }}</label>
                                     <input
                                         disabled
                                         type="text"
@@ -151,7 +149,7 @@ onMounted(() => {
 
                                 <!-- purchase price -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Purchase Price</label>
+                                    <label class="my-2">{{ t('products.purchase_price') }}</label>
                                     <input
                                         disabled
                                         class="form-control"
@@ -161,7 +159,7 @@ onMounted(() => {
                                 </div>
                                 <!-- sale price -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Sale Price</label>
+                                    <label class="my-2">{{ t('products.sale_price') }}</label>
                                     <input
                                         disabled
                                         class="form-control"
@@ -171,7 +169,7 @@ onMounted(() => {
                                 </div>
                                 <!-- tax -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Tax</label>
+                                    <label class="my-2">{{ t('taxes.tax') }}</label>
                                     <input
                                         disabled
                                         class="form-control"
@@ -181,7 +179,7 @@ onMounted(() => {
                                 </div>
                                 <!-- tax type-->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Tax Type</label>
+                                    <label class="my-2">{{ t('taxes.tax_type') }}</label>
                                     <input
                                         disabled
                                         class="form-control"
@@ -192,12 +190,12 @@ onMounted(() => {
                             </div>
 
                             <div class="form-item mt-4">
-                                <label class="my-2">Product Images</label>
+                                <label class="my-2">{{ t('products.product_images') }}</label>
                                 <ImagesBox :images="product_data.gallery" />
                             </div>
 
                             <div class="form-item mt-4">
-                                <label class="my-2">Description</label>
+                                <label class="my-2">{{ t('products.description') }}</label>
                                 <textarea
                                     disabled
                                     :value="product_data.description"

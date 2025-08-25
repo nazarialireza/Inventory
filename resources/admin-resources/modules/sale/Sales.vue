@@ -13,10 +13,12 @@ import AddNewButton from "../../components/buttons/AddNewButton.vue";
 import FilterButton from "../../components/buttons/FilterButton.vue";
 import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddPayment from "../payment/AddPayment.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
 
+const { t } = useI18n();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const sales = ref([]);
@@ -75,7 +77,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_sale')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Sales</h3>
+            <h3 class="h3">{{ t('sales.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -95,7 +97,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="search by reference no.."
+                            placeholder="{{ t('sales.search_reference') }}"
                             v-model="search"
                             @keyup="fetchData(1, per_page, search)"
                         />
@@ -120,16 +122,16 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th> -->
-                        <th class="min100">Date</th>
-                        <th class="min100">Reference</th>
-                        <th class="min100">Customer</th>
-                        <th class="min100">Warehouse</th>
-                        <th class="min100">Total</th>
-                        <th class="min100">Paid</th>
-                        <th class="min100">Due</th>
-                        <th class="">Sale Status</th>
-                        <th class="">Payment Status</th>
-                        <th class="table-action-col">Action</th>
+                        <th class="min100">{{ t('general.date') }}</th>
+                        <th class="min100">{{ t('sales.reference') }}</th>
+                        <th class="min100">{{ t('customers.customer') }}</th>
+                        <th class="min100">{{ t('warehouses.warehouse') }}</th>
+                        <th class="min100">{{ t('general.total') }}</th>
+                        <th class="min100">{{ t('payments.paid') }}</th>
+                        <th class="min100">{{ t('payments.due') }}</th>
+                        <th class="">{{ t('sales.sale_status') }}</th>
+                        <th class="">{{ t('payments.payment_status') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

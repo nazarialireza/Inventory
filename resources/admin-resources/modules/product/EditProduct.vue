@@ -6,6 +6,7 @@ import { useProductStore } from "./productStore";
 import { useUnitStore } from "../unit/unitStore";
 import UploadContainer from "../../components/fileUploader/UploadContainer.vue";
 import deleteUploadedFile from "../../utils/file";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps([
     "product_id",
@@ -16,6 +17,7 @@ const props = defineProps([
 ]);
 const emit = defineEmits(["close", "refreshData"]);
 
+const { t } = useI18n();
 const loading = ref(false);
 const productStore = useProductStore();
 const unitStore = useUnitStore();
@@ -84,7 +86,7 @@ onMounted(async () => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Product</h5>
+                    <h5 class="modal-title">{{ t('products.edit_product') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeEditProductModal" />
                     </button>
@@ -95,7 +97,7 @@ onMounted(async () => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item">
-                                <label class="my-2">Product Name</label>
+                                <label class="my-2">{{ t('products.product_name') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="productStore.edit_product_errors.name"
@@ -109,7 +111,7 @@ onMounted(async () => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Product Slug</label>
+                                <label class="my-2">{{ t('products.product_slug') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="productStore.edit_product_errors.slug"
@@ -124,7 +126,7 @@ onMounted(async () => {
                             </div>
                             <div class="row">
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Code</label>
+                                    <label class="my-2">{{ t('products.code') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -144,9 +146,7 @@ onMounted(async () => {
                                     />
                                 </div>
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2"
-                                        >Barcode Symbology</label
-                                    >
+                                    <label class="my-2">{{ t('products.barcode_symbology') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -175,7 +175,7 @@ onMounted(async () => {
                             </div>
                             <div class="row">
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Category</label>
+                                    <label class="my-2">{{ t('categories.category') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -192,9 +192,7 @@ onMounted(async () => {
                                         v-model="product_data.category_id"
                                         class="form-control"
                                     >
-                                        <option value="">
-                                            select category
-                                        </option>
+                                        <option value="">{{ t('categories.select_category') }}</option>
                                         <option
                                             :value="category.id"
                                             v-for="category in categories"
@@ -204,7 +202,7 @@ onMounted(async () => {
                                     </select>
                                 </div>
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Brand</label>
+                                    <label class="my-2">{{ t('brands.brand') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -221,7 +219,7 @@ onMounted(async () => {
                                         v-model="product_data.brand_id"
                                         class="form-control"
                                     >
-                                        <option value="">select brand</option>
+                                        <option value="">{{ t('brands.select_brand') }}</option>
                                         <option
                                             :value="brand.id"
                                             v-for="brand in brands"
@@ -234,9 +232,7 @@ onMounted(async () => {
                             <div class="row">
                                 <!-- stock alert quantity -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2"
-                                        >Stock Alert Quantity</label
-                                    >
+                                    <label class="my-2">{{ t('products.stock_alert_quantity') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -259,7 +255,7 @@ onMounted(async () => {
                                 </div>
                                 <!-- product unit -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Product Unit</label>
+                                    <label class="my-2">{{ t('products.product_unit') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -354,7 +350,7 @@ onMounted(async () => {
                                 </div> -->
                                 <!-- purchase price -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Purchase Price</label>
+                                    <label class="my-2">{{ t('products.purchase_price') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -375,7 +371,7 @@ onMounted(async () => {
                                 </div>
                                 <!-- sale price -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Sale Price</label>
+                                    <label class="my-2">{{ t('products.sale_price') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -396,7 +392,7 @@ onMounted(async () => {
                                 </div>
                                 <!-- tax -->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Tax</label>
+                                    <label class="my-2">{{ t('taxes.tax') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -413,7 +409,7 @@ onMounted(async () => {
                                         v-model="product_data.tax_id"
                                         class="form-control"
                                     >
-                                        <option value="">select tax</option>
+                                        <option value="">{{ t('taxes.select_tax') }}</option>
                                         <option
                                             :value="tax.id"
                                             v-for="tax in taxes"
@@ -424,7 +420,7 @@ onMounted(async () => {
                                 </div>
                                 <!-- tax type-->
                                 <div class="form-item col-sm-6">
-                                    <label class="my-2">Tax Type</label>
+                                    <label class="my-2">{{ t('taxes.tax_type') }}</label>
                                     <p
                                         class="text-danger"
                                         v-if="
@@ -441,20 +437,14 @@ onMounted(async () => {
                                         v-model="product_data.tax_type"
                                         class="form-control"
                                     >
-                                        <option value="inclusive">
-                                            inclusive
-                                        </option>
-                                        <option value="exclusive">
-                                            exclusive
-                                        </option>
+                                        <option value="inclusive">{{ t('taxes.inclusive') }}</option>
+                                        <option value="exclusive">{{ t('taxes.exclusive') }}</option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="form-item mt-4">
-                                <label class="my-2"
-                                    >Product Images (multiple allowed)</label
-                                >
+                                <label class="my-2">{{ t('products.product_images') }}</label>
                                 <UploadContainer
                                     multiple
                                     @filesUploaded="
@@ -471,7 +461,7 @@ onMounted(async () => {
                             </div>
 
                             <div class="form-item mt-4">
-                                <label class="my-2">Description</label>
+                                <label class="my-2">{{ t('products.description') }}</label>
                                 <textarea
                                     v-model="product_data.description"
                                     class="form-control"
@@ -487,14 +477,14 @@ onMounted(async () => {
                         class="btn btn-danger btn-sm"
                         @click="closeEditProductModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

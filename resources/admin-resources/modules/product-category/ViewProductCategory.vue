@@ -4,10 +4,12 @@ import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import ImagesBox from "../../components/img/ImagesBox.vue"
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useProductCategoryStore } from "./productCategoryStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["product_category_id"]);
 const emit = defineEmits(["close"]);
 
+const { t } = useI18n();
 const loading = ref(false);
 const productCategoryStore = useProductCategoryStore();
 const product_category_data = computed(() => productCategoryStore.current_product_category_item);
@@ -33,7 +35,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Product Category Details</h5>
+                    <h5 class="modal-title">{{ t('categories.view_category') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewProductCategoryModal" />
                     </button>
@@ -44,7 +46,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                         <div class="form-item">
-                            <label class="my-2">Category Name</label>
+                            <label class="my-2">{{ t('categories.category_name') }}</label>
                             <input
                                 disabled
                                 type="text"
@@ -53,7 +55,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Category Slug</label>
+                            <label class="my-2">{{ t('categories.category_slug') }}</label>
                             <input
                                 disabled
                                 type="text"
@@ -62,7 +64,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Category Thumbnail</label>
+                            <label class="my-2">{{ t('categories.category_thumbnail') }}</label>
                             <ImagesBox :images="product_category_data.thumbnail" />
                         </div>
                     </form>

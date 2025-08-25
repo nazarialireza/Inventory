@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useWarehouseStore } from "./warehouseStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["warehouse_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const warehouseStore = useWarehouseStore();
@@ -32,7 +34,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Warehouse Details</h5>
+                    <h5 class="modal-title">{{ t('warehouses.warehouse_details') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewWarehouseModal" />
                     </button>
@@ -42,7 +44,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item">
-                                <label class="my-2">Warehouse Name</label>
+                                <label class="my-2">{{ t('warehouses.warehouse_name') }}</label>
                                 <input
                                     disabled
                                     type="text"
@@ -51,7 +53,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Email</label>
+                                <label class="my-2">{{ t('general.email') }}</label>
                                 <input
                                     disabled
                                     type="email"
@@ -60,7 +62,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Phone</label>
+                                <label class="my-2">{{ t('general.phone') }}</label>
                                 <input
                                     disabled
                                     type="tel"
@@ -69,7 +71,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Address</label>
+                                <label class="my-2">{{ t('general.address') }}</label>
                                 <textarea
                                     disabled
                                     class="form-control"
