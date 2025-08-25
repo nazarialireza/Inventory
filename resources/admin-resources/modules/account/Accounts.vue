@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddAccount from "./AddAccount.vue";
 import EditAccount from "./EditAccount.vue";
 import ViewAccount from "./ViewAccount.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -25,6 +26,7 @@ const accountStore = useAccountStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const accounts = computed(() => accountStore.accounts);
+const { t } = useI18n();
 const q_name = ref("");
 const selected_accounts = ref([]);
 const all_selectd = ref(false);
@@ -66,7 +68,7 @@ async function fetchData(
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected Account?" })
+        .show_box({ message: t('general.confirm_delete', { item: 'account' }) })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 accountStore.deleteAccount(id).then(() => {
@@ -104,7 +106,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_account')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Account List</h3>
+            <h3 class="h3">{{ t('accounts.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -127,7 +129,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            placeholder="{{ t('accounts.placeholder.name') }}"
                             v-model="q_name"
                             @keyup="fetchData(1, accountStore.per_page, q_name)"
                         />
@@ -152,11 +154,11 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Name</th>
-                        <th>Number</th>
-                        <th>Balance</th>
-                        <th>Status</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('general.name') }}</th>
+                        <th>{{ t('accounts.number') }}</th>
+                        <th>{{ t('accounts.balance') }}</th>
+                        <th>{{ t('general.status') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

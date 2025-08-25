@@ -3,10 +3,12 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useTaxStore } from "./taxStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["tax_id"]);
 const emit = defineEmits(["close", "refreshData"]);
 
+const { t } = useI18n();
 const loading = ref(false);
 const taxStore = useTaxStore();
 const tax_data = computed(() => taxStore.current_tax_item);
@@ -44,7 +46,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Tax</h5>
+                    <h5 class="modal-title">{{ t('taxes.edit_tax') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeEditTaxModal" />
                     </button>
@@ -55,7 +57,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-items">
-                                <label class="my-2">Tax Name</label>
+                                <label class="my-2">{{ t('taxes.tax_name') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="taxStore.edit_tax_errors.name"
@@ -69,7 +71,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-items">
-                                <label class="my-2">Tax Rate</label>
+                                <label class="my-2">{{ t('taxes.tax_rate') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="taxStore.edit_tax_errors.rate"
@@ -91,14 +93,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeEditTaxModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

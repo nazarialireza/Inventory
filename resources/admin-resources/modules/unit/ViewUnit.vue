@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useUnitStore } from "./unitStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["unit_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const unitStore = useUnitStore();
@@ -33,7 +35,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Unit Details</h5>
+                    <h5 class="modal-title">{{ t('units.view_unit') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewUnitModal" />
                     </button>
@@ -41,14 +43,14 @@ onMounted(() => {
                 <div class="modal-body pb-5">
                     <Loader v-if="loading" />
                     <div class="form-items" v-if="loading == false">
-                        <label class="my-2">Unit Name</label>
+                        <label class="my-2">{{ t('units.unit_name') }}</label>
                         <input
                             disabled
                             type="text"
                             class="form-control"
                             v-model="unit_data.name"
                         />
-                        <label class="my-2">Unit Short Name</label>
+                        <label class="my-2">{{ t('units.short_name') }}</label>
                         <input
                             disabled
                             type="text"
@@ -57,7 +59,7 @@ onMounted(() => {
                         />
 
                         <div class="form-item">
-                            <label class="my-2">Base Unit</label>
+                            <label class="my-2">{{ t('units.base_unit') }}</label>
                             <select
                                 disabled
                                 class="form-select form-select-sm text-capitalize"
@@ -73,19 +75,19 @@ onMounted(() => {
                         </div>
 
                         <div class="form-item" v-if="unit_data.base_unit_id">
-                            <label class="my-2">Operator</label>
+                            <label class="my-2">{{ t('units.operator') }}</label>
                             <select
                                 disabled
                                 class="form-select form-select-sm text-capitalize"
                                 v-model="unit_data.operator"
                             >
-                                <option value="divide">divide (/)</option>
-                                <option value="multiply">multuply (*)</option>
+                                <option value="divide">{{ t('general.divide') }}</option>
+                                <option value="multiply">{{ t('general.multiply') }}</option>
                             </select>
                         </div>
 
                         <div class="form-item" v-if="unit_data.base_unit_id">
-                            <label class="my-2">Operation Value</label>
+                            <label class="my-2">{{ t('units.operation_value') }}</label>
                             <input
                                 disabled
                                 type="number"

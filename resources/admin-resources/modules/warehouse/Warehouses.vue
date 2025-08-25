@@ -46,7 +46,7 @@ function select_all() {
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected warehouse?" })
+        .show_box({ message: t('general.confirm_delete', { item: 'warehouse' }) })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 warehouseStore.deleteWarehouse(id).then(() => {

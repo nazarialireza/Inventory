@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddBrand from "./AddBrand.vue";
 import EditBrand from "./EditBrand.vue";
 import ViewBrand from "./ViewBrand.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -25,6 +26,7 @@ const brandStore = useBrandStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const brands = computed(() => brandStore.brands);
+const { t } = useI18n();
 const q_name = ref("");
 const selected_brands = ref([]);
 const all_selectd = ref(false);
@@ -44,7 +46,7 @@ function select_all() {
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected brand?" })
+        .show_box({ message: t('general.confirm_delete', { item: 'brand' }) })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 brandStore.deleteBrand(id).then(() => {
@@ -101,7 +103,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_brand')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Brands</h3>
+            <h3 class="h3">{{ t('brands.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -124,7 +126,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            placeholder="{{ t('brands.placeholder.name') }}"
                             v-model="q_name"
                             @keyup="fetchData(1, brandStore.per_page, q_name)"
                         />
@@ -150,9 +152,9 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Logo</th>
-                        <th>Brand Name</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('brands.logo') }}</th>
+                        <th>{{ t('brands.brand_name') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

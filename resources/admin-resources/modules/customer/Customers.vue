@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddCustomer from "./AddCustomer.vue";
 import EditCustomer from "./EditCustomer.vue";
 import ViewCustomer from "./ViewCustomer.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -25,6 +26,7 @@ const customerStore = useCustomerStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const customers = computed(() => customerStore.customers);
+const { t } = useI18n();
 const q_name = ref("");
 const selected_customers = ref([]);
 const all_selectd = ref(false);
@@ -66,7 +68,7 @@ async function fetchData(
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected Customer?" })
+        .show_box({ message: t('general.confirm_delete', { item: 'customer' }) })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 customerStore.deleteCustomer(id).then(() => {
@@ -104,7 +106,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_customer')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Customer List</h3>
+            <h3 class="h3">{{ t('customers.customer_list') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -127,7 +129,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            :placeholder="t('customers.placeholder.name')"
                             v-model="q_name"
                             @keyup="
                                 fetchData(1, customerStore.per_page, q_name)
@@ -154,12 +156,12 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Sale Due</th>
-                        <th>Sale Return Due</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('general.name') }}</th>
+                        <th>{{ t('general.phone') }}</th>
+                        <th>{{ t('general.email') }}</th>
+                        <th>{{ t('customers.sale_due') }}</th>
+                        <th>{{ t('customers.sale_return_due') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

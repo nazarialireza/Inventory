@@ -14,6 +14,7 @@ import FilterButton from "../../components/buttons/FilterButton.vue";
 import AddAdjustment from "./AddAdjustment.vue";
 // import EditAdjustment from "./EditAdjustment.vue";
 // import ViewAdjustment from "./ViewAdjustment.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -25,6 +26,7 @@ const adjustmentStore = useAdjustmentStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const adjustments = computed(() => adjustmentStore.adjustments);
+const { t } = useI18n();
 const search = ref("");
 const selected_adjustments = ref([]);
 const all_selectd = ref(false);
@@ -103,7 +105,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_account_adjustment')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Balance Adjustments</h3>
+            <h3 class="h3">{{ t('adjustments.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <!-- <BulkDeleteButton
                     v-if="
@@ -126,7 +128,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            placeholder="{{ t('adjustments.placeholder.search') }}"
                             v-model="search"
                             @keyup="
                                 fetchData(1, adjustmentStore.per_page, search)
@@ -153,11 +155,11 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th> -->
-                        <th>Bank Name</th>
-                        <th>Branch</th>
-                        <th>Adjustment Number</th>
-                        <th>Type</th>
-                        <th>Amount</th>
+                        <th>{{ t('accounts.bank_name') }}</th>
+                        <th>{{ t('accounts.branch_name') }}</th>
+                        <th>{{ t('adjustments.adjustment_number') }}</th>
+                        <th>{{ t('adjustments.type') }}</th>
+                        <th>{{ t('adjustments.amount') }}</th>
                         <!-- <th class="table-action-col">Action</th> -->
                     </tr>
                 </thead>

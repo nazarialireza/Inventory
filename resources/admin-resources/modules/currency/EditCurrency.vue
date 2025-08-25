@@ -3,11 +3,12 @@ import { reactive, ref, computed, onMounted } from "vue";
 
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
-
 import { useCurrencyStore } from "./currencyStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["currency_id"]);
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const currencyStore = useCurrencyStore();
@@ -46,7 +47,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Currency</h5>
+                    <h5 class="modal-title">{{ t('currencies.edit_currency') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeEditCurrencyModal" />
                     </button>
@@ -55,7 +56,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <Loader v-if="loading" />
                     <div class="form-items" v-if="loading == false">
-                        <label class="my-2">Currency Name</label>
+                        <label class="my-2">{{ t('currencies.currency_name') }}</label>
                         <p
                             class="text-danger"
                             v-if="currencyStore.edit_currency_errors.name"
@@ -68,7 +69,7 @@ onMounted(() => {
                             v-model="currency_data.name"
                         />
 
-                        <label class="my-2">Currency Code</label>
+                        <label class="my-2">{{ t('currencies.currency_code') }}</label>
                         <p
                             class="text-danger"
                             v-if="currencyStore.edit_currency_errors.code"
@@ -81,7 +82,7 @@ onMounted(() => {
                             v-model="currency_data.code"
                         />
 
-                        <label class="my-2">Currency Symbol</label>
+                        <label class="my-2">{{ t('currencies.currency_symbol') }}</label>
                         <p
                             class="text-danger"
                             v-if="currencyStore.edit_currency_errors.symbol"
@@ -101,14 +102,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeEditCurrencyModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

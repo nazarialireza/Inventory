@@ -4,10 +4,12 @@ import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import axios from "axios";
 import { useNotificationStore } from "../../components/shared/notification/notificationStore";
 import formatValidationErrors from "../../utils/format-validation-errors";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
 const props = defineProps(["invoice_id", "due_amount"]);
 
+const { t } = useI18n();
 const payment = reactive({
     invoice_id: "",
     account_id: "",
@@ -72,7 +74,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Payment</h5>
+                    <h5 class="modal-title">{{ t('payments.add_payment') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddPaymentModal" />
                     </button>
@@ -80,12 +82,12 @@ onMounted(() => {
 
                 <div class="modal-body">
                     <div class="p-2">
-                        <label class="my-1">Select Account</label>
+                        <label class="my-1">{{ t('accounts.select_account') }}</label>
                         <select
                             class="form-select form-select-sm"
                             v-model="payment.account_id"
                         >
-                            <option value="">none</option>
+                            <option value="">{{ t('general.none') }}</option>
                             <option
                                 :value="account.id"
                                 v-for="account in accounts"
@@ -102,7 +104,7 @@ onMounted(() => {
                     </div>
 
                     <div class="p-2">
-                        <label class="my-1">Date</label>
+                        <label class="my-1">{{ t('general.date') }}</label>
                         <input
                             type="date"
                             class="form-control"
@@ -114,7 +116,7 @@ onMounted(() => {
                     </div>
 
                     <div class="p-2">
-                        <label class="my-1">Due Amount</label>
+                        <label class="my-1">{{ t('payments.due_amount') }}</label>
                         <input
                             type="number"
                             class="form-control"
@@ -124,7 +126,7 @@ onMounted(() => {
                     </div>
 
                     <div class="p-2">
-                        <label class="my-1">Paying Amount</label>
+                        <label class="my-1">{{ t('payments.paying_amount') }}</label>
                         <input
                             type="number"
                             class="form-control"
@@ -142,18 +144,18 @@ onMounted(() => {
                     </div>
 
                     <div class="p-2">
-                        <label class="my-1">Payment Method</label>
+                        <label class="my-1">{{ t('payments.payment_method') }}</label>
                         <select
                             class="form-select form-select-sm"
                             v-model="payment.payment_method"
                         >
-                            <option value="">none</option>
-                            <option value="cash">cash</option>
-                            <option value="payoneer">payoneer</option>
-                            <option value="wise">wise</option>
-                            <option value="bank">bank</option>
-                            <option value="paypal">paypal</option>
-                            <option value="card">card</option>
+                            <option value="">{{ t('general.none') }}</option>
+                            <option value="cash">{{ t('payments.cash') }}</option>
+                            <option value="payoneer">{{ t('payments.payoneer') }}</option>
+                            <option value="wise">{{ t('payments.wise') }}</option>
+                            <option value="bank">{{ t('payments.bank') }}</option>
+                            <option value="paypal">{{ t('payments.paypal') }}</option>
+                            <option value="card">{{ t('payments.card') }}</option>
                         </select>
                         <span
                             class="v-error"
@@ -169,14 +171,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddPaymentModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

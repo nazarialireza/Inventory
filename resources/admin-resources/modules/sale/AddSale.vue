@@ -5,6 +5,7 @@ import router from "../../router";
 import axios from "axios";
 import { useNotificationStore } from "../../components/shared/notification/notificationStore";
 import formatValidationErrors from "../../utils/format-validation-errors";
+import { useI18n } from "../../composables/useI18n";
 const warehouses = ref([]);
 const items = ref([]);
 const selected_items = ref([]);
@@ -27,6 +28,7 @@ const note = ref("");
 const customer_q = ref("");
 const product_q = ref("");
 const validation_errors = ref([]);
+const { t } = useI18n();
 
 async function fetchCustomers(name = customer_q.value) {
     if (name.length < 1) {

@@ -5,10 +5,12 @@ import Loader from "../../components/shared/loader/Loader.vue";
 import { useProductCategoryStore } from "./productCategoryStore";
 import UploadContainer from "../../components/fileUploader/UploadContainer.vue";
 import deleteUploadedFile from "../../utils/file";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["product_category_id"]);
 const emit = defineEmits(["close", "refreshData"]);
 
+const { t } = useI18n();
 const loading = ref(false);
 const productCategoryStore = useProductCategoryStore();
 const product_category_data = computed(
@@ -68,7 +70,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Product Category</h5>
+                    <h5 class="modal-title">{{ t('categories.edit_category') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeEditProductCategoryModal" />
                     </button>
@@ -79,9 +81,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item">
-                                <label class="my-2"
-                                    >Product Category Name</label
-                                >
+                                <label class="my-2">{{ t('categories.category_name') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -101,9 +101,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2"
-                                    >Product Category Slug</label
-                                >
+                                <label class="my-2">{{ t('categories.category_slug') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -141,14 +139,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeEditProductCategoryModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

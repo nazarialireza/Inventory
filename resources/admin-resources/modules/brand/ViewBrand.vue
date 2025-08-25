@@ -4,9 +4,11 @@ import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import ImagesBox from "../../components/img/ImagesBox.vue"
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useBrandStore } from "./brandStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["brand_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const brandStore = useBrandStore();
@@ -33,7 +35,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Brand Details</h5>
+                    <h5 class="modal-title">{{ t('brands.view_brand') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewBrandModal" />
                     </button>
@@ -44,7 +46,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                         <div class="form-item">
-                            <label class="my-2">Brand Name</label>
+                            <label class="my-2">{{ t('brands.brand_name') }}</label>
                             <input
                                 disabled
                                 type="text"
@@ -53,7 +55,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Brand Slug</label>
+                            <label class="my-2">{{ t('brands.brand_slug') }}</label>
                             <input
                                 disabled
                                 type="text"
@@ -62,7 +64,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Brand Logo</label>
+                            <label class="my-2">{{ t('brands.brand_logo') }}</label>
                             <ImagesBox :images="brand_data.logo" />
                         </div>
                     </form>

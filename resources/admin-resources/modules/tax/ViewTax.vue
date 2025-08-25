@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useTaxStore } from "./taxStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["tax_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const taxStore = useTaxStore();
@@ -32,7 +34,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tax Details</h5>
+                    <h5 class="modal-title">{{ t('taxes.view_tax') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewTaxModal" />
                     </button>
@@ -42,7 +44,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item">
-                                <label class="my-2">Tax Name</label>
+                                <label class="my-2">{{ t('taxes.tax_name') }}</label>
                                 <input
                                     disabled
                                     type="text"
@@ -51,7 +53,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Tax Rate</label>
+                                <label class="my-2">{{ t('taxes.tax_rate') }}</label>
                                 <input
                                     disabled
                                     type="text"

@@ -3,9 +3,11 @@ import { ref, computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import { useWarehouseStore } from "./warehouseStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["warehouse_id"]);
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const warehouseStore = useWarehouseStore();
@@ -44,7 +46,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Warehouse</h5>
+                    <h5 class="modal-title">{{ t('warehouses.edit_warehouse') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeEditWarehouseModal" />
                     </button>
@@ -55,7 +57,7 @@ onMounted(() => {
                     <div class="form-items" v-if="loading == false">
                         <form action="">
                             <div class="form-item">
-                                <label class="my-2">Warehouse Name</label>
+                                <label class="my-2">{{ t('warehouses.warehouse_name') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -75,7 +77,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Email</label>
+                                <label class="my-2">{{ t('general.email') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -95,7 +97,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Phone</label>
+                                <label class="my-2">{{ t('general.phone') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -115,7 +117,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item">
-                                <label class="my-2">Address</label>
+                                <label class="my-2">{{ t('general.address') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -143,14 +145,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeEditWarehouseModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

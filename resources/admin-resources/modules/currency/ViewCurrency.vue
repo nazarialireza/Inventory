@@ -5,9 +5,11 @@ import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 
 import { useCurrencyStore } from "./currencyStore";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["currency_id"]);
 const emit = defineEmits(["close"]);
+const { t } = useI18n();
 
 const loading = ref(false);
 const currencyStore = useCurrencyStore();
@@ -34,7 +36,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Currency Details</h5>
+                    <h5 class="modal-title">{{ t('currencies.view_currency') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeViewCurrencyModal" />
                     </button>
@@ -42,7 +44,7 @@ onMounted(() => {
                 <div class="modal-body pb-5">
                     <Loader v-if="loading" />
                     <div class="form-items" v-if="loading == false">
-                        <label class="my-2">Currency Name</label>
+                        <label class="my-2">{{ t('currencies.currency_name') }}</label>
                         <input
                             disabled
                             type="text"
@@ -50,7 +52,7 @@ onMounted(() => {
                             v-model="currency_data.name"
                         />
 
-                        <label class="my-2">Currency Code</label>
+                        <label class="my-2">{{ t('currencies.currency_code') }}</label>
                         <input
                             disabled
                             type="text"
@@ -58,7 +60,7 @@ onMounted(() => {
                             v-model="currency_data.code"
                         />
 
-                        <label class="my-2">Currency Symbol</label>
+                        <label class="my-2">{{ t('currencies.currency_symbol') }}</label>
                         <input
                             disabled
                             type="text"

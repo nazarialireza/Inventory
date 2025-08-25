@@ -5,9 +5,11 @@ import { useProductStore } from "./productStore";
 import { useUnitStore } from "../unit/unitStore";
 import UploadContainer from "../../components/fileUploader/UploadContainer.vue";
 import deleteUploadedFile from "../../utils/file";
+import { useI18n } from "../../composables/useI18n";
 
 const props = defineProps(["brands", "categories", "taxes", "base_units"]);
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const productStore = useProductStore();
 const unitStore = useUnitStore();
@@ -59,7 +61,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Product</h5>
+                    <h5 class="modal-title">{{ t('products.add_new_product') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddProductModal" />
                     </button>
@@ -68,7 +70,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <form action="">
                         <div class="form-item">
-                            <label class="my-2">Product Name</label>
+                            <label class="my-2">{{ t('products.product_name') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="productStore.add_product_errors.name"
@@ -82,7 +84,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Product Slug</label>
+                            <label class="my-2">{{ t('products.product_slug') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="productStore.add_product_errors.slug"
@@ -97,7 +99,7 @@ onMounted(() => {
                         </div>
                         <div class="row">
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Code</label>
+                                <label class="my-2">{{ t('products.code') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="productStore.add_product_errors.code"
@@ -111,7 +113,7 @@ onMounted(() => {
                                 />
                             </div>
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Barcode Symbology</label>
+                                <label class="my-2">{{ t('products.barcode_symbology') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -140,7 +142,7 @@ onMounted(() => {
                         </div>
                         <div class="row">
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Category</label>
+                                <label class="my-2">{{ t('products.category') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -157,7 +159,7 @@ onMounted(() => {
                                     v-model="product_data.category_id"
                                     class="form-control"
                                 >
-                                    <option value="">select category</option>
+                                    <option value="">{{ t('products.select_category') }}</option>
                                     <option
                                         :value="category.id"
                                         v-for="category in categories"
@@ -167,7 +169,7 @@ onMounted(() => {
                                 </select>
                             </div>
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Brand</label>
+                                <label class="my-2">{{ t('navigation.brand') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -182,7 +184,7 @@ onMounted(() => {
                                     v-model="product_data.brand_id"
                                     class="form-control"
                                 >
-                                    <option value="">select brand</option>
+                                    <option value="">{{ t('products.select_brand') }}</option>
                                     <option
                                         :value="brand.id"
                                         v-for="brand in brands"
@@ -195,7 +197,7 @@ onMounted(() => {
                         <div class="row">
                             <!-- stock alert quantity -->
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Stock Alert Quantity</label>
+                                <label class="my-2">{{ t('products.stock_alert_quantity') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -307,7 +309,7 @@ onMounted(() => {
                             </div> -->
                             <!-- purchase price -->
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Purchase Price</label>
+                                <label class="my-2">{{ t('products.cost') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -328,7 +330,7 @@ onMounted(() => {
                             </div>
                             <!-- sale price -->
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Sale Price</label>
+                                <label class="my-2">{{ t('products.price') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -349,7 +351,7 @@ onMounted(() => {
                             </div>
                             <!-- tax -->
                             <div class="form-item col-sm-6">
-                                <label class="my-2">Tax</label>
+                                <label class="my-2">{{ t('products.tax') }}</label>
                                 <p
                                     class="text-danger"
                                     v-if="
@@ -424,14 +426,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddProductModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

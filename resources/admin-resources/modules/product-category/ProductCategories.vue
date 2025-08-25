@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddProductCategory from "./AddProductCategory.vue";
 import EditProductCategory from "./EditProductCategory.vue";
 import ViewProductCategory from "./ViewProductCategory.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -21,6 +22,7 @@ const showAddProductCategory = ref(false);
 const showEditProductCategory = ref(false);
 const showViewProductCategory = ref(false);
 
+const { t } = useI18n();
 const productCategoryStore = useProductCategoryStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
@@ -44,7 +46,7 @@ function select_all() {
 
 async function deleteData(id) {
     confirmStore
-        .show_box({ message: "Do you want to delete selected Category?" })
+        .show_box({ message: t('general.delete_confirmation') })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 productCategoryStore.deleteProductCategory(id).then(() => {
@@ -102,7 +104,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_product_category')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Product Categories</h3>
+            <h3 class="h3">{{ t('categories.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -125,7 +127,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            placeholder="{{ t('general.search_placeholder') }}"
                             v-model="q_name"
                             @keyup="fetchData(1, productCategoryStore.per_page, q_name,true)"
                         />
@@ -151,9 +153,9 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>Thumbnail</th>
-                        <th>Category Name</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('categories.thumbnail') }}</th>
+                        <th>{{ t('categories.category_name') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>

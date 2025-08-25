@@ -2,8 +2,10 @@
 import { computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import { useWarehouseStore } from "./warehouseStore";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const warehouseStore = useWarehouseStore();
 const warehouse_data = computed(() => warehouseStore.current_warehouse_item);
@@ -35,7 +37,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Warehouse</h5>
+                    <h5 class="modal-title">{{ t('warehouses.add_new_warehouse') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddWarehouseModal" />
                     </button>
@@ -44,7 +46,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <form action="">
                         <div class="form-item">
-                            <label class="my-2">Warehouse Name</label>
+                            <label class="my-2">{{ t('warehouses.warehouse_name') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="warehouseStore.add_warehouse_errors.name"
@@ -58,7 +60,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Email</label>
+                            <label class="my-2">{{ t('general.email') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="warehouseStore.add_warehouse_errors.email"
@@ -72,7 +74,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Phone</label>
+                            <label class="my-2">{{ t('general.phone') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="warehouseStore.add_warehouse_errors.phone"
@@ -86,7 +88,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Address</label>
+                            <label class="my-2">{{ t('general.address') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="warehouseStore.add_warehouse_errors.address"
@@ -103,14 +105,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddWarehouseModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

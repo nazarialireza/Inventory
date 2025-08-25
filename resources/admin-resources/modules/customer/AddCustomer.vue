@@ -2,8 +2,10 @@
 import { computed, onMounted } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import { useCustomerStore } from "./customerStore";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const customerStore = useCustomerStore();
 const customer_data = computed(() => customerStore.current_customer_item);
@@ -37,7 +39,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Customer</h5>
+                    <h5 class="modal-title">{{ t('customers.add_new_customer') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddCustomerModal" />
                     </button>
@@ -46,7 +48,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <form action="">
                         <div class="form-item mt-4">
-                            <label class="my-2">Staus</label>
+                            <label class="my-2">{{ t('general.status') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="customerStore.add_customer_errors.status"
@@ -66,7 +68,7 @@ onMounted(() => {
                                         class="form-check-label"
                                         for="active"
                                     >
-                                        Active
+                                        {{ t('general.active') }}
                                     </label>
                                 </span>
                                 <span class="form-check ms-2">
@@ -81,13 +83,13 @@ onMounted(() => {
                                         class="form-check-label"
                                         for="disabled"
                                     >
-                                        Disabled
+                                        {{ t('general.disabled') }}
                                     </label>
                                 </span>
                             </div>
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Name</label>
+                            <label class="my-2">{{ t('general.name') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="customerStore.add_customer_errors.name"
@@ -101,7 +103,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Email</label>
+                            <label class="my-2">{{ t('general.email') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="customerStore.add_customer_errors.email"
@@ -115,7 +117,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Phone</label>
+                            <label class="my-2">{{ t('general.phone') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="customerStore.add_customer_errors.phone"
@@ -129,7 +131,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Tax Number</label>
+                            <label class="my-2">{{ t('customers.tax_number') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -147,7 +149,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Country</label>
+                            <label class="my-2">{{ t('customers.country') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="customerStore.add_customer_errors.country"
@@ -161,7 +163,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">City</label>
+                            <label class="my-2">{{ t('customers.city') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="customerStore.add_customer_errors.city"
@@ -175,7 +177,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Postal Code</label>
+                            <label class="my-2">{{ t('customers.postal_code') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -195,7 +197,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item mt-4">
-                            <label class="my-2">Address</label>
+                            <label class="my-2">{{ t('general.address') }}</label>
                             <textarea
                                 v-model="customer_data.address"
                                 class="form-control"
@@ -226,14 +228,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddCustomerModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

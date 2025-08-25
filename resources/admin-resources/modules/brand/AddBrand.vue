@@ -4,8 +4,10 @@ import deleteUploadedFile from "../../utils/file";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import { useBrandStore } from "./brandStore";
 import UploadContainer from "../../components/fileUploader/UploadContainer.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const brandStore = useBrandStore();
 const brand_data = computed(() => brandStore.current_brand_item);
@@ -44,7 +46,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Brand</h5>
+                    <h5 class="modal-title">{{ t('brands.add_brand') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddBrandModal" />
                     </button>
@@ -53,7 +55,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <form action="">
                         <div class="form-item">
-                            <label class="my-2">Brand Name</label>
+                            <label class="my-2">{{ t('brands.brand_name') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="brandStore.add_brand_errors.name"
@@ -67,7 +69,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Brand Slug</label>
+                            <label class="my-2">{{ t('brands.brand_slug') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="brandStore.add_brand_errors.slug"
@@ -97,14 +99,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddBrandModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

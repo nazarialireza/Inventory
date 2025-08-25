@@ -3,8 +3,10 @@ import axios from "axios";
 import { computed, onMounted, ref } from "vue";
 import CrossSvgIcon from "../../assets/icons/cross-svg-icon.vue";
 import { useAdjustmentStore } from "./adjustmentStore";
+import { useI18n } from "../../composables/useI18n";
 
 const emit = defineEmits(["close", "refreshData"]);
+const { t } = useI18n();
 
 const adjustmentStore = useAdjustmentStore();
 const adjustment_data = computed(() => adjustmentStore.current_adjustment_item);
@@ -49,7 +51,7 @@ onMounted(() => {
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add New Adjustment</h5>
+                    <h5 class="modal-title">{{ t('adjustments.add_adjustment') }}</h5>
                     <button type="button" class="close">
                         <CrossSvgIcon @click="closeAddAdjustmentModal" />
                     </button>
@@ -58,7 +60,7 @@ onMounted(() => {
                 <div class="modal-body">
                     <form action="">
                         <div class="form-item">
-                            <label class="my-2">Account</label>
+                            <label class="my-2">{{ t('general.account') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -75,7 +77,7 @@ onMounted(() => {
                                 v-model="adjustment_data.account_id"
                                 class="form-select"
                             >
-                                <option value="">none</option>
+                                <option value="">{{ t('general.none') }}</option>
                                 <option
                                     :value="account.id"
                                     v-for="account in accounts"
@@ -85,7 +87,7 @@ onMounted(() => {
                             </select>
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Amount</label>
+                            <label class="my-2">{{ t('adjustments.amount') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -104,7 +106,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Type</label>
+                            <label class="my-2">{{ t('adjustments.type') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -117,12 +119,12 @@ onMounted(() => {
                                 v-model="adjustment_data.type"
                                 class="form-select"
                             >
-                                <option value="add">Add</option>
-                                <option value="subtract">Subtract</option>
+                                <option value="add">{{ t('adjustments.add') }}</option>
+                                <option value="subtract">{{ t('adjustments.subtract') }}</option>
                             </select>
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Date</label>
+                            <label class="my-2">{{ t('general.date') }}</label>
                             <p
                                 class="text-danger"
                                 v-if="
@@ -138,7 +140,7 @@ onMounted(() => {
                             />
                         </div>
                         <div class="form-item">
-                            <label class="my-2">Note</label>
+                            <label class="my-2">{{ t('adjustments.note') }}</label>
                             <textarea
                                 v-model="adjustment_data.note"
                                 class="form-control"
@@ -153,14 +155,14 @@ onMounted(() => {
                         class="btn btn-danger btn-sm"
                         @click="closeAddAdjustmentModal"
                     >
-                        Cancel
+                        {{ t('general.cancel') }}
                     </button>
                     <button
                         type="submit"
                         class="btn btn-primary ml-1 btn-sm"
                         @click="submitData"
                     >
-                        Save
+                        {{ t('general.save') }}
                     </button>
                 </div>
             </div>

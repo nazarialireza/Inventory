@@ -14,6 +14,7 @@ import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddCurrency from "./AddCurrency.vue";
 import EditCurrency from "./EditCurrency.vue";
 import ViewCurrency from "./ViewCurrency.vue";
+import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
@@ -25,6 +26,7 @@ const currencyStore = useCurrencyStore();
 const confirmStore = useConfirmStore();
 const authStore = useAuthStore();
 const currencies = computed(() => currencyStore.currencies);
+const { t } = useI18n();
 const q_name = ref("");
 const selected_currencies = ref([]);
 const all_selectd = ref(false);
@@ -44,7 +46,7 @@ function select_all() {
 
 async function deleteData(id) {
     await confirmStore
-        .show_box({ message: "Do you want to delete selected currency?" })
+        .show_box({ message: t('general.confirm_delete', { item: 'currency' }) })
         .then(async () => {
             if (confirmStore.do_action == true) {
                 await currencyStore.deleteCurrency(id);
@@ -96,7 +98,7 @@ onMounted(() => {
 <template>
     <div v-if="authStore.userCan('view_currency')">
         <div class="page-top-box mb-2 d-flex flex-wrap">
-            <h3 class="h3">Currencies</h3>
+            <h3 class="h3">{{ t('currencies.title') }}</h3>
             <div class="page-heading-actions ms-auto">
                 <BulkDeleteButton
                     v-if="
@@ -119,13 +121,13 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="type name.."
+                            placeholder="{{ t('currencies.placeholder.name') }}"
                             v-model="q_name"
                             @keyup="
                                 fetchData(1, currencyStore.per_page, q_name)
                             "
                         />
-                        <label class="input-group-text">sarch</label>
+                        <label class="input-group-text">{{ t('general.search') }}</label>
                     </div>
                 </div>
             </div>
@@ -147,11 +149,11 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th>
-                        <th>ID</th>
-                        <th>Currency Name</th>
-                        <th>Currency Code</th>
-                        <th>Currency Symbol</th>
-                        <th class="table-action-col">Action</th>
+                        <th>{{ t('general.id') }}</th>
+                        <th>{{ t('currencies.currency_name') }}</th>
+                        <th>{{ t('currencies.currency_code') }}</th>
+                        <th>{{ t('currencies.currency_symbol') }}</th>
+                        <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
                 <tbody>
