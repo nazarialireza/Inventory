@@ -248,7 +248,7 @@ onMounted(async () => {
                     <input
                         type="text"
                         class="form-control form-control-sm sqaure"
-                        placeholder="search customer.."
+                        :placeholder="t('sales.search_customer')"
                         v-model="customer_q"
                         @keyup="fetchCustomers(customer_q)"
                     />
@@ -292,7 +292,7 @@ onMounted(async () => {
                         :disabled="!selected_warehouse"
                         type="text"
                         class="form-control form-control-sm"
-                        placeholder="search items.."
+                        :placeholder="t('sales.search_items')"
                         v-model="product_q"
                         @keyup="fetchProducts(product_q)"
                     />

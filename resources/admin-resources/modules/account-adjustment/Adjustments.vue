@@ -128,7 +128,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="{{ t('adjustments.placeholder.search') }}"
+                            :placeholder="t('adjustments.placeholder.search')"
                             v-model="search"
                             @keyup="
                                 fetchData(1, adjustmentStore.per_page, search)

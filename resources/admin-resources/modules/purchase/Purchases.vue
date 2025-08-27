@@ -97,7 +97,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="{{ t('purchases.search_reference') }}"
+                            :placeholder="t('purchases.search_reference')"
                             v-model="search"
                             @keyup="fetchData(1, per_page, search)"
                         />

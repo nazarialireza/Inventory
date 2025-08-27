@@ -247,7 +247,7 @@ onMounted(async () => {
                     <input
                         type="text"
                         class="form-control form-control-sm sqaure"
-                        placeholder="{{ t('purchases.search_supplier') }}"
+                        :placeholder="t('purchases.search_supplier')"
                         v-model="supplier_q"
                         @keyup="fetchSuppliers(supplier_q)"
                     />
@@ -290,7 +290,7 @@ onMounted(async () => {
                         :disabled="!selected_warehouse"
                         type="text"
                         class="form-control form-control-sm"
-                        placeholder="{{ t('purchases.search_items') }}"
+                        :placeholder="t('purchases.search_items')"
                         v-model="product_q"
                         @keyup="fetchProducts(product_q)"
                     />

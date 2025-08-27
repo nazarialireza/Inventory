@@ -129,7 +129,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="{{ t('accounts.placeholder.name') }}"
+                            :placeholder="t('accounts.placeholder.name')"
                             v-model="q_name"
                             @keyup="fetchData(1, accountStore.per_page, q_name)"
                         />

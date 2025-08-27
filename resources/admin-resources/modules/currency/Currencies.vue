@@ -121,7 +121,7 @@ onMounted(() => {
                         <input
                             type="text"
                             class="form-control"
-                            placeholder="{{ t('currencies.placeholder.name') }}"
+                            :placeholder="t('currencies.placeholder.name')"
                             v-model="q_name"
                             @keyup="
                                 fetchData(1, currencyStore.per_page, q_name)

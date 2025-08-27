@@ -93,6 +93,14 @@ return [
         'edit_brand' => 'Edit Brand',
         'view_brand' => 'Brand Details',
         'logo' => 'Logo',
+        'brand' => 'Brand',
+        'brand_name' => 'Brand Name',
+        'brand_slug' => 'Brand Slug',
+        'brand_logo' => 'Brand Logo',
+        'select_brand' => 'Select Brand',
+        'placeholder' => [
+            'name' => 'type name..',
+        ],
     ],
 
     // Categories
@@ -101,6 +109,13 @@ return [
         'add_category' => 'Add Product Category',
         'edit_category' => 'Edit Product Category',
         'view_category' => 'Product Category Details',
+        'thumbnail' => 'Thumbnail',
+        'category_name' => 'Category Name',
+        'category_slug' => 'Category Slug',
+        'category_thumbnail' => 'Category Thumbnail',
+        'category' => 'Category',
+        'select_category' => 'Select Category',
+        
     ],
 
     // Currencies
@@ -149,6 +164,9 @@ return [
         'view_product' => 'Product Details',
         'product_name' => 'Product Name',
         'product_slug' => 'Product Slug',
+        'product_details' => 'Product Details',
+        'product_unit' => 'Product Unit',
+        'product_images' => 'Product Images',
         'code' => 'Code',
         'barcode_symbology' => 'Barcode Symbology',
         'select_category' => 'select category',
@@ -157,6 +175,8 @@ return [
         'image' => 'Image',
         'cost' => 'Cost',
         'price' => 'Price',
+        'purchase_price' => 'Purchase Price',
+        'sale_price' => 'Sale Price',
         'stock' => 'Stock',
         'sku' => 'SKU',
         'price' => 'Price',
@@ -165,6 +185,7 @@ return [
         'category' => 'Category',
         'tax' => 'Tax',
         'unit' => 'Unit',
+        'description' => 'Description',
     ],
 
     // Sales
@@ -180,6 +201,9 @@ return [
         'due' => 'Due',
         'invoice_status' => 'Invoice Status',
         'payment_status' => 'Payment Status',
+        'search_reference' => 'Search Reference',
+        'search_customer' => 'Search customer..',
+        'search_items' => 'Search items..',
         'placeholder' => [
             'reference' => 'search by reference no..',
         ],
@@ -223,6 +247,14 @@ return [
         'view_tax' => 'Tax Details',
         'rate' => 'Rate (%)',
         'type' => 'Type',
+        'tax' => 'Tax',
+        'tax_name' => 'Tax Name',
+        'tax_rate' => 'Tax Rate',
+        'tax_rate_percent' => 'Tax Rate (%)',
+        'tax_type' => 'Tax Type',
+        'select_tax' => 'Select Tax',
+        'inclusive' => 'Inclusive',
+        'exclusive' => 'Exclusive',
         'placeholder' => [
             'name' => 'type name..',
         ],
