@@ -74,68 +74,113 @@ async function loadTranslations(locale = null) {
 function loadCSS(isRtl = false) {
     return new Promise((resolve) => {
         try {
-            // Find and remove existing main CSS links
-            const allLinks = document.querySelectorAll('link[rel="stylesheet"]');
-            allLinks.forEach(link => {
-                // Remove CSS files that are main-related (both LTR and RTL)
-                if (link.href.includes('main') && link.href.includes('.css')) {
-                    link.remove();
-                }
-            });
-            
-            // Create new link element
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.type = 'text/css';
-            link.id = 'dynamic-theme-css';
+            console.log(`Starting CSS load: ${isRtl ? 'RTL' : 'LTR'}`);
             
             // Check if we're in development or production
             const isDev = import.meta.env.DEV;
+            console.log(`Environment: ${isDev ? 'Development' : 'Production'}`);
+            
+            // Remove existing dynamic CSS link to ensure only one CSS file is active
+            const existingLink = document.getElementById('dynamic-theme-css');
+            if (existingLink) {
+                existingLink.remove();
+                console.log('Removed existing dynamic CSS link');
+            }
+            
+            // Also remove any existing main CSS links from Vite to prevent conflicts
+            const allLinks = document.querySelectorAll('link[rel="stylesheet"]');
+            allLinks.forEach(link => {
+                if (link.href.includes('main') && (link.href.includes('.css') || link.href.includes('main-rtl') || link.href.includes('main-ltr'))) {
+                    // Don't remove the link we're about to add
+                    if (link.id !== 'dynamic-theme-css') {
+                        console.log(`Removing conflicting CSS link: ${link.href}`);
+                        link.remove();
+                    }
+                }
+            });
             
             if (isDev) {
-                // In development, use Vite's dev server paths
-                const cssFileName = isRtl ? 'main-rtl.css' : 'main.css';
-                link.href = `/resources/admin-resources/assets/css/${cssFileName}`;
+                // In development mode, use Vite dev server
+                const currentHost = window.location.hostname;
+                const currentPort = window.location.port;
+                const vitePort = (['5173', '5174', '3000', '8080'].includes(currentPort)) ? currentPort : '5174';
+                
+                console.log(`Using dev server: ${currentHost}:${vitePort}`);
+                
+                // Create new link element
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.id = 'dynamic-theme-css';
+                
+                // Use Vite dev server URL format
+                const cssPath = isRtl 
+                    ? `http://${currentHost}:${vitePort}/resources/admin-resources/assets/css/main-rtl.css`
+                    : `http://${currentHost}:${vitePort}/resources/admin-resources/assets/css/main.css`;
+                
+                link.href = cssPath;
                 
                 link.onload = () => {
-                    console.log(`CSS loaded successfully: ${link.href}`);
+                    console.log(`✓ CSS loaded successfully: ${cssPath}`);
                     currentCSSLink.value = link;
                     resolve();
                 };
                 
                 link.onerror = () => {
-                    console.warn(`Failed to load CSS: ${link.href}`);
-                    resolve(); // Don't break the app
+                    console.warn(`✗ Failed to load CSS: ${cssPath}`);
+                    // Don't reload the page, just resolve and continue
+                    // The application should still work with the previously loaded CSS
+                    console.log('Continuing without CSS reload to prevent page refresh...');
+                    resolve();
                 };
                 
                 document.head.appendChild(link);
+                console.log(`Added CSS link to head: ${cssPath}`);
+                
             } else {
-                // In production, use the built CSS files
-                // Try to get the CSS URL from the Vite manifest
+                // In production, use the built CSS files from the manifest
+                console.log('Loading CSS from production manifest...');
+                
                 fetch('/build/manifest.json')
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
                     .then(manifest => {
                         const cssKey = isRtl 
                             ? 'resources/admin-resources/assets/css/main-rtl.css'
                             : 'resources/admin-resources/assets/css/main.css';
                         
+                        console.log('Available CSS entries:', Object.keys(manifest).filter(key => key.includes('.css')));
+                        console.log(`Looking for CSS key: ${cssKey}`);
+                        
                         if (manifest[cssKey] && manifest[cssKey].file) {
+                            // Create new link element
+                            const link = document.createElement('link');
+                            link.rel = 'stylesheet';
+                            link.type = 'text/css';
+                            link.id = 'dynamic-theme-css';
                             link.href = `/build/${manifest[cssKey].file}`;
                             
                             link.onload = () => {
-                                console.log(`CSS loaded successfully: ${link.href}`);
+                                console.log(`✓ CSS loaded successfully: ${link.href}`);
                                 currentCSSLink.value = link;
                                 resolve();
                             };
                             
                             link.onerror = () => {
-                                console.warn(`Failed to load CSS: ${link.href}`);
+                                console.warn(`✗ Failed to load CSS: ${link.href}`);
+                                // Don't reload, just continue
                                 resolve();
                             };
                             
                             document.head.appendChild(link);
+                            console.log(`Added production CSS link: ${link.href}`);
                         } else {
                             console.error(`Could not find CSS file in manifest: ${cssKey}`);
+                            console.error('Available CSS entries:', Object.keys(manifest).filter(key => key.includes('.css')));
                             resolve();
                         }
                     })
@@ -145,10 +190,8 @@ function loadCSS(isRtl = false) {
                     });
             }
             
-            console.log(`Loading ${isRtl ? 'RTL' : 'LTR'} CSS`);
-            
         } catch (error) {
-            console.error('Error loading CSS:', error);
+            console.error('Error in loadCSS function:', error);
             resolve(); // Don't reject, just resolve to not break the app
         }
     });
@@ -157,27 +200,41 @@ function loadCSS(isRtl = false) {
 // Switch language
 async function switchLanguage(locale) {
     if (!availableLocales.value[locale]) {
-        console.error(`Locale ${locale} is not available`);
+        console.error(`Locale ${locale} is not available. Available locales:`, Object.keys(availableLocales.value));
         return false;
     }
     
     try {
         console.log(`Switching language to: ${locale}`);
         
-        // Update backend locale
+        const oldLocale = currentLocale.value;
+        const oldIsRTL = isRTL.value;
+        
+        // Update backend locale first
+        console.log('Updating backend locale...');
         await axios.post('/api/locale', { locale });
+        console.log('Backend locale updated successfully');
         
         // Update frontend state
         currentLocale.value = locale;
         isRTL.value = availableLocales.value[locale]?.dir === 'rtl';
         
-        console.log(`Language switched to ${locale}, RTL: ${isRTL.value}`);
+        console.log(`Language switched: ${oldLocale} -> ${locale}`);
+        console.log(`Direction changed: ${oldIsRTL ? 'RTL' : 'LTR'} -> ${isRTL.value ? 'RTL' : 'LTR'}`);
         
         // Load new translations
+        console.log('Loading translations for new locale...');
         await loadTranslations(locale);
+        console.log('Translations loaded successfully');
         
-        // Load appropriate CSS for the language direction
-        await loadCSS(isRTL.value);
+        // Load appropriate CSS for the language direction if direction changed
+        if (oldIsRTL !== isRTL.value) {
+            console.log(`Direction changed, loading ${isRTL.value ? 'RTL' : 'LTR'} CSS...`);
+            await loadCSS(isRTL.value);
+            console.log('CSS loaded successfully');
+        } else {
+            console.log('Direction unchanged, no CSS reload needed');
+        }
         
         // Update document attributes
         document.documentElement.setAttribute('lang', locale);
@@ -187,14 +244,23 @@ async function switchLanguage(locale) {
         document.body.classList.remove('rtl', 'ltr');
         document.body.classList.add(isRTL.value ? 'rtl' : 'ltr');
         
-        console.log(`Document dir set to: ${isRTL.value ? 'rtl' : 'ltr'}`);
+        console.log(`Document attributes updated:`);
+        console.log(`- lang: ${document.documentElement.getAttribute('lang')}`);
+        console.log(`- dir: ${document.documentElement.getAttribute('dir')}`);
+        console.log(`- body classes: ${document.body.className}`);
         
         // Force a DOM update
         await nextTick();
         
+        console.log(`Language switch completed successfully!`);
         return true;
     } catch (error) {
         console.error('Failed to switch language:', error);
+        console.error('Error details:', {
+            message: error.message,
+            response: error.response?.data,
+            status: error.response?.status
+        });
         return false;
     }
 }
@@ -208,6 +274,12 @@ async function initializeI18n() {
         availableLocales.value = response.data.available_locales;
         isRTL.value = response.data.current_locale_info?.dir === 'rtl';
         
+        console.log('I18n initialized:', {
+            currentLocale: currentLocale.value,
+            isRTL: isRTL.value,
+            availableLocales: Object.keys(availableLocales.value)
+        });
+        
         // Set initial document attributes
         document.documentElement.setAttribute('lang', currentLocale.value);
         document.documentElement.setAttribute('dir', isRTL.value ? 'rtl' : 'ltr');
@@ -216,16 +288,30 @@ async function initializeI18n() {
         document.body.classList.toggle('rtl', isRTL.value);
         document.body.classList.toggle('ltr', !isRTL.value);
         
-        // Check if we need to load different CSS than what was server-rendered
-        // The blade template loads CSS based on server-side locale
-        const bodyHasRTL = document.body.classList.contains('rtl');
-        if (bodyHasRTL !== isRTL.value) {
-            // Server and client language direction don't match, load correct CSS
-            await loadCSS(isRTL.value);
+        // Check if server-rendered CSS matches current locale direction
+        const serverRenderedRTL = document.body.classList.contains('rtl');
+        const clientExpectedRTL = isRTL.value;
+        
+        console.log('CSS direction check:', {
+            serverRendered: serverRenderedRTL ? 'RTL' : 'LTR',
+            clientExpected: clientExpectedRTL ? 'RTL' : 'LTR',
+            needsSwitch: serverRenderedRTL !== clientExpectedRTL
+        });
+        
+        // Only load CSS if there's a mismatch and we're in development mode
+        // In production, trust the server-rendered CSS
+        const isDev = import.meta.env.DEV;
+        if (isDev && serverRenderedRTL !== clientExpectedRTL) {
+            console.log('Direction mismatch in dev mode, loading correct CSS...');
+            await loadCSS(clientExpectedRTL);
+        } else {
+            console.log('CSS direction matches or in production mode, no switch needed');
         }
         
         // Load initial translations
         await loadTranslations();
+        
+        console.log('I18n initialization completed successfully');
     } catch (error) {
         console.error('Failed to initialize i18n:', error);
         // Set defaults
@@ -235,6 +321,17 @@ async function initializeI18n() {
             prs: { name: 'دری', dir: 'rtl' }
         };
         isRTL.value = false;
+        
+        // Ensure body classes are set even on error
+        document.body.classList.remove('rtl', 'ltr');
+        document.body.classList.add('ltr');
+        
+        // Try to load English translations as fallback
+        try {
+            await loadTranslations('en');
+        } catch (fallbackError) {
+            console.error('Failed to load fallback translations:', fallbackError);
+        }
     }
 }
 

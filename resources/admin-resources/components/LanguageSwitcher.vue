@@ -86,9 +86,7 @@ onUnmounted(() => {
                 :class="{ 'changing': isChanging }"
             >
                 <div class="current-language">
-                    <span class="language-icon">🌐</span>
-                    <span class="language-name">{{ currentLocaleInfo.native || currentLocaleInfo.name }}</span>
-                    <svg 
+                    <svg v-if="isRTL"
                         class="dropdown-arrow" 
                         :class="{ 'open': isDropdownOpen }"
                         width="12" 
@@ -97,6 +95,18 @@ onUnmounted(() => {
                     >
                         <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
                     </svg>
+                    <span v-else class="language-icon">🌐</span>
+                    <span class="language-name">{{ currentLocaleInfo.native || currentLocaleInfo.name }}</span>
+                    <svg v-if="!isRTL"
+                        class="dropdown-arrow" 
+                        :class="{ 'open': isDropdownOpen }"
+                        width="12" 
+                        height="12" 
+                        viewBox="0 0 12 12"
+                    >
+                        <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/>
+                    </svg>
+                    <span v-else class="language-icon">🌐</span>
                 </div>
                 <div v-if="isChanging" class="changing-indicator">
                     <div class="spinner"></div>
@@ -115,12 +125,11 @@ onUnmounted(() => {
                         }"
                         @click="handleLanguageChange(locale.code)"
                     >
+                        <span class="language-native">{{ locale.native }}</span>
+                        <span v-if="locale.code === currentLocale" class="active-indicator">✓</span>
                         <span class="language-flag">
                             {{ locale.code === 'en' ? '🇺🇸' : locale.code === 'prs' ? '🇦🇫' : '🌐' }}
                         </span>
-                        <span class="language-native">{{ locale.native }}</span>
-                        <span class="language-english">({{ locale.name }})</span>
-                        <span v-if="locale.code === currentLocale" class="active-indicator">✓</span>
                     </li>
                 </ul>
             </transition>
@@ -178,6 +187,10 @@ onUnmounted(() => {
     color: #374151;
 }
 
+.rtl .language-name {
+    padding-left: 21px;
+}
+
 .dropdown-arrow {
     transition: transform 0.2s ease;
     color: #6b7280;
@@ -222,9 +235,10 @@ onUnmounted(() => {
     padding: 0;
     list-style: none;
     overflow: hidden;
+    width: 220px !important;
 }
 
-.language-option {
+.language-option{
     display: flex;
     align-items: center;
     padding: 12px 16px;
@@ -275,15 +289,6 @@ onUnmounted(() => {
 .language-switcher.rtl .language-options {
     left: auto;
     right: 0;
-}
-
-.language-option.rtl {
-    flex-direction: row-reverse;
-    text-align: right;
-}
-
-.language-option.rtl .language-native {
-    text-align: right;
 }
 
 .language-option.rtl .language-english {

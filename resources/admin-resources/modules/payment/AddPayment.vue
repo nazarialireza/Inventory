@@ -150,12 +150,12 @@ onMounted(() => {
                             v-model="payment.payment_method"
                         >
                             <option value="">{{ t('general.none') }}</option>
-                            <option value="cash">{{ t('payments.cash') }}</option>
-                            <option value="payoneer">{{ t('payments.payoneer') }}</option>
-                            <option value="wise">{{ t('payments.wise') }}</option>
-                            <option value="bank">{{ t('payments.bank') }}</option>
-                            <option value="paypal">{{ t('payments.paypal') }}</option>
-                            <option value="card">{{ t('payments.card') }}</option>
+                            <option value="cash">{{ t('payments.methods.cash') }}</option>
+                            <option value="payoneer">{{ t('payments.methods.payoneer') }}</option>
+                            <option value="wise">{{ t('payments.methods.wise') }}</option>
+                            <option value="bank">{{ t('payments.methods.bank') }}</option>
+                            <option value="paypal">{{ t('payments.methods.paypal') }}</option>
+                            <option value="card">{{ t('payments.methods.card') }}</option>
                         </select>
                         <span
                             class="v-error"

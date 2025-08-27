@@ -275,7 +275,7 @@ onMounted(async () => {
                         v-model="selected_warehouse"
                         @input="onSelectWarehouse()"
                     >
-                        <option value="">none</option>
+                        <option value="">{{ t('payments.methods.none') }}</option>
                         <option :value="w.id" v-for="w in warehouses">
                             {{ w.name }}
                         </option>
@@ -494,7 +494,7 @@ onMounted(async () => {
                         class="form-select form-select-sm"
                         v-model="account_id"
                     >
-                        <option value="">none</option>
+                        <option value="">{{ t('payments.methods.none') }}</option>
                         <option :value="account.id" v-for="account in accounts">
                             {{ account.name }} -- {{ account.balance }}
                         </option>
@@ -509,13 +509,13 @@ onMounted(async () => {
                         class="form-select form-select-sm"
                         v-model="payment_method"
                     >
-                        <option value="">none</option>
-                        <option value="cash">cash</option>
-                        <option value="payoneer">payoneer</option>
-                        <option value="wise">wise</option>
-                        <option value="bank">bank</option>
-                        <option value="paypal">paypal</option>
-                        <option value="card">card</option>
+                        <option value="">{{ t('payments.methods.none') }}</option>
+                        <option value="cash">{{ t('payments.methods.cash') }}</option>
+                        <option value="payoneer">{{ t('payments.methods.payoneer') }}</option>
+                        <option value="wise">{{ t('payments.methods.wise') }}</option>
+                        <option value="bank">{{ t('payments.methods.bank') }}</option>
+                        <option value="paypal">{{ t('payments.methods.paypal') }}</option>
+                        <option value="card">{{ t('payments.methods.card') }}</option>
                     </select>
                     <span class="v-error" v-if="validation_errors.payment_method">
                         {{ validation_errors.payment_method }}

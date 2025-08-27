@@ -1,21 +1,23 @@
 <script setup>
-import menuSvgIcon from "../assets/icons/menu-svg-icon.vue";
-import userSvgIcon from "../assets/icons/user-svg-icon.vue";
-import logoutSvgIcon from "../assets/icons/logout-svg-icon.vue";
-import settingSvgIcon from "../assets/icons/setting-svg-icon.vue";
 import LanguageSwitcher from "./LanguageSwitcher.vue";
 import { useSidebar } from "../stores/sidebar";
-import { useI18n } from "../composables/useI18n.js";
-import { ref } from "vue";
+import { useI18n } from "../composables/useI18n";
+import { ref, defineAsyncComponent } from "vue";
 
 const sidebarStore = useSidebar();
 const userDropDown = ref(false);
 const { t } = useI18n();
+
+// Dynamic imports for better code splitting
+const MenuSvgIcon = defineAsyncComponent(() => import("../assets/icons/menu-svg-icon.vue"));
+const UserSvgIcon = defineAsyncComponent(() => import("../assets/icons/user-svg-icon.vue"));
+const LogoutSvgIcon = defineAsyncComponent(() => import("../assets/icons/logout-svg-icon.vue"));
+const SettingSvgIcon = defineAsyncComponent(() => import("../assets/icons/setting-svg-icon.vue"));
 </script>
 
 <template>
     <nav class="navbar navbar-header navbar-expand navbar-light">
-        <menuSvgIcon @click="sidebarStore.toggle()" />
+        <MenuSvgIcon @click="sidebarStore.toggle()" />
         <ul class="navbar-nav d-flex align-items-center navbar-light ms-auto">
             <!-- Language Switcher -->
             <li class="nav-item me-3">
@@ -23,11 +25,11 @@ const { t } = useI18n();
             </li>
             <div class="top-nav-item position-relative">
                 <span @click="userDropDown = !userDropDown">
-                    <userSvgIcon width="25px" height="25px" />
+                    <UserSvgIcon width="25px" height="25px" />
                 </span>
                 <div v-if="userDropDown" class="top-nav-dropdown">
                     <a class="top-nav-dropdown-item" href="/logout">
-                        <logoutSvgIcon
+                        <LogoutSvgIcon
                             width="16px"
                             height="16px"
                             color="currentColor"
@@ -35,7 +37,7 @@ const { t } = useI18n();
                         <span class="ms-2">{{ t('general.logout') }}</span>
                     </a>
                     <!-- <a class="top-nav-dropdown-item" href="/logout">
-                        <settingSvgIcon
+                        <SettingSvgIcon
                             width="16px"
                             height="16px"
                             color="currentColor"

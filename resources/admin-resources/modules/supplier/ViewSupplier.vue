@@ -122,6 +122,7 @@ onMounted(() => {
                                 <label class="my-2">{{ t('suppliers.tax_number') }}</label>
 
                                 <input
+                                    disabled
                                     type="text"
                                     class="form-control"
                                     v-model="supplier_data.tax_number"

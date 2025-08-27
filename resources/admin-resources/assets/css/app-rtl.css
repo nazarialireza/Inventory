@@ -1480,7 +1480,7 @@ footer {
     background: #6c757d;
     min-height: 100vh;
     padding-top: 100px;
-    background-image: url(../images/background/auth.jpg)
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
 }
 
 #auth .card {

@@ -122,15 +122,15 @@ onMounted(() => {
                                 v-model="all_selectd"
                             />
                         </th> -->
-                        <th class="min100">{{ t('general.date') }}</th>
+                        <th class="min100">{{ t('sales.date') }}</th>
                         <th class="min100">{{ t('sales.reference') }}</th>
-                        <th class="min100">{{ t('customers.customer') }}</th>
-                        <th class="min100">{{ t('warehouses.warehouse') }}</th>
-                        <th class="min100">{{ t('general.total') }}</th>
-                        <th class="min100">{{ t('payments.paid') }}</th>
-                        <th class="min100">{{ t('payments.due') }}</th>
-                        <th class="">{{ t('sales.sale_status') }}</th>
-                        <th class="">{{ t('payments.payment_status') }}</th>
+                        <th class="min100">{{ t('sales.customer') }}</th>
+                        <th class="min100">{{ t('sales.warehouse') }}</th>
+                        <th class="min100">{{ t('sales.total') }}</th>
+                        <th class="min100">{{ t('sales.paid') }}</th>
+                        <th class="min100">{{ t('sales.due') }}</th>
+                        <th class="">{{ t('sales.invoice_status') }}</th>
+                        <th class="">{{ t('sales.payment_status') }}</th>
                         <th class="table-action-col">{{ t('general.action') }}</th>
                     </tr>
                 </thead>
