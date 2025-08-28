@@ -1,8 +1,8 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 
-// Global reactive state
-const currentLocale = ref('en');
+// Global reactive state and set local to Dari
+const currentLocale = ref('prs');
 const availableLocales = ref({});
 const translations = ref({});
 const isRTL = ref(false);
@@ -60,10 +60,10 @@ async function loadTranslations(locale = null) {
         
     } catch (error) {
         console.error(`Failed to load translations for ${targetLocale}:`, error);
-        // Fallback to English translations
-        if (targetLocale !== 'en') {
-            console.warn(`Failed to load translations for ${targetLocale}, falling back to English`);
-            await loadTranslations('en');
+        // Fallback to Dari translations
+        if (targetLocale !== 'prs') {
+            console.warn(`Failed to load translations for ${targetLocale}, falling back to Dari`);
+            await loadTranslations('prs');
         } else {
             console.error('Failed to load translations:', error);
         }
@@ -298,9 +298,9 @@ async function initializeI18n() {
         document.body.classList.remove('rtl', 'ltr');
         document.body.classList.add('ltr');
         
-        // Try to load English translations as fallback
+        // Try to load Dari translations as fallback
         try {
-            await loadTranslations('en');
+            await loadTranslations('prs');
         } catch (fallbackError) {
             console.error('Failed to load fallback translations:', fallbackError);
         }
