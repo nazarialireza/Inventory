@@ -162,11 +162,11 @@ onMounted(() => {
                                         ? 'btn-outline-primary'
                                         : '',
                                     sale.invoice_status == 'pending'
-                                        ? 'btn-outline-warning'
+                                        ? 'btn-outline-danger'
                                         : '',
                                 ]"
                             >
-                                {{ sale.invoice_status }}
+                                {{ t(`sales.status.${sale.invoice_status}`) }}
                             </span>
                         </td>
                         <td>
@@ -180,11 +180,11 @@ onMounted(() => {
                                         ? 'bg-danger'
                                         : '',
                                     sale.payment_status == 'partial'
-                                        ? 'bg-warning'
+                                        ? 'bg-primary'
                                         : '',
                                 ]"
                             >
-                                {{ sale.payment_status }}
+                                {{ t(`sales.status.${sale.payment_status}`) }}
                             </span>
                         </td>
                         <td class="table-action-btns sm">

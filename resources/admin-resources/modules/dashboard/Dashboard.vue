@@ -19,7 +19,7 @@ let weeklySalePurchaseChartData = ref({
     chartOptions: {
         title: {
             text: t("dashboard.weekly_sale_purchase"),
-            align: "left",
+            align: "rithg",
             style: { color: "#475f7b" },
         },
         chart: { id: "weeklySalePurchase" },
@@ -37,7 +37,7 @@ let topSellingProductChartData = ref({
     chartOptions: {
         title: {
             text: t("dashboard.top_selling_products"),
-            align: "left",
+            align: "rithg",
             style: { color: "#475f7b" },
         },
         chart: { id: "topSellingProduct" },
@@ -57,7 +57,7 @@ let weeklyPaymentChartData = ref({
     chartOptions: {
         title: {
             text: t("dashboard.payment_send_received_week"),
-            align: "left",
+            align: "rithg",
             style: { color: "#475f7b" },
         },
         chart: {
