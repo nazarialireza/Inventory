@@ -68,34 +68,34 @@ const ViewSvgIcon = defineAsyncComponent(() => import("../assets/icons/view-svg-
                     <div class="dropdown-separator"></div>
                     
                     <!-- User Profile -->
-                    <a class="top-nav-dropdown-item" href="#/profile">
+                    <router-link to="/admin/profile" class="top-nav-dropdown-item">
                         <ViewSvgIcon
                             width="16px"
                             height="16px"
                             color="currentColor"
                         />
                         <span class="ms-2">{{ t('general.view_profile') }}</span>
-                    </a>
+                    </router-link>
                     
                     <!-- Account Settings -->
-                    <a class="top-nav-dropdown-item" href="#/settings">
+                    <router-link to="/admin/settings" class="top-nav-dropdown-item">
                         <SettingSvgIcon
                             width="16px"
                             height="16px"
                             color="currentColor"
                         />
                         <span class="ms-2">{{ t('general.account_settings') }}</span>
-                    </a>
+                    </router-link>
                     
                     <!-- Notifications -->
-                    <a class="top-nav-dropdown-item" href="#/notifications">
+                    <router-link to="/admin/notifications" class="top-nav-dropdown-item">
                         <NotificationSvgIcon
                             width="16px"
                             height="16px"
                             color="currentColor"
                         />
                         <span class="ms-2">{{ t('general.user_notifications') }}</span>
-                    </a>
+                    </router-link>
                     
                     <!-- Menu Separator -->
                     <div class="dropdown-separator"></div>
@@ -186,7 +186,8 @@ const ViewSvgIcon = defineAsyncComponent(() => import("../assets/icons/view-svg-
     margin: 0;
 }
 
-.top-nav-dropdown-item {
+.top-nav-dropdown-item,
+.top-nav-dropdown-item.router-link-active {
     display: flex;
     align-items: center;
     padding: 12px 16px;
@@ -199,7 +200,8 @@ const ViewSvgIcon = defineAsyncComponent(() => import("../assets/icons/view-svg-
     border: none;
 }
 
-.top-nav-dropdown-item:hover {
+.top-nav-dropdown-item:hover,
+.top-nav-dropdown-item.router-link-active:hover {
     background-color: #f8fafc;
     color: #2ba8f3;
     text-decoration: none;

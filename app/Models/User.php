@@ -23,6 +23,11 @@ class User extends Authenticatable
         'user_name',
         'email',
         'password',
+        'phone',
+        'address',
+        'city',
+        'country',
+        'avatar',
     ];
 
     /**
@@ -44,4 +49,28 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the user's settings.
+     */
+    public function settings()
+    {
+        return $this->hasOne(UserSettings::class);
+    }
+
+    /**
+     * Get the user's notifications.
+     */
+    public function notifications()
+    {
+        return $this->hasMany(UserNotification::class);
+    }
+
+    /**
+     * Get the user's unread notifications.
+     */
+    public function unreadNotifications()
+    {
+        return $this->notifications()->unread();
+    }
 }

@@ -57,6 +57,26 @@ Route::group(['middleware' => ['auth']], function () {
 
     // User
     Route::get('/api/users/authenticated-user', [UserController::class, 'getAuthenticatedUser']);
+    
+    // User Profile and Settings Routes
+    Route::prefix('api/user')->group(function () {
+        // Profile routes
+        Route::get('/profile', [UserController::class, 'getProfile']);
+        Route::put('/profile', [UserController::class, 'updateProfile']);
+        Route::post('/avatar', [UserController::class, 'uploadAvatar']);
+        
+        // Settings routes
+        Route::get('/settings', [UserController::class, 'getSettings']);
+        Route::put('/settings', [UserController::class, 'updateSettings']);
+        Route::put('/password', [UserController::class, 'changePassword']);
+        
+        // Notifications routes
+        Route::get('/notifications', [UserController::class, 'getNotifications']);
+        Route::patch('/notifications/{id}/read', [UserController::class, 'markNotificationAsRead']);
+        Route::patch('/notifications/mark-all-read', [UserController::class, 'markAllNotificationsAsRead']);
+        Route::delete('/notifications/{id}', [UserController::class, 'deleteNotification']);
+        Route::delete('/notifications/clear-all', [UserController::class, 'clearAllNotifications']);
+    });
 
     // Dashboard Overview
     Route::get('/api/dashboard-report', [DashboardController::class, 'getDashboardOverview']);

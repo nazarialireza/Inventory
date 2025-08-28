@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Api\TranslationController;
+use App\Http\Controllers\Api\User\UserController;
 
 // Translation routes
 Route::get('/translations/{locale}', [TranslationController::class, 'getTranslations']);
@@ -43,6 +44,6 @@ Route::get('/locale', function () {
     ]);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });

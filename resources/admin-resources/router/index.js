@@ -127,6 +127,23 @@ const router = createRouter({
                     path: "i18n-test",
                     component: () => import("../components/TestI18n.vue"),
                 },
+                
+                // User Profile Routes
+                {
+                    name: "user-profile",
+                    path: "profile",
+                    component: () => import("../modules/user/UserProfile.vue"),
+                },
+                {
+                    name: "user-settings",
+                    path: "settings",
+                    component: () => import("../modules/user/UserSettings.vue"),
+                },
+                {
+                    name: "user-notifications",
+                    path: "notifications",
+                    component: () => import("../modules/user/UserNotifications.vue"),
+                },
             ],
         },
     ],
