@@ -90,7 +90,24 @@ const updateSettings = async () => {
     validationErrors.value = {};
     
     try {
-        const response = await axios.put('/api/user/settings', settings.value);
+        // Flatten the structure to match backend validation expectations
+        const payload = {
+            language: settings.value.language,
+            timezone: settings.value.timezone,
+            date_format: settings.value.date_format,
+            time_format: settings.value.time_format,
+            currency_symbol: settings.value.currency_symbol,
+            'notifications.email_notifications': settings.value.notifications.email_notifications,
+            'notifications.push_notifications': settings.value.notifications.push_notifications,
+            'notifications.sale_notifications': settings.value.notifications.sale_notifications,
+            'notifications.purchase_notifications': settings.value.notifications.purchase_notifications,
+            'notifications.low_stock_alerts': settings.value.notifications.low_stock_alerts,
+            'privacy.profile_visibility': settings.value.privacy.profile_visibility,
+            'privacy.show_email': settings.value.privacy.show_email,
+            'privacy.show_phone': settings.value.privacy.show_phone
+        };
+        
+        const response = await axios.put('/api/user/settings', payload);
         settings.value = { ...settings.value, ...response.data.data };
         
         notificationStore.pushNotification({
@@ -402,4 +419,46 @@ onMounted(() => {
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+/* RTL specific fixes for form elements */
+:deep(.rtl) .form-check {
+    padding-right: 1.5rem;
+    padding-left: 0;
+}
+
+:deep(.rtl) .form-check-input {
+    margin-right: -1.5rem;
+    margin-left: 0;
+}
+
+/* Fix for select dropdowns in RTL mode */
+:deep(.rtl) select.form-select {
+    direction: ltr !important;
+    text-align: right;
+    background-position: left .75rem center !important;
+}
+
+:deep(.rtl) select.form-select option {
+    direction: rtl;
+    text-align: right;
+    color: #212529 !important;
+    background-color: #fff !important;
+    padding: 8px 12px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Ensure Dari text is visible in options */
+:deep(.rtl) select.form-select option[value="prs"] {
+    unicode-bidi: plaintext;
+    color: #212529 !important;
+    background-color: #fff !important;
+}
+
+/* Force option visibility */
+:deep(.rtl) select.form-select option:not([hidden]) {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
 </style>

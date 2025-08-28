@@ -1722,6 +1722,62 @@ footer {
     box-shadow: none !important;
 }
 
+/* Fix for select dropdown option visibility in RTL mode */
+.rtl select,
+.rtl .form-select {
+    direction: ltr !important;
+    text-align: right;
+    background-position: left .75rem center !important;
+}
+
+.rtl select option,
+.rtl .form-select option {
+    direction: rtl;
+    text-align: right;
+    font-family: 'Poppins', sans-serif;
+    color: #212529 !important;
+    background-color: #fff !important;
+    padding: 8px 12px;
+}
+
+/* Ensure option text is visible */
+.rtl select option[value="en"],
+.rtl .form-select option[value="en"] {
+    color: #212529 !important;
+    background-color: #fff !important;
+}
+
+.rtl select option[value="prs"],
+.rtl .form-select option[value="prs"] {
+    color: #212529 !important;
+    background-color: #fff !important;
+    font-family: 'Poppins', sans-serif;
+    unicode-bidi: plaintext;
+}
+
+/* Force visibility for options */
+.rtl select option:not([hidden]),
+.rtl .form-select option:not([hidden]) {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Fix for Dari text rendering */
+body.rtl select,
+body.rtl .form-select {
+    direction: ltr;
+    text-align: right;
+}
+
+body.rtl select option,
+body.rtl .form-select option {
+    direction: rtl;
+    text-align: right;
+    color: #212529 !important;
+    background: #fff !important;
+}
+
 /* Css for hiding elements in small device */
 @media (max-width: 600px) {
     .d-600-none {

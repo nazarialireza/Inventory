@@ -64,6 +64,7 @@ class UserController extends Controller
      */
     public function updateProfile(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         
         $validator = Validator::make($request->all(), [
@@ -120,6 +121,7 @@ class UserController extends Controller
             ], 422);
         }
 
+        /** @var User $user */
         $user = Auth::user();
         
         // Delete old avatar if exists
@@ -145,6 +147,7 @@ class UserController extends Controller
      */
     public function getSettings()
     {
+        /** @var User $user */
         $user = Auth::user();
         $settings = $user->settings ?? new UserSettings();
         
@@ -200,8 +203,15 @@ class UserController extends Controller
             ], 422);
         }
 
+        /** @var User $user */
         $user = Auth::user();
-        $settings = $user->settings ?? new UserSettings(['user_id' => $user->id]);
+        $settings = $user->settings;
+        
+        // Create new settings if they don't exist
+        if (!$settings) {
+            $settings = new UserSettings();
+            $settings->user_id = $user->id;
+        }
         
         $settings->fill([
             'language' => $request->language,
@@ -224,7 +234,25 @@ class UserController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Settings updated successfully',
-            'data' => $settings
+            'data' => [
+                'language' => $settings->language,
+                'timezone' => $settings->timezone,
+                'date_format' => $settings->date_format,
+                'time_format' => $settings->time_format,
+                'currency_symbol' => $settings->currency_symbol,
+                'notifications' => [
+                    'email_notifications' => $settings->email_notifications,
+                    'push_notifications' => $settings->push_notifications,
+                    'sale_notifications' => $settings->sale_notifications,
+                    'purchase_notifications' => $settings->purchase_notifications,
+                    'low_stock_alerts' => $settings->low_stock_alerts,
+                ],
+                'privacy' => [
+                    'profile_visibility' => $settings->profile_visibility,
+                    'show_email' => $settings->show_email,
+                    'show_phone' => $settings->show_phone,
+                ]
+            ]
         ]);
     }
 
@@ -245,6 +273,7 @@ class UserController extends Controller
             ], 422);
         }
 
+        /** @var User $user */
         $user = Auth::user();
 
         // Check current password
@@ -271,6 +300,7 @@ class UserController extends Controller
      */
     public function getNotifications(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         $perPage = $request->get('per_page', 10);
         $filter = $request->get('filter', 'all');
@@ -303,6 +333,7 @@ class UserController extends Controller
      */
     public function markNotificationAsRead($id)
     {
+        /** @var User $user */
         $user = Auth::user();
         $notification = $user->notifications()->find($id);
         
@@ -326,6 +357,7 @@ class UserController extends Controller
      */
     public function markAllNotificationsAsRead()
     {
+        /** @var User $user */
         $user = Auth::user();
         $user->unreadNotifications->markAsRead();
         
@@ -340,6 +372,7 @@ class UserController extends Controller
      */
     public function deleteNotification($id)
     {
+        /** @var User $user */
         $user = Auth::user();
         $notification = $user->notifications()->find($id);
         
@@ -363,6 +396,7 @@ class UserController extends Controller
      */
     public function clearAllNotifications()
     {
+        /** @var User $user */
         $user = Auth::user();
         $user->notifications()->delete();
         
