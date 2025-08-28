@@ -7,6 +7,19 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Invextry</title>
     
+    {{-- Prevent content flash during initialization --}}
+    <style>
+        body.app-initializing #invextry-admin {
+            opacity: 0;
+            visibility: hidden;
+        }
+        body:not(.app-initializing) #invextry-admin {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.2s ease-in-out;
+        }
+    </style>
+    
     @php
         // Get current locale and determine if it's RTL
         $currentLocale = app()->getLocale();

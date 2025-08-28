@@ -1,10 +1,10 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useI18n } from "../../composables/useI18n";
 import axios from "axios";
 import { useNotificationStore } from "../../components/shared/notification/notificationStore";
 
-const { t } = useI18n();
+const { t, switchLanguage, currentLocale } = useI18n();
 const notificationStore = useNotificationStore();
 
 // Settings data
@@ -110,6 +110,9 @@ const updateSettings = async () => {
         const response = await axios.put('/api/user/settings', payload);
         settings.value = { ...settings.value, ...response.data.data };
         
+        // Note: Language switching is handled by the watcher above
+        // No need to manually switch here to avoid double switching
+        
         notificationStore.pushNotification({
             message: t('general.settings_updated_successfully'),
             type: 'success',
@@ -166,6 +169,37 @@ const changePassword = async () => {
 onMounted(() => {
     fetchSettings();
 });
+
+// Watch for language changes and automatically switch UI language
+// Only activate after initial load to prevent initialization conflicts
+let isInitialLoad = true;
+
+watch(
+    () => settings.value.language,
+    async (newLanguage, oldLanguage) => {
+        // Skip the watcher during initial component load
+        if (isInitialLoad) {
+            isInitialLoad = false;
+            return;
+        }
+        
+        // Only switch if language actually changed and is different from current UI language
+        if (newLanguage && oldLanguage && newLanguage !== oldLanguage && newLanguage !== currentLocale.value) {
+            console.log(`User manually changed language from ${oldLanguage} to ${newLanguage}, switching UI language...`);
+            
+            try {
+                const success = await switchLanguage(newLanguage);
+                if (success) {
+                    console.log(`UI language switched successfully to ${newLanguage}`);
+                } else {
+                    console.warn(`Failed to switch UI language to ${newLanguage}`);
+                }
+            } catch (error) {
+                console.error('Error switching UI language:', error);
+            }
+        }
+    }
+);
 </script>
 
 <template>

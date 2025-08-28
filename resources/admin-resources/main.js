@@ -23,10 +23,16 @@ async function initApp() {
     try {
         console.log('Initializing Invextry Admin...');
         
-        // Initialize internationalization
+        // Add loading class to prevent content flash
+        document.body.classList.add('app-initializing');
+        
+        // Initialize internationalization before mounting
         console.log('Loading i18n system...');
         await initializeI18n();
         console.log('i18n system loaded successfully');
+        
+        // Remove loading class now that language is set
+        document.body.classList.remove('app-initializing');
         
         // Mount the app
         console.log('Mounting Vue app...');
@@ -35,6 +41,9 @@ async function initApp() {
         
     } catch (error) {
         console.error('Failed to initialize app:', error);
+        
+        // Remove loading class on error
+        document.body.classList.remove('app-initializing');
         
         // Mount anyway with fallback settings
         console.log('Mounting app with fallback settings...');

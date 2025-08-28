@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\App;
 use Illuminate\Validation\Rule;
 
 class UserController extends Controller
@@ -230,6 +232,12 @@ class UserController extends Controller
         ]);
         
         $settings->save();
+        
+        // Sync language with session and app locale if it changed
+        if ($settings->language) {
+            Session::put('locale', $settings->language);
+            App::setLocale($settings->language);
+        }
 
         return response()->json([
             'status' => 'success',

@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class LanguageMiddleware
@@ -25,8 +26,8 @@ class LanguageMiddleware
             $locale = $request->locale;
             Session::put('locale', $locale);
         } else {
-            // Get locale from session or use default
-            $locale = Session::get('locale', config('app.locale'));
+            // Priority order: User settings > Session > Default
+            $locale = $this->determineLocale($availableLocales);
         }
         
         // Ensure the locale is supported
@@ -38,5 +39,29 @@ class LanguageMiddleware
         App::setLocale($locale);
         
         return $next($request);
+    }
+    
+    /**
+     * Determine the appropriate locale based on priority
+     * 
+     * @param array $availableLocales
+     * @return string
+     */
+    private function determineLocale(array $availableLocales): string
+    {
+        // For authenticated users, check their language preference first
+        if (Auth::check()) {
+            $user = Auth::user();
+            $userSettings = $user->settings;
+            
+            if ($userSettings && $userSettings->language && in_array($userSettings->language, $availableLocales)) {
+                // Update session to match user preference
+                Session::put('locale', $userSettings->language);
+                return $userSettings->language;
+            }
+        }
+        
+        // Fall back to session or default
+        return Session::get('locale', config('app.locale'));
     }
 }

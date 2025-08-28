@@ -1,8 +1,8 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 
-// Global reactive state
-const currentLocale = ref('en');
+// Global reactive state - Start with empty values to prevent English flash
+const currentLocale = ref('');
 const availableLocales = ref({});
 const translations = ref({});
 const isRTL = ref(false);
@@ -14,8 +14,10 @@ function trans(key, params = {}) {
     // Trigger reactivity by accessing translations.value
     const currentTranslations = translations.value;
     
+    // If translations aren't loaded yet, return a placeholder or empty string to avoid showing keys
     if (!currentTranslations || Object.keys(currentTranslations).length === 0) {
-        return key;
+        // Return empty string instead of key during initialization to prevent flashing translation keys
+        return translationsLoaded.value ? key : '';
     }
     
     const keys = key.split('.');
@@ -25,9 +27,11 @@ function trans(key, params = {}) {
         if (value && typeof value === 'object' && k in value) {
             value = value[k];
         } else {
-            // Fallback to the key itself if translation not found
-            console.warn(`Translation not found for key: ${key}`);
-            return key;
+            // Only log warning if translations are supposed to be loaded
+            if (translationsLoaded.value) {
+                console.warn(`Translation not found for key: ${key}`);
+            }
+            return translationsLoaded.value ? key : '';
         }
     }
     
@@ -38,7 +42,7 @@ function trans(key, params = {}) {
         }
     }
     
-    return value || key;
+    return value || (translationsLoaded.value ? key : '');
 }
 
 // Load translations for current locale
@@ -259,34 +263,41 @@ async function switchLanguage(locale) {
 async function initializeI18n() {
     try {
         const response = await axios.get('/api/locale');
+        console.log('Fetching user language preferences...' );
+        console.log(response.data);
         
+        // Set all language state immediately to prevent English flash
         currentLocale.value = response.data.current_locale;
         availableLocales.value = response.data.available_locales;
         isRTL.value = response.data.current_locale_info?.dir === 'rtl';
         
-        console.log('I18n initialized:', {
+        console.log('I18n initialized with user preference:', {
             currentLocale: currentLocale.value,
             isRTL: isRTL.value,
             availableLocales: Object.keys(availableLocales.value)
         });
         
-        // Set initial document attributes
+        // Set initial document attributes immediately
         document.documentElement.setAttribute('lang', currentLocale.value);
         document.documentElement.setAttribute('dir', isRTL.value ? 'rtl' : 'ltr');
+        
+        // Set body classes immediately to prevent layout shift
+        document.body.classList.remove('rtl', 'ltr');
+        document.body.classList.add(isRTL.value ? 'rtl' : 'ltr');
         
         // Load the correct CSS file for the current direction
         console.log(`Loading initial CSS for direction: ${isRTL.value ? 'RTL' : 'LTR'}`);
         await loadCSS(isRTL.value);
         
-        console.log(`Initial direction class set to: ${isRTL.value ? 'rtl' : 'ltr'}`);
-        
         // Load initial translations
         await loadTranslations();
         
-        console.log('I18n initialization completed successfully');
+        console.log('I18n initialization completed - no language switching needed');
     } catch (error) {
         console.error('Failed to initialize i18n:', error);
-        // Set defaults
+        
+        // Set English defaults only as fallback
+        console.log('Falling back to English defaults due to initialization error');
         currentLocale.value = 'en';
         availableLocales.value = {
             en: { name: 'English', dir: 'ltr' },
