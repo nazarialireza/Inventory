@@ -235,7 +235,7 @@ onUnmounted(() => {
     padding: 0;
     list-style: none;
     overflow: hidden;
-    width: 220px !important;
+    width: 180px !important;
 }
 
 .language-option{
