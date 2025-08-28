@@ -47,9 +47,6 @@ const SettingSvgIcon = defineAsyncComponent(() => import("../assets/icons/settin
                 </div>
             </div>
         </ul>
-        <a href="/demo" class="ms-2">
-            <span class="badge bg-danger py-2 px-3">{{ t('general.demo') }}</span>
-        </a>
     </nav>
 </template>
 
