@@ -207,6 +207,7 @@ return [
     'sales' => [
         'title' => 'Sales',
         'add_sale' => 'Add Sale',
+        'add_new_sale' => 'Add New Sale',
         'reference' => 'Reference',
         'date' => 'Date',
         'customer' => 'Customer',
@@ -218,7 +219,32 @@ return [
         'payment_status' => 'Payment Status',
         'search_reference' => 'Search Reference',
         'search_customer' => 'Search customer..',
+        'search_product' => 'Search Product',
         'search_items' => 'Search items..',
+        'product' => 'Product',
+        'unit_price' => 'Unit Price',
+        'stock' => 'Stock',
+        'quantity' => 'Quantity',
+        'tax' => 'Tax',
+        'subtotal' => 'Subtotal',
+        'action' => 'Action',
+        'order_summary' => 'Order Summary',
+        'order_tax' => 'Order Tax',
+        'order_tax_label' => 'Order Tax:',
+        'discount' => 'Discount',
+        'discount_label' => 'Discount:',
+        'shipping' => 'Shipping',
+        'shipping_label' => 'Shipping:',
+        'paid_label' => 'Paid:',
+        'due_label' => 'Due:',
+        'grand_total' => 'Grand Total',
+        'grand_total_label' => 'Grand Total:',
+        'sale_status' => 'Sale Status',
+        'paid_amount' => 'Paid Amount',
+        'select_account' => 'Select Account',
+        'payment_method' => 'Payment Method',
+        'sale_note' => 'Sale Note',
+        'save_sale' => 'Save Sale',
         'placeholder' => [
             'reference' => 'search by reference no..',
         ],
@@ -413,6 +439,7 @@ return [
     // Notifications
     'notifications' => [
         'error_occurred' => 'Error Occurred',
+        'paid_amount_error' => 'Paid amount can not be greater than total amount',
     ],
 
     // Language

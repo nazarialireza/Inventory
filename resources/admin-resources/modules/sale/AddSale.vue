@@ -174,7 +174,7 @@ function calculateGrandTotal() {
         payment_status.value = "paid";
         const notifcationStore = useNotificationStore();
         notifcationStore.pushNotification({
-            message: "Paid amount can not be greater than total amount",
+            message: t('notifications.paid_amount_error'),
             type: "warning",
             time: 5000,
         });
@@ -205,7 +205,7 @@ function saveSale() {
         .catch((error) => {
             const notifcationStore = useNotificationStore();
             notifcationStore.pushNotification({
-                message: "Error Occurred",
+                message: t('notifications.error_occurred'),
                 type: "error",
                 time: 3000,
             });
@@ -227,13 +227,13 @@ onMounted(async () => {
 <template>
     <div class="add-invoice-page">
         <div class="page-top-box d-flex flex-wrap align-items-center">
-            <h3 class="h5">Add New Sale</h3>
+            <h3 class="h5">{{ t('sales.add_new_sale') }}</h3>
         </div>
         <div class="add-invoice-contents bg-white p-3 my-3 rounded-3 shadow">
             <!-- Product, warehouse, customer selection -->
             <div class="d-flex flex-wrap">
                 <div class="p-1 min150">
-                    <label class="my-1">date</label>
+                    <label class="my-1">{{ t('sales.date') }}</label>
                     <input
                         type="date"
                         class="form-control form-control-sm"
@@ -244,7 +244,7 @@ onMounted(async () => {
                     </span>
                 </div>
                 <div class="p-1 dropdown-search-select-box min100 max200">
-                    <label class="my-1">customer</label>
+                    <label class="my-1">{{ t('sales.customer') }}</label>
                     <input
                         type="text"
                         class="form-control form-control-sm sqaure"
@@ -270,14 +270,14 @@ onMounted(async () => {
                     </span>
                 </div>
                 <div class="p-1 min150">
-                    <label class="my-1">warehouse</label>
+                    <label class="my-1">{{ t('sales.warehouse') }}</label>
                     <select
                         class="form-select form-select-sm"
                         v-model="selected_warehouse"
                         @input="onSelectWarehouse()"
                         :disabled="selected_items.length > 0 || items.length>0"
                     >
-                        <option value="">none</option>
+                        <option value="">{{ t('general.none') }}</option>
                         <option :value="w.id" v-for="w in warehouses">
                             {{ w.name }}
                         </option>
@@ -287,7 +287,7 @@ onMounted(async () => {
                     </span>
                 </div>
                 <div class="p-1 dropdown-search-select-box">
-                    <label class="my-1">search product</label>
+                    <label class="my-1">{{ t('sales.search_product') }}</label>
                     <input
                         :disabled="!selected_warehouse"
                         type="text"
@@ -318,13 +318,13 @@ onMounted(async () => {
                 >
                     <thead>
                         <tr class="bg-ass text-secondary">
-                            <th class="min150">Product</th>
-                            <th class="min100">Unit Price</th>
-                            <th class="">Stock</th>
-                            <th class="min100">Quantity</th>
-                            <th class="min100">Tax</th>
-                            <th class="min100">Subtotal</th>
-                            <th class="min100">action</th>
+                            <th class="min150">{{ t('sales.product') }}</th>
+                            <th class="min100">{{ t('sales.unit_price') }}</th>
+                            <th class="">{{ t('sales.stock') }}</th>
+                            <th class="min100">{{ t('sales.quantity') }}</th>
+                            <th class="min100">{{ t('sales.tax') }}</th>
+                            <th class="min100">{{ t('sales.subtotal') }}</th>
+                            <th class="min100">{{ t('sales.action') }}</th>
                         </tr>
                     </thead>
                     <tbody v-if="selected_items.length > 0">
@@ -392,30 +392,30 @@ onMounted(async () => {
             <div class="mt-1 4-3">
                 <div class="invoice_summary mb-3 max250 ms-auto">
                     <li class="list-group-item bg-ass text-secondary">
-                        Order Summary
+                        {{ t('sales.order_summary') }}
                     </li>
                     <li class="list-group-item">
-                        <span class="text-primary">Order Tax:</span>
+                        <span class="text-primary">{{ t('sales.order_tax_label') }}</span>
                         {{ total_invoice_tax.toFixed(2) }}
                     </li>
                     <li class="list-group-item">
-                        <span class="text-primary">Discount:</span>
+                        <span class="text-primary">{{ t('sales.discount_label') }}</span>
                         {{ discount.toFixed(2) }}
                     </li>
                     <li class="list-group-item">
-                        <span class="text-primary">Shipping:</span>
+                        <span class="text-primary">{{ t('sales.shipping_label') }}</span>
                         {{ shipping_cost.toFixed(2) }}
                     </li>
                     <li class="list-group-item">
-                        <span class="text-primary">Paid:</span>
+                        <span class="text-primary">{{ t('sales.paid_label') }}</span>
                         {{ paid_amount.toFixed(2) }}
                     </li>
                     <li class="list-group-item">
-                        <span class="text-primary">Due:</span>
+                        <span class="text-primary">{{ t('sales.due_label') }}</span>
                         {{ (invoice_grand_total - paid_amount).toFixed(2) }}
                     </li>
                     <li class="list-group-item bg-ass text-secondary">
-                        <span class="bold h6">Grand Total:</span>
+                        <span class="bold h6">{{ t('sales.grand_total_label') }}</span>
                         {{ invoice_grand_total.toFixed(2) }}
                     </li>
                 </div>
@@ -425,7 +425,7 @@ onMounted(async () => {
             <div class="row">
                 <div class="input-group input-group-sm my-1 max250">
                     <span class="input-group-text bg-ass text-secondary"
-                        >Order Tax</span
+                        >{{ t('sales.order_tax') }}</span
                     >
                     <input
                         type="number"
@@ -440,7 +440,7 @@ onMounted(async () => {
                 </div>
                 <div class="input-group input-group-sm my-1 max250">
                     <span class="input-group-text bg-ass text-secondary"
-                        >Discount</span
+                        >{{ t('sales.discount') }}</span
                     >
                     <input
                         type="number"
@@ -455,7 +455,7 @@ onMounted(async () => {
                 </div>
                 <div class="input-group input-group-sm my-1 max250">
                     <span class="input-group-text bg-ass text-secondary"
-                        >Shipping</span
+                        >{{ t('sales.shipping') }}</span
                     >
                     <input
                         type="number"
@@ -473,29 +473,29 @@ onMounted(async () => {
             <!-- Sale status and Payment Status -->
             <div class="row my-3">
                 <div class="p-2 max200">
-                    <label class="my-1">Sale Status</label>
+                    <label class="my-1">{{ t('sales.sale_status') }}</label>
                     <select
                         class="form-select form-select-sm"
                         v-model="invoice_status"
                     >
-                        <option value="received">received</option>
-                        <option value="pending">pending</option>
-                        <option value="ordered">ordered</option>
+                        <option value="received">{{ t('sales.status.received') }}</option>
+                        <option value="pending">{{ t('sales.status.pending') }}</option>
+                        <option value="ordered">{{ t('sales.status.ordered') }}</option>
                     </select>
                 </div>
                 <div class="p-2 max200">
-                    <label class="my-1">Payment Status</label>
+                    <label class="my-1">{{ t('sales.payment_status') }}</label>
                     <select
                         class="form-select form-select-sm"
                         v-model="payment_status"
                     >
-                        <option value="unpaid">unpaid</option>
-                        <option value="partial">partial</option>
-                        <option value="paid">paid</option>
+                        <option value="unpaid">{{ t('sales.status.unpaid') }}</option>
+                        <option value="partial">{{ t('sales.status.partial') }}</option>
+                        <option value="paid">{{ t('sales.status.paid') }}</option>
                     </select>
                 </div>
                 <div class="p-2 max200">
-                    <label class="my-1">Paid Amount</label>
+                    <label class="my-1">{{ t('sales.paid_amount') }}</label>
                     <input
                         type="number"
                         class="form-control"
@@ -505,12 +505,12 @@ onMounted(async () => {
                     />
                 </div>
                 <div class="p-2 max200">
-                    <label class="my-1">Select Account</label>
+                    <label class="my-1">{{ t('sales.select_account') }}</label>
                     <select
                         class="form-select form-select-sm"
                         v-model="account_id"
                     >
-                        <option value="">none</option>
+                        <option value="">{{ t('general.none') }}</option>
                         <option :value="account.id" v-for="account in accounts">
                             {{ account.name }} -- {{ account.balance }}
                         </option>
@@ -520,18 +520,18 @@ onMounted(async () => {
                     </span>
                 </div>
                 <div class="p-2 max200">
-                    <label class="my-1">Payment Method</label>
+                    <label class="my-1">{{ t('sales.payment_method') }}</label>
                     <select
                         class="form-select form-select-sm"
                         v-model="payment_method"
                     >
-                        <option value="">none</option>
-                        <option value="cash">cash</option>
-                        <option value="payoneer">payoneer</option>
-                        <option value="wise">wise</option>
-                        <option value="bank">bank</option>
-                        <option value="paypal">paypal</option>
-                        <option value="card">card</option>
+                        <option value="">{{ t('payments.methods.none') }}</option>
+                        <option value="cash">{{ t('payments.methods.cash') }}</option>
+                        <option value="payoneer">{{ t('payments.methods.payoneer') }}</option>
+                        <option value="wise">{{ t('payments.methods.wise') }}</option>
+                        <option value="bank">{{ t('payments.methods.bank') }}</option>
+                        <option value="paypal">{{ t('payments.methods.paypal') }}</option>
+                        <option value="card">{{ t('payments.methods.card') }}</option>
                     </select>
                     <span
                         class="v-error"
@@ -544,7 +544,7 @@ onMounted(async () => {
             <!-- Sale Note -->
             <div class="row my-1">
                 <div>
-                    <label class="my-2">Sale Note</label>
+                    <label class="my-2">{{ t('sales.sale_note') }}</label>
                     <textarea
                         v-model="note"
                         class="form-control"
@@ -557,7 +557,7 @@ onMounted(async () => {
                     class="btn btn-sm btn-primary d-inline"
                     @click="saveSale()"
                 >
-                    Save Sale
+                    {{ t('sales.save_sale') }}
                 </button>
             </div>
         </div>
