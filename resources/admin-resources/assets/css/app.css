@@ -856,7 +856,7 @@ footer {
 
 .sidebar-wrapper {
     overflow: scroll;
-    width: 260px;
+    width: 100vw;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -990,11 +990,11 @@ footer {
 
 @media screen and (max-width:767px) {
     .sidebar-wrapper {
-        left: -270px
+        left: -100vw;
     }
 
     .sidebar-wrapper .sidebar-toggler.x {
-        display: block
+        display: block;
     }
 }
 

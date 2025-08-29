@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import vue from "@vitejs/plugin-vue";
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig(({ command }) => {
     const config = {
@@ -16,6 +17,57 @@ export default defineConfig(({ command }) => {
                 ],
                 refresh: true,
             }),
+            VitePWA({
+                registerType: 'autoUpdate',
+                includeAssets: ['favicon.svg', 'apple-touch-icon.svg', 'maskable-icon-512x512.svg'],
+                manifest: {
+                    name: 'Invextry - Professional Inventory Management System',
+                    short_name: 'Invextry',
+                    description: 'Modern inventory management system for businesses with offline support',
+                    theme_color: '#3b82f6',
+                    background_color: '#ffffff',
+                    display: 'standalone',
+                    orientation: 'portrait',
+                    scope: '/',
+                    start_url: '/',
+                    icons: [
+                        {
+                            src: 'pwa-64x64.svg',
+                            sizes: '64x64',
+                            type: 'image/svg+xml'
+                        },
+                        {
+                            src: 'pwa-192x192.svg',
+                            sizes: '192x192',
+                            type: 'image/svg+xml'
+                        },
+                        {
+                            src: 'pwa-512x512.svg',
+                            sizes: '512x512',
+                            type: 'image/svg+xml',
+                            purpose: 'any'
+                        },
+                        {
+                            src: 'maskable-icon-512x512.svg',
+                            sizes: '512x512',
+                            type: 'image/svg+xml',
+                            purpose: 'maskable'
+                        },
+                        {
+                            src: 'apple-touch-icon.svg',
+                            sizes: '180x180',
+                            type: 'image/svg+xml'
+                        }
+                    ]
+                },
+                workbox: {
+                    globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+                    navigateFallback: null
+                },
+                devOptions: {
+                    enabled: true
+                }
+            })
         ],
     };
 

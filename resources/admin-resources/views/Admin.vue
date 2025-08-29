@@ -1,6 +1,8 @@
 <script setup>
 import Sidebar from "../components/Sidebar.vue";
 import Navbar from "../components/Navbar.vue";
+import MobileBottomNav from "../components/MobileBottomNav.vue";
+import OfflineStatusIndicator from "../components/OfflineStatusIndicator.vue";
 import Loader from "../components/shared/loader/Loader.vue";
 import NoticationsContainer from "../components/shared/notification/notications-container.vue";
 import ConfirmBox from "../components/shared/confirm-alert/confirm-box.vue";
@@ -36,6 +38,7 @@ onMounted(async () => {
                 authStore.permissions.includes('manage_dashboard')
             "
         >
+            <OfflineStatusIndicator />
             <Sidebar />
             <div id="main">
                 <Navbar />
@@ -43,6 +46,7 @@ onMounted(async () => {
                     <router-view />
                 </div>
             </div>
+            <MobileBottomNav />
         </div>
         <div class="admin-area-modals-container">
             <ConfirmBox v-if="confirmStore.show_confirm_box" />

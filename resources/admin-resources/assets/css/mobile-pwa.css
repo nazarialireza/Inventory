@@ -1,0 +1,378 @@
+/* PWA Mobile Enhancements */
+
+/* Enhanced touch targets for mobile */
+@media screen and (max-width: 768px) {
+    /* Minimum touch target size of 44x44px for accessibility */
+    .navbar .navbar-toggler,
+    .sidebar-wrapper .sidebar-link,
+    .sidebar-wrapper .sidebar-sublink,
+    .btn,
+    .form-control,
+    .form-select,
+    button,
+    a.btn,
+    .pagination .page-link {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px;
+    }
+
+    /* Enhanced sidebar for mobile */
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 280px;
+        height: 100vh;
+        z-index: 1050;
+        transition: left 0.3s ease-in-out;
+        box-shadow: none;
+    }
+
+    #sidebar.active {
+        left: 0;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Overlay when sidebar is open */
+    #sidebar.active::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 280px;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+
+    .sidebar-wrapper {
+        background: white;
+        height: 100vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Enhanced navbar for mobile */
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1040;
+        background: white !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 12px 16px;
+    }
+
+    .navbar .navbar-brand {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Main content adjustments */
+    #main {
+        margin-left: 0 !important;
+        padding-top: 0;
+    }
+
+    #main .main-content {
+        padding: 16px;
+    }
+
+    /* Card improvements for mobile */
+    .card {
+        margin-bottom: 16px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .card .card-body {
+        padding: 16px;
+    }
+
+    /* Table responsiveness */
+    .table-responsive {
+        border: none;
+        margin-bottom: 0;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+        padding: 12px 8px;
+        white-space: nowrap;
+    }
+
+    /* Form improvements */
+    .form-control,
+    .form-select {
+        padding: 12px 16px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+
+    /* Button improvements */
+    .btn {
+        padding: 12px 24px;
+        font-size: 16px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .btn:active {
+        transform: translateY(1px);
+    }
+
+    /* Modal improvements for mobile */
+    .modal-dialog {
+        margin: 16px;
+        max-width: calc(100vw - 32px);
+    }
+
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .modal-body {
+        padding: 20px 24px;
+    }
+
+    .modal-footer {
+        padding: 16px 24px 20px;
+        border-top: 1px solid #eee;
+    }
+
+    /* Dropdown improvements */
+    .dropdown-menu {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        min-width: 200px;
+    }
+
+    .dropdown-item {
+        padding: 12px 20px;
+        font-size: 14px;
+    }
+
+    /* Navigation improvements */
+    .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .page-link {
+        margin: 2px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    /* User dropdown mobile optimization */
+    .top-nav-dropdown {
+        position: fixed !important;
+        top: 60px !important;
+        right: 16px !important;
+        left: 16px !important;
+        width: auto !important;
+        max-width: none !important;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .top-nav-dropdown-item {
+        padding: 16px 20px !important;
+        font-size: 16px !important;
+    }
+
+    /* Language switcher mobile */
+    .language-switcher .dropdown-menu {
+        right: 0;
+        left: auto;
+        min-width: 150px;
+    }
+
+    /* Safe area insets for devices with notches */
+    @supports (padding: max(0px)) {
+        .navbar {
+            padding-left: max(16px, env(safe-area-inset-left));
+            padding-right: max(16px, env(safe-area-inset-right));
+        }
+
+        #main .main-content {
+            padding-left: max(16px, env(safe-area-inset-left));
+            padding-right: max(16px, env(safe-area-inset-right));
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+        }
+    }
+}
+
+/* Enhanced touch feedback */
+@media (hover: none) and (pointer: coarse) {
+    /* Touch device specific styles */
+    .btn:hover {
+        background-color: initial;
+    }
+
+    .btn:active {
+        background-color: var(--bs-btn-active-bg, #0056b3);
+        transform: scale(0.98);
+    }
+
+    .sidebar-link:active,
+    .sidebar-sublink:active {
+        background-color: rgba(0, 123, 255, 0.1);
+    }
+
+    .dropdown-item:active {
+        background-color: var(--bs-dropdown-link-active-bg, #0056b3);
+    }
+}
+
+/* Landscape phone optimizations */
+@media screen and (max-width: 896px) and (orientation: landscape) {
+    .navbar {
+        padding: 8px 16px;
+    }
+
+    #main .main-content {
+        padding: 12px 16px;
+    }
+
+    .card .card-body {
+        padding: 12px;
+    }
+
+    .modal-dialog {
+        margin: 8px;
+        max-width: calc(100vw - 16px);
+    }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 480px) {
+    .sidebar-wrapper {
+        width: 100vw;
+    }
+
+    #sidebar {
+        width: 100vw;
+        left: -100vw;
+    }
+
+    #sidebar.active {
+        left: 0;
+    }
+
+    #sidebar.active::after {
+        display: none;
+    }
+
+    .top-nav-dropdown {
+        right: 8px !important;
+        left: 8px !important;
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .table th,
+    .table td {
+        padding: 8px 4px;
+        font-size: 12px;
+    }
+
+    .btn-sm {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Pull-to-refresh prevention */
+body {
+    overscroll-behavior-y: contain;
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+    /* iOS Safari specific styles */
+    .form-control,
+    .form-select {
+        -webkit-appearance: none;
+    }
+
+    /* Prevent zoom on input focus */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="url"],
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* Dark mode support for PWA */
+@media (prefers-color-scheme: dark) {
+    .sidebar-wrapper {
+        background: #1f2937;
+        color: #f3f4f6;
+    }
+
+    .navbar {
+        background: #1f2937 !important;
+        color: #f3f4f6;
+    }
+
+    .card {
+        background: #374151;
+        color: #f3f4f6;
+        border-color: #4b5563;
+    }
+
+    .form-control,
+    .form-select {
+        background: #374151;
+        color: #f3f4f6;
+        border-color: #4b5563;
+    }
+
+    .modal-content {
+        background: #1f2937;
+        color: #f3f4f6;
+    }
+
+    .dropdown-menu {
+        background: #374151;
+        border-color: #4b5563;
+    }
+
+    .dropdown-item {
+        color: #f3f4f6;
+    }
+
+    .dropdown-item:hover,
+    .dropdown-item:focus {
+        background: #4b5563;
+    }
+}
