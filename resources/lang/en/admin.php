@@ -97,6 +97,27 @@ return [
         'language'=> 'Language',
     ],
 
+    // Authentication
+    'auth' => [
+        'login' => 'Login',
+        'signup' => 'Sign Up',
+        'signin' => 'Sign In',
+        'register' => 'Register',
+        'name' => 'Name',
+        'user_name' => 'User Name',
+        'email' => 'Email',
+        'password' => 'Password',
+        'login_title' => 'Login',
+        'signup_title' => 'Sign Up',
+        'login_subtitle' => 'Please fill the form to login',
+        'signup_subtitle' => 'Please fill the form to register.',
+        'have_account' => 'Have an account? Sign In',
+        'no_account' => 'Don\'t have an account? Sign Up',
+        'select_language' => 'Select Language',
+        'english' => 'English',
+        'dari' => 'Dari',
+    ],
+
     // Navigation
     'navigation' => [
         'dashboard' => 'Dashboard',

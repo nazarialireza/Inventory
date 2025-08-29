@@ -97,6 +97,27 @@ return [
         'language'=> 'زبان',
     ],
 
+    // Authentication
+    'auth' => [
+        'login' => 'ورود',
+        'signup' => 'ثبت نام',
+        'signin' => 'ورود',
+        'register' => 'ثبت نام',
+        'name' => 'نام',
+        'user_name' => 'نام کاربری',
+        'email' => 'ایمیل',
+        'password' => 'رمز عبور',
+        'login_title' => 'ورود',
+        'signup_title' => 'ثبت نام',
+        'login_subtitle' => 'لطفاً فرم را برای ورود پر کنید',
+        'signup_subtitle' => 'لطفاً فرم را برای ثبت نام پر کنید.',
+        'have_account' => 'حساب دارید؟ وارد شوید',
+        'no_account' => 'حساب ندارید؟ ثبت نام کنید',
+        'select_language' => 'انتخاب زبان',
+        'english' => 'انگلیسی',
+        'dari' => 'دری',
+    ],
+
     // Navigation
     'navigation' => [
         'dashboard' => 'داشبورد',

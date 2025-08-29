@@ -144,13 +144,7 @@ const navlinks = computed(() => [
     <div id="sidebar" :class="{ active: sidebarStore.open }">
         <div class="sidebar-wrapper active">
             <div class="sidebar-header d-flex">
-                <div>
-                    <img
-                        src="../assets/img/invextry-logo.png"
-                        class="cursor-pointer img-fluid"
-                        @click="$router.push({ name: 'dashboard' })"
-                    />
-                </div>
+            
                 <div class="small-screen-menu-icon ms-3">
                     <crossSvgIcon
                         width="25px"
