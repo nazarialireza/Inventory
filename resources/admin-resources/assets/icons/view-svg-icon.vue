@@ -9,8 +9,8 @@ defineProps({
 
 <template>
     <svg
-        :width="width ? width : '24px'"
-        :height="height ? height : '24px'"
+        :width="width ? width : '16px'"
+        :height="height ? height : '16px'"
         :fill="color ? color : '#00E6BD'"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

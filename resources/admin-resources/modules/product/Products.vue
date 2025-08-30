@@ -3,6 +3,8 @@ import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
+import ImageWithFallback from "../../components/ImageWithFallback.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useProductStore } from "./productStore";
 import { useBrandStore } from "../brand/brandStore";
@@ -49,17 +51,63 @@ const q_name = ref("");
 const selected_products = ref([]);
 const all_selectd = ref(false);
 
-function select_all() {
-    if (all_selectd.value == false) {
-        selected_products.value = [];
-        productStore.products.forEach((element) => {
-            selected_products.value.push(element.id);
-        });
-        all_selectd.value = true;
-    } else {
-        all_selectd.value = false;
-        selected_products.value = [];
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'image',
+        label: t('products.image'),
+        hiddenOnMobile: false,
+        mobileClass: ''
+    },
+    {
+        key: 'name',
+        label: t('general.name'),
+        headerClass: 'max200 min200',
+        hiddenOnMobile: false
+    },
+    {
+        key: 'category',
+        label: t('products.category'),
+        headerClass: 'min100',
+        defaultValue: '--',
+        hiddenOnMobile: false
+    },
+    {
+        key: 'brand',
+        label: t('navigation.brand'),
+        headerClass: 'min100',
+        defaultValue: '--',
+        hiddenOnMobile: true
+    },
+    {
+        key: 'purchase_price',
+        label: t('products.cost'),
+        headerClass: 'min100',
+        cellClass: 'currency-value',
+        hiddenOnMobile: true,
+        formatter: (value) => value ? `$${value}` : '--'
+    },
+    {
+        key: 'sale_price',
+        label: t('products.price'),
+        headerClass: 'min100',
+        cellClass: 'currency-value',
+        hiddenOnMobile: false,
+        formatter: (value) => value ? `$${value}` : '--'
+    },
+    {
+        key: 'stock_info',
+        label: t('products.stock'),
+        headerClass: 'min100',
+        hiddenOnMobile: false,
+        formatter: (value, item) => `${item.stock_quantity ?? 0} ${item.unit || ''}`
     }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_products.value = selectedIds;
+    all_selectd.value = selectedIds.length === products.value.length && products.value.length > 0;
 }
 
 async function deleteData(id) {
@@ -167,88 +215,76 @@ onBeforeMount(async () => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="products"
+            :columns="tableColumns"
+            :selected-items="selected_products"
+            :has-selection="authStore.userCan('delete_product')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            :view-more-text="t('general.view') + ' ' + t('general.details')"
+            :view-less-text="t('general.close')"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('products.image') }}</th>
-                        <th class="max200 min200">{{ t('general.name') }}</th>
-                        <!-- <th class="">Code</th> -->
-                        <th class="min100">{{ t('products.category') }}</th>
-                        <th class="min100">{{ t('navigation.brand') }}</th>
-                        <th class="min100">{{ t('products.cost') }}</th>
-                        <th class="min100">{{ t('products.price') }}</th>
-                        <!-- <th>Unit</th> -->
-                        <th class="min100">{{ t('products.stock') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="product in products" :key="product.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_products"
-                                :value="product.id"
-                            />
-                        </td>
+            <!-- Custom cell renderers -->
+            <template #cell-image="{ item }">
+              <ImageWithFallback
+                :src="item.gallery[0] ? item.gallery[0]['url'] : $demoIMG"
+                :alt="item.name"
+                :width="23"
+                :height="23"
+                image-class="table-image"
+              />
+            </template>
 
-                        <td>
-                            <div style="width: 46px; height: 46px">
-                                <img
-                                    :src="
-                                        product.gallery[0]
-                                            ? product.gallery[0]['url']
-                                            : $demoIMG
-                                    "
-                                    :alt="product.name"
-                                    class="img-fluid"
-                                />
-                            </div>
-                        </td>
-                        <td>{{ product.name }}</td>
-                        <!-- <td>{{ product.code }}</td> -->
-                        <td>{{ product.category ?? "--" }}</td>
-                        <td>{{ product.brand ?? "--" }}</td>
-                        <td>{{ product.purchase_price }}</td>
-                        <td>{{ product.sale_price }}</td>
-                        <!-- <td>{{ product.unit.name }}</td> -->
-                        <td>
-                            {{ product.stock_quantity ?? 0 }}
-                            {{ product.unit }}
-                        </td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewProductModal(product.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_product')"
-                                color="#739EF1"
-                                @click="openEditProductModal(product.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_product')"
-                                color="#FF7474"
-                                @click="deleteData(product.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <template #cell-category="{ item }">
+                {{ item.category ?? "--" }}
+            </template>
+
+            <template #cell-brand="{ item }">
+                {{ item.brand ?? "--" }}
+            </template>
+
+            <template #cell-stock_info="{ item }">
+                <span class="number-value">
+                    {{ item.stock_quantity ?? 0 }} {{ item.unit }}
+                </span>
+            </template>
+
+            <!-- Mobile card header customization -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+                <div class="card-subtitle" v-if="item.category">
+                    {{ item.category }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewProductModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_product')"
+                    color="#739EF1"
+                    @click="openEditProductModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_product')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && products.length > 0"
             :total_pages="productStore.total_pages"
@@ -287,3 +323,42 @@ onBeforeMount(async () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.table-image {
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.currency-value {
+    font-weight: 500;
+    color: #059669;
+}
+
+.number-value {
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-weight: 500;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

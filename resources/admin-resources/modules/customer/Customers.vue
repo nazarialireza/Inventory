@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useCustomerStore } from "./customerStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
@@ -31,17 +32,43 @@ const q_name = ref("");
 const selected_customers = ref([]);
 const all_selectd = ref(false);
 
-function select_all() {
-    if (all_selectd.value == false) {
-        selected_customers.value = [];
-        customerStore.customers.forEach((element) => {
-            selected_customers.value.push(element.id);
-        });
-        all_selectd.value = true;
-    } else {
-        all_selectd.value = false;
-        selected_customers.value = [];
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'name',
+        label: t('general.name'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'phone',
+        label: t('general.phone'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'email',
+        label: t('general.email'),
+        hiddenOnMobile: true
+    },
+    {
+        key: 'sale_due',
+        label: t('customers.sale_due'),
+        hiddenOnMobile: false,
+        cellClass: 'currency-value',
+        formatter: (value) => value ? `$${value}` : '$0.00'
+    },
+    {
+        key: 'sale_return_due',
+        label: t('customers.sale_return_due'),
+        hiddenOnMobile: true,
+        cellClass: 'currency-value',
+        formatter: (value) => value ? `$${value}` : '$0.00'
     }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_customers.value = selectedIds;
+    all_selectd.value = selectedIds.length === customers.value.length && customers.value.length > 0;
 }
 
 async function fetchData(
@@ -141,61 +168,64 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="customers"
+            :columns="tableColumns"
+            :selected-items="selected_customers"
+            :has-selection="authStore.userCan('delete_customer')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            :view-more-text="t('general.view') + ' ' + t('general.details')"
+            :view-less-text="t('general.close')"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('general.name') }}</th>
-                        <th>{{ t('general.phone') }}</th>
-                        <th>{{ t('general.email') }}</th>
-                        <th>{{ t('customers.sale_due') }}</th>
-                        <th>{{ t('customers.sale_return_due') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="customer in customers" :key="customer.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_customers"
-                                :value="customer.id"
-                            />
-                        </td>
-                        <td>{{ customer.name }}</td>
-                        <td>{{ customer.phone }}</td>
-                        <td>{{ customer.email }}</td>
-                        <td>{{ customer.sale_due }}</td>
-                        <td>{{ customer.sale_return_due }}</td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon color="#00CFDD" @click="openViewCustomerModal(customer.id)" />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_customer')"
-                                color="#739EF1"
-                                @click="openEditCustomerModal(customer.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_customer')"
-                                color="#FF7474"
-                                @click="deleteData(customer.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Custom cell renderers -->
+            <template #cell-phone="{ item }">
+                <a :href="`tel:${item.phone}`" class="phone-link">
+                    {{ item.phone || '--' }}
+                </a>
+            </template>
+
+            <template #cell-email="{ item }">
+                <a :href="`mailto:${item.email}`" class="email-link">
+                    {{ item.email || '--' }}
+                </a>
+            </template>
+
+            <!-- Mobile card header customization -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+                <div class="card-subtitle" v-if="item.phone">
+                    {{ item.phone }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon 
+                    color="#00CFDD" 
+                    @click="openViewCustomerModal(item.id)" 
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_customer')"
+                    color="#739EF1"
+                    @click="openEditCustomerModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_customer')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && customers.length > 0"
             :total_pages="customerStore.total_pages"
@@ -226,3 +256,54 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.phone-link {
+    color: #059669;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.phone-link:hover {
+    color: #047857;
+    text-decoration: underline;
+}
+
+.email-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.email-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.currency-value {
+    font-weight: 500;
+    color: #059669;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

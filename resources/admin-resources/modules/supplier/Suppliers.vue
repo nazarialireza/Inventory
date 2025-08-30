@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useSupplierStore } from "./supplierStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";

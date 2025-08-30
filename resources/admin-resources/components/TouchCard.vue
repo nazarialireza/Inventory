@@ -228,51 +228,12 @@ const createRipple = (event) => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Padding variations */
-.touch-card-padding-none .touch-card-body {
-  padding: 0;
-}
-
-.touch-card-padding-sm .touch-card-body {
-  padding: 12px;
-}
-
-.touch-card-padding-normal .touch-card-body {
-  padding: 20px;
-}
-
-.touch-card-padding-lg .touch-card-body {
-  padding: 28px;
-}
-
-.touch-card-padding-none .touch-card-header,
-.touch-card-padding-none .touch-card-footer {
-  padding: 0;
-}
-
-.touch-card-padding-sm .touch-card-header,
-.touch-card-padding-sm .touch-card-footer {
-  padding: 12px;
-}
-
-.touch-card-padding-normal .touch-card-header,
-.touch-card-padding-normal .touch-card-footer {
-  padding: 20px;
-}
-
-.touch-card-padding-lg .touch-card-header,
-.touch-card-padding-lg .touch-card-footer {
-  padding: 28px;
-}
-
 /* Header styles */
 .touch-card-header {
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
 }
 
 .touch-card-title {
@@ -364,18 +325,6 @@ const createRipple = (event) => {
 @media screen and (max-width: 768px) {
   .touch-card {
     border-radius: 8px;
-  }
-  
-  .touch-card-padding-normal .touch-card-body,
-  .touch-card-padding-normal .touch-card-header,
-  .touch-card-padding-normal .touch-card-footer {
-    padding: 16px;
-  }
-  
-  .touch-card-padding-lg .touch-card-body,
-  .touch-card-padding-lg .touch-card-header,
-  .touch-card-padding-lg .touch-card-footer {
-    padding: 20px;
   }
   
   .touch-card-title {
