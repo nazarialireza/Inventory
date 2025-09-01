@@ -142,7 +142,7 @@ onMounted(() => {
                             : '',
                     ]"
                 >
-                    {{ item.type }}
+                    {{ item.type == 'add' ? t('adjustments.add') : t('adjustments.subtract') }}
                 </span>
             </template>
 

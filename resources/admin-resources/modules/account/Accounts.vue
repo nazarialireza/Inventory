@@ -197,7 +197,7 @@ onMounted(() => {
                             : '',
                     ]"
                 >
-                    {{ item.status }}
+                    {{ item.status == 'active' ? t('general.active') : t('general.disabled') }}
                 </span>
             </template>
 
