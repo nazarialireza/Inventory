@@ -213,16 +213,19 @@ onMounted(() => {
                 />
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && warehouses.length > 0"
-            :total_pages="warehouseStore.total_pages"
-            :current_page="warehouseStore.current_page"
-            :per_page="warehouseStore.per_page"
-            @pageChange="
-                (currentPage) => fetchData(currentPage, warehouseStore.per_page)
-            "
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+        
+        <div class="pagination-container" v-if="loading == false && warehouses.length > 0">
+            <Pagination
+                :total_pages="warehouseStore.total_pages"
+                :current_page="warehouseStore.current_page"
+                :per_page="warehouseStore.per_page"
+                @pageChange="
+                    (currentPage) => fetchData(currentPage, warehouseStore.per_page)
+                "
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
+        
         <div class="modals-container">
             <AddWarehouse
                 v-if="showAddWarehouse"

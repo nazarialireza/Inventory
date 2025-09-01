@@ -147,3 +147,10 @@ function pageChange(perpage) {
         </ul>
     </div>
 </template>
+<style scoped>
+@media screen and (max-width: 768px) {
+    .select_per_page {
+        width: 100%;
+    }
+}
+</style>

@@ -199,16 +199,19 @@ onMounted(() => {
                 />
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && product_categories.length > 0"
-            :total_pages="productCategoryStore.total_pages"
-            :current_page="productCategoryStore.current_page"
-            :per_page="productCategoryStore.per_page"
-            @pageChange="
-                (currentPage) => fetchData(currentPage, productCategoryStore.per_page)
-            "
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+        
+        <div class="pagination-container" v-if="loading == false && product_categories.length > 0">
+            <Pagination
+                :total_pages="productCategoryStore.total_pages"
+                :current_page="productCategoryStore.current_page"
+                :per_page="productCategoryStore.per_page"
+                @pageChange="
+                    (currentPage) => fetchData(currentPage, productCategoryStore.per_page)
+                "
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
+        
         <div class="modals-container">
             <AddProductCategory
                 v-if="showAddProductCategory"

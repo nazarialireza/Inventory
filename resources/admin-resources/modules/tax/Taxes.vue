@@ -201,16 +201,19 @@ onMounted(() => {
                 />
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && taxes.length > 0"
-            :total_pages="taxStore.total_pages"
-            :current_page="taxStore.current_page"
-            :per_page="taxStore.per_page"
-            @pageChange="
-                (currentPage) => fetchData(currentPage, taxStore.per_page)
-            "
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+        
+        <div class="pagination-container" v-if="loading == false && taxes.length > 0">
+            <Pagination
+                :total_pages="taxStore.total_pages"
+                :current_page="taxStore.current_page"
+                :per_page="taxStore.per_page"
+                @pageChange="
+                    (currentPage) => fetchData(currentPage, taxStore.per_page)
+                "
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
+        
         <div class="modals-container">
             <AddTax
                 v-if="showAddTax"

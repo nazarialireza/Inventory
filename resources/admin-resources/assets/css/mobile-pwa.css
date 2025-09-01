@@ -1,5 +1,16 @@
 /* PWA Mobile Enhancements */
 
+.pagination-container {
+    margin-bottom: 80px; /* Add space at the bottom on mobile */
+    padding: 0 4px;
+}
+
+/* Enhance pagination for mobile */
+@media screen and (max-width: 768px) {
+    .pagination-container {
+        margin-bottom: 100px; /* Increase bottom margin on mobile */
+    }
+}
 /* Enhanced touch targets for mobile */
 @media screen and (max-width: 768px) {
     /* Minimum touch target size of 44x44px for accessibility */
@@ -177,6 +188,7 @@
     .pagination {
         justify-content: center;
         flex-wrap: wrap;
+        text-align: center;
     }
 
     .page-link {

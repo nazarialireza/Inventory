@@ -229,16 +229,19 @@ onMounted(() => {
                 />
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && accounts.length > 0"
-            :total_pages="accountStore.total_pages"
-            :current_page="accountStore.current_page"
-            :per_page="accountStore.per_page"
-            @pageChange="
-                (currentPage) => fetchData(currentPage, accountStore.per_page)
-            "
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+        
+        <div class="pagination-container" v-if="loading == false && accounts.length > 0">
+            <Pagination
+                :total_pages="accountStore.total_pages"
+                :current_page="accountStore.current_page"
+                :per_page="accountStore.per_page"
+                @pageChange="
+                    (currentPage) => fetchData(currentPage, accountStore.per_page)
+                "
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
+        
         <div class="modals-container">
             <AddAccount
                 v-if="showAddAccount"

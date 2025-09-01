@@ -247,14 +247,17 @@ onMounted(() => {
                 />
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && sales.length > 0"
-            :total_pages="total_pages"
-            :current_page="current_page"
-            :per_page="per_page"
-            @pageChange="(currentPage) => fetchData(currentPage, per_page)"
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+        
+        <div class="pagination-container" v-if="loading == false && sales.length > 0">
+            <Pagination
+                :total_pages="total_pages"
+                :current_page="current_page"
+                :per_page="per_page"
+                @pageChange="(currentPage) => fetchData(currentPage, per_page)"
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
+        
         <div class="modals-container">
             <AddPayment
                 v-if="showPaymentModal"

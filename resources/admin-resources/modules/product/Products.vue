@@ -285,16 +285,17 @@ onBeforeMount(async () => {
                 />
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && products.length > 0"
-            :total_pages="productStore.total_pages"
-            :current_page="productStore.current_page"
-            :per_page="productStore.per_page"
-            @pageChange="
+         <div class="pagination-container" v-if="loading == false && products.length > 0">
+            <Pagination
+                :total_pages="productStore.total_pages"
+                :current_page="productStore.current_page"
+                :per_page="productStore.per_page"
+                @pageChange="
                 (currentPage) => fetchData(currentPage, productStore.per_page)
-            "
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+                "
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
         <div class="modals-container">
             <AddProduct
                 v-if="showAddProduct"

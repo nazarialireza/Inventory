@@ -207,16 +207,19 @@ onMounted(() => {
                 />
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && currencies.length > 0"
-            :total_pages="currencyStore.total_pages"
-            :current_page="currencyStore.current_page"
-            :per_page="currencyStore.per_page"
-            @pageChange="
-                (currentPage) => fetchData(currentPage, currencyStore.per_page)
-            "
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+        
+        <div class="pagination-container" v-if="loading == false && currencies.length > 0">
+            <Pagination
+                :total_pages="currencyStore.total_pages"
+                :current_page="currencyStore.current_page"
+                :per_page="currencyStore.per_page"
+                @pageChange="
+                    (currentPage) => fetchData(currentPage, currencyStore.per_page)
+                "
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
+        
         <div class="modals-container">
             <AddCurrency
                 v-if="showAddCurrency"

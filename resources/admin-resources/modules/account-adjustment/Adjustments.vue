@@ -156,17 +156,20 @@ onMounted(() => {
                 </div>
             </template>
         </ResponsiveDataTable>
-        <Pagination
-            v-if="loading == false && adjustments.length > 0"
-            :total_pages="adjustmentStore.total_pages"
-            :current_page="adjustmentStore.current_page"
-            :per_page="adjustmentStore.per_page"
-            @pageChange="
-                (currentPage) =>
-                    fetchData(currentPage, adjustmentStore.per_page)
-            "
-            @perPageChange="(perpage) => fetchData(1, perpage)"
-        />
+        
+        <div class="pagination-container" v-if="loading == false && adjustments.length > 0">
+            <Pagination
+                :total_pages="adjustmentStore.total_pages"
+                :current_page="adjustmentStore.current_page"
+                :per_page="adjustmentStore.per_page"
+                @pageChange="
+                    (currentPage) =>
+                        fetchData(currentPage, adjustmentStore.per_page)
+                "
+                @perPageChange="(perpage) => fetchData(1, perpage)"
+            />
+        </div>
+        
         <div class="modals-container">
             <AddAdjustment
                 v-if="showAddAdjustment"
