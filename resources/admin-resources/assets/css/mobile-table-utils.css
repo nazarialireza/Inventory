@@ -7,7 +7,6 @@
 
 /* Action buttons mobile optimization */
 .table-action-btns {
-  display: flex;
   gap: 6px;
   justify-content: center;
   align-items: center;

@@ -850,13 +850,18 @@ footer {
     left: 0
 }
 
-#sidebar:not(.active)~#main {
+#sidebar:not(.active) ~ #main {
     margin-left: 0
+}
+
+/* Desktop: When sidebar is active, adjust main content margin */
+#sidebar.active ~ #main {
+    margin-left: 260px;
 }
 
 .sidebar-wrapper {
     overflow: scroll;
-    width: 100vw;
+    width: 260px;
     height: 100vh;
     position: fixed;
     top: 0;
@@ -990,11 +995,17 @@ footer {
 
 @media screen and (max-width:767px) {
     .sidebar-wrapper {
-        left: -100vw;
+        left: -270px;
+        width: 270px;
     }
 
     .sidebar-wrapper .sidebar-toggler.x {
         display: block;
+    }
+    
+    /* Mobile: Always adjust main content when sidebar is active */
+    #sidebar.active ~ #main {
+        margin-left: 0;
     }
 }
 

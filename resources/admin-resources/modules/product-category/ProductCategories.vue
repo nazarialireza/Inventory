@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useProductCategoryStore } from "./productCategoryStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
@@ -31,17 +32,25 @@ const q_name = ref("");
 const selected_product_categories = ref([]);
 const all_selectd = ref(false);
 
-function select_all() {
-    if (all_selectd.value == false) {
-        selected_product_categories.value = [];
-        productCategoryStore.product_categories.forEach((element) => {
-            selected_product_categories.value.push(element.id);
-        });
-        all_selectd.value = true;
-    } else {
-        all_selectd.value = false;
-        selected_product_categories.value = [];
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'thumbnail',
+        label: t('categories.thumbnail'),
+        hiddenOnMobile: false,
+        mobileClass: 'text-center'
+    },
+    {
+        key: 'name',
+        label: t('categories.category_name'),
+        hiddenOnMobile: false
     }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_product_categories.value = selectedIds;
+    all_selectd.value = selectedIds.length === product_categories.value.length && product_categories.value.length > 0;
 }
 
 async function deleteData(id) {
@@ -138,67 +147,58 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="product_categories"
+            :columns="tableColumns"
+            :selected-items="selected_product_categories"
+            :has-selection="authStore.userCan('delete_product_category')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            :view-more-text="t('general.view') + ' ' + t('general.details')"
+            :view-less-text="t('general.close')"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('categories.thumbnail') }}</th>
-                        <th>{{ t('categories.category_name') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="productCategory in product_categories" :key="productCategory.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_product_categories"
-                                :value="productCategory.id"
-                            />
-                        </td>
+            <!-- Custom cell renderers -->
+            <template #cell-thumbnail="{ item }">
+                <div style="width: 50px; height: 50px">
+                    <img
+                        :src="item.thumbnail[0]?item.thumbnail[0]['url']:$demoIMG"
+                        :alt="item.name"
+                        class="img-fluid"
+                    />
+                </div>
+            </template>
 
-                        <td>
-                            <div style="width: 50px; height: 50px">
-                                <img
-                                    :src="productCategory.thumbnail[0]?productCategory.thumbnail[0]['url']:$demoIMG"
-                                    :alt="productCategory.name"
-                                    class="img-fluid"
-                                />
-                            </div>
-                        </td>
-                        <td>{{ productCategory.name }}</td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewProductCategoryModal(productCategory.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_product_category')"
-                                color="#739EF1"
-                                @click="openEditProductCategoryModal(productCategory.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_product_category')"
-                                color="#FF7474"
-                                @click="deleteData(productCategory.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewProductCategoryModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_product_category')"
+                    color="#739EF1"
+                    @click="openEditProductCategoryModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_product_category')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && product_categories.length > 0"
             :total_pages="productCategoryStore.total_pages"
@@ -229,3 +229,22 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.table-image {
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+</style>

@@ -2,13 +2,32 @@
 import { useRoute } from "vue-router";
 import SideNavLink from "../components/SideNavLink.vue";
 import crossSvgIcon from "../assets/icons/cross-svg-icon.vue";
-import { ref, watch, computed } from "vue";
+import menuSvgIcon from "../assets/icons/menu-svg-icon.vue";
+import { ref, watch, computed, onMounted, onUnmounted } from "vue";
 import { useSidebar } from "../stores/sidebar";
 import { useI18n } from "../composables/useI18n.js";
 
 const sidebarStore = useSidebar();
 const route = useRoute();
 const { t, currentLocale } = useI18n();
+
+// Handle window resize to adjust sidebar behavior
+const handleResize = () => {
+    // On mobile screens, close sidebar by default
+    if (window.innerWidth <= 768) {
+        sidebarStore.closeSidebar();
+    }
+};
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+    // Set initial state based on screen size
+    handleResize();
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
 
 // Make navigation links reactive to language changes
 const navlinks = computed(() => [
@@ -142,14 +161,23 @@ const navlinks = computed(() => [
 
 <template>
     <div id="sidebar" :class="{ active: sidebarStore.open }">
-        <div class="sidebar-wrapper active">
-            <div class="sidebar-header d-flex">
-            
+        <div class="sidebar-wrapper">
+            <div class="sidebar-header d-flex align-items-center">
+                <div class="logo-container flex-grow-1">
+                    <!-- Logo would go here -->
+                </div>
                 <div class="small-screen-menu-icon ms-3">
                     <crossSvgIcon
                         width="25px"
                         height="25px"
-                        @click="sidebarStore.toggle()"
+                        @click="sidebarStore.closeSidebar()"
+                        class="d-md-none"
+                    />
+                    <menuSvgIcon
+                        width="25px"
+                        height="25px"
+                        @click="sidebarStore.closeSidebar()"
+                        class="d-none d-md-block"
                     />
                 </div>
             </div>

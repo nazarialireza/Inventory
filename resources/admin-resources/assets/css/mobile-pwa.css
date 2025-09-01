@@ -51,6 +51,7 @@
         height: 100vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        width: 280px;
     }
 
     /* Enhanced navbar for mobile */

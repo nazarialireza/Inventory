@@ -856,7 +856,7 @@ footer {
 
 .sidebar-wrapper {
     overflow: scroll;
-    width: 100vw;
+    width: 266px;
     height: 100vh;
     position: fixed;
     top: 0;

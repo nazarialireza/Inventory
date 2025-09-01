@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useBrandStore } from "./brandStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
@@ -31,17 +32,25 @@ const q_name = ref("");
 const selected_brands = ref([]);
 const all_selectd = ref(false);
 
-function select_all() {
-    if (all_selectd.value == false) {
-        selected_brands.value = [];
-        brandStore.brands.forEach((element) => {
-            selected_brands.value.push(element.id);
-        });
-        all_selectd.value = true;
-    } else {
-        all_selectd.value = false;
-        selected_brands.value = [];
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'logo',
+        label: t('brands.logo'),
+        hiddenOnMobile: false,
+        mobileClass: 'text-center'
+    },
+    {
+        key: 'name',
+        label: t('brands.brand_name'),
+        hiddenOnMobile: false
     }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_brands.value = selectedIds;
+    all_selectd.value = selectedIds.length === brands.value.length && brands.value.length > 0;
 }
 
 async function deleteData(id) {
@@ -137,71 +146,62 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="brands"
+            :columns="tableColumns"
+            :selected-items="selected_brands"
+            :has-selection="authStore.userCan('delete_brand')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            :view-more-text="t('general.view') + ' ' + t('general.details')"
+            :view-less-text="t('general.close')"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('brands.logo') }}</th>
-                        <th>{{ t('brands.brand_name') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="brand in brands" :key="brand.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_brands"
-                                :value="brand.id"
-                            />
-                        </td>
+            <!-- Custom cell renderers -->
+            <template #cell-logo="{ item }">
+                <div style="width: 50px; height: 50px">
+                    <img
+                        :src="
+                            item.logo[0]
+                                ? item.logo[0]['url']
+                                : $demoIMG
+                        "
+                        :alt="item.name"
+                        class="img-fluid"
+                    />
+                </div>
+            </template>
 
-                        <td>
-                            <div style="width: 50px; height: 50px">
-                                <img
-                                    :src="
-                                        brand.logo[0]
-                                            ? brand.logo[0]['url']
-                                            : $demoIMG
-                                    "
-                                    :alt="brand.name"
-                                    class="img-fluid"
-                                />
-                            </div>
-                        </td>
-                        <td>{{ brand.name }}</td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewBrandModal(brand.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_brand')"
-                                color="#739EF1"
-                                @click="openEditBrandModal(brand.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_brand')"
-                                color="#FF7474"
-                                @click="deleteData(brand.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewBrandModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_brand')"
+                    color="#739EF1"
+                    @click="openEditBrandModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_brand')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && brands.length > 0"
             :total_pages="brandStore.total_pages"
@@ -232,3 +232,22 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.table-image {
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+</style>
