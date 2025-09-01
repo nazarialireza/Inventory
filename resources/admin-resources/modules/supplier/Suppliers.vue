@@ -32,17 +32,41 @@ const q_name = ref("");
 const selected_suppliers = ref([]);
 const all_selectd = ref(false);
 
-function select_all() {
-    if (all_selectd.value == false) {
-        selected_suppliers.value = [];
-        supplierStore.suppliers.forEach((element) => {
-            selected_suppliers.value.push(element.id);
-        });
-        all_selectd.value = true;
-    } else {
-        all_selectd.value = false;
-        selected_suppliers.value = [];
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'name',
+        label: t('general.name'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'phone',
+        label: t('general.phone'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'email',
+        label: t('general.email'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'purchase_due',
+        label: t('suppliers.purchase_due'),
+        hiddenOnMobile: true,
+        cellClass: 'currency-value'
+    },
+    {
+        key: 'purchase_return_due',
+        label: t('suppliers.purchase_return_due'),
+        hiddenOnMobile: true,
+        cellClass: 'currency-value'
     }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_suppliers.value = selectedIds;
+    all_selectd.value = selectedIds.length === suppliers.value.length && suppliers.value.length > 0;
 }
 
 async function fetchData(
@@ -142,64 +166,50 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="suppliers"
+            :columns="tableColumns"
+            :selected-items="selected_suppliers"
+            :has-selection="authStore.userCan('delete_supplier')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            :view-more-text="t('general.view') + ' ' + t('general.details')"
+            :view-less-text="t('general.close')"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('general.name') }}</th>
-                        <th>{{ t('general.phone') }}</th>
-                        <th>{{ t('general.email') }}</th>
-                        <th>{{ t('suppliers.purchase_due') }}</th>
-                        <th>{{ t('suppliers.purchase_return_due') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="supplier in suppliers" :key="supplier.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_suppliers"
-                                :value="supplier.id"
-                            />
-                        </td>
-                        <td>{{ supplier.name }}</td>
-                        <td>{{ supplier.phone }}</td>
-                        <td>{{ supplier.email }}</td>
-                        <td>{{ supplier.purchase_due }}</td>
-                        <td>{{ supplier.purchase_return_due }}</td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewSupplierModal(supplier.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_supplier')"
-                                color="#739EF1"
-                                @click="openEditSupplierModal(supplier.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_supplier')"
-                                color="#FF7474"
-                                @click="deleteData(supplier.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+                <div class="card-subtitle" v-if="item.phone">
+                    {{ item.phone }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewSupplierModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_supplier')"
+                    color="#739EF1"
+                    @click="openEditSupplierModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_supplier')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && suppliers.length > 0"
             :total_pages="supplierStore.total_pages"
@@ -230,3 +240,32 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.currency-value {
+    font-weight: 500;
+    color: #059669;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

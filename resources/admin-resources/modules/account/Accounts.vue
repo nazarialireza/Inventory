@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useAccountStore } from "./accountStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
@@ -30,6 +31,36 @@ const { t } = useI18n();
 const q_name = ref("");
 const selected_accounts = ref([]);
 const all_selectd = ref(false);
+
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'name',
+        label: t('general.name'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'account_number',
+        label: t('accounts.number'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'balance',
+        label: t('accounts.balance'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'status',
+        label: t('general.status'),
+        hiddenOnMobile: false
+    }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_accounts.value = selectedIds;
+    all_selectd.value = selectedIds.length === accounts.value.length && accounts.value.length > 0;
+}
 
 function select_all() {
     if (all_selectd.value == false) {
@@ -139,76 +170,65 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="accounts"
+            :columns="tableColumns"
+            :selected-items="selected_accounts"
+            :has-selection="authStore.userCan('delete_account')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('general.name') }}</th>
-                        <th>{{ t('accounts.number') }}</th>
-                        <th>{{ t('accounts.balance') }}</th>
-                        <th>{{ t('general.status') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="account in accounts" :key="account.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_accounts"
-                                :value="account.id"
-                            />
-                        </td>
-                        <td>{{ account.name }}</td>
-                        <td>{{ account.account_number }}</td>
-                        <td>{{ account.balance }}</td>
-                        <td>
-                            <span
-                                class="badge-sqaure text-uppercase"
-                                :class="[
-                                    account.status == 'active'
-                                        ? 'btn-outline-success'
-                                        : '',
-                                    account.status == 'disabled'
-                                        ? 'btn-outline-secondary'
-                                        : '',
-                                ]"
-                            >
-                                {{ account.status }}
-                            </span>
-                        </td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewAccountModal(account.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_account')"
-                                color="#739EF1"
-                                @click="openEditAccountModal(account.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_account')"
-                                color="#FF7474"
-                                @click="deleteData(account.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Custom cell renderers -->
+            <template #cell-status="{ item }">
+                <span
+                    class="badge-sqaure text-uppercase"
+                    :class="[
+                        item.status == 'active'
+                            ? 'btn-outline-success'
+                            : '',
+                        item.status == 'disabled'
+                            ? 'btn-outline-secondary'
+                            : '',
+                    ]"
+                >
+                    {{ item.status }}
+                </span>
+            </template>
+
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+                <div class="card-subtitle" v-if="item.account_number">
+                    {{ item.account_number }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewAccountModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_account')"
+                    color="#739EF1"
+                    @click="openEditAccountModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_account')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && accounts.length > 0"
             :total_pages="accountStore.total_pages"
@@ -239,3 +259,27 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

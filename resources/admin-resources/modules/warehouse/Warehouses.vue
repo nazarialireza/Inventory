@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useWarehouseStore } from "./warehouseStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
@@ -30,6 +31,36 @@ const { t } = useI18n();
 const q_name = ref("");
 const selected_warehouses = ref([]);
 const all_selectd = ref(false);
+
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'name',
+        label: t('general.name'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'email',
+        label: t('general.email'),
+        hiddenOnMobile: true
+    },
+    {
+        key: 'phone',
+        label: t('general.phone'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'address',
+        label: t('general.address'),
+        hiddenOnMobile: true
+    }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_warehouses.value = selectedIds;
+    all_selectd.value = selectedIds.length === warehouses.value.length && warehouses.value.length > 0;
+}
 
 function select_all() {
     if (all_selectd.value == false) {
@@ -140,62 +171,48 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="warehouses"
+            :columns="tableColumns"
+            :selected-items="selected_warehouses"
+            :has-selection="authStore.userCan('delete_warehouse')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('general.name') }}</th>
-                        <th>{{ t('general.email') }}</th>
-                        <th>{{ t('general.phone') }}</th>
-                        <th>{{ t('general.address') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="warehouse in warehouses" :key="warehouse.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_warehouses"
-                                :value="warehouse.id"
-                            />
-                        </td>
-                        <td>{{ warehouse.name }}</td>
-                        <td>{{ warehouse.email }}</td>
-                        <td>{{ warehouse.phone }}</td>
-                        <td>{{ warehouse.address }}</td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewWarehouseModal(warehouse.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_warehouse')"
-                                color="#739EF1"
-                                @click="openEditWarehouseModal(warehouse.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_warehouse')"
-                                color="#FF7474"
-                                @click="deleteData(warehouse.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+                <div class="card-subtitle" v-if="item.phone">
+                    {{ item.phone }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewWarehouseModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_warehouse')"
+                    color="#739EF1"
+                    @click="openEditWarehouseModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_warehouse')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && warehouses.length > 0"
             :total_pages="warehouseStore.total_pages"
@@ -226,3 +243,27 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

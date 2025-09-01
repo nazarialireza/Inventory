@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useTaxStore } from "./taxStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
@@ -30,6 +31,27 @@ const taxes = computed(() => taxStore.taxes);
 const q_name = ref("");
 const selected_taxes = ref([]);
 const all_selectd = ref(false);
+
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'name',
+        label: t('taxes.tax_name'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'rate',
+        label: t('taxes.tax_rate_percent'),
+        hiddenOnMobile: false,
+        formatter: (value) => `${value} %`
+    }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_taxes.value = selectedIds;
+    all_selectd.value = selectedIds.length === taxes.value.length && taxes.value.length > 0;
+}
 
 function select_all() {
     if (all_selectd.value == false) {
@@ -137,58 +159,48 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="taxes"
+            :columns="tableColumns"
+            :selected-items="selected_taxes"
+            :has-selection="authStore.userCan('delete_tax')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('taxes.tax_name') }}</th>
-                        <th>{{ t('taxes.tax_rate_percent') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="tax in taxes" :key="tax.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_taxes"
-                                :value="tax.id"
-                            />
-                        </td>
-                        <td>{{ tax.name }}</td>
-                        <td>{{ tax.rate }} %</td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewTaxModal(tax.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_tax')"
-                                color="#739EF1"
-                                @click="openEditTaxModal(tax.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_tax')"
-                                color="#FF7474"
-                                @click="deleteData(tax.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+                <div class="card-subtitle" v-if="item.rate">
+                    {{ item.rate }} %
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewTaxModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_tax')"
+                    color="#739EF1"
+                    @click="openEditTaxModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_tax')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && taxes.length > 0"
             :total_pages="taxStore.total_pages"
@@ -219,3 +231,27 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

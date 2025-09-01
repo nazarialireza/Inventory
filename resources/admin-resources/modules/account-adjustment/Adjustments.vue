@@ -3,24 +3,17 @@ import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useAdjustmentStore } from "./adjustmentStore";
-// import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
-// import EditSvgIcon from "../../assets/icons/edit-svg-icon.vue";
-// import ViewSvgIcon from "../../assets/icons/view-svg-icon.vue";
 import AddNewButton from "../../components/buttons/AddNewButton.vue";
 import FilterButton from "../../components/buttons/FilterButton.vue";
-// import BulkDeleteButton from "../../components/buttons/BulkDeleteButton.vue";
 import AddAdjustment from "./AddAdjustment.vue";
-// import EditAdjustment from "./EditAdjustment.vue";
-// import ViewAdjustment from "./ViewAdjustment.vue";
 import { useI18n } from "../../composables/useI18n";
 
 const loading = ref(false);
 const filterTab = ref(true);
 const showAddAdjustment = ref(false);
-// const showEditAdjustment = ref(false);
-// const showViewAdjustment = ref(false);
 
 const adjustmentStore = useAdjustmentStore();
 const confirmStore = useConfirmStore();
@@ -31,18 +24,40 @@ const search = ref("");
 const selected_adjustments = ref([]);
 const all_selectd = ref(false);
 
-// function select_all() {
-//     if (all_selectd.value == false) {
-//         selected_adjustments.value = [];
-//         adjustmentStore.adjustments.forEach((element) => {
-//             selected_adjustments.value.push(element.id);
-//         });
-//         all_selectd.value = true;
-//     } else {
-//         all_selectd.value = false;
-//         selected_adjustments.value = [];
-//     }
-// }
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'account.bank_name',
+        label: t('accounts.bank_name'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'account.branch_name',
+        label: t('accounts.branch_name'),
+        hiddenOnMobile: true
+    },
+    {
+        key: 'account.account_number',
+        label: t('adjustments.adjustment_number'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'type',
+        label: t('adjustments.type'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'amount',
+        label: t('adjustments.amount'),
+        hiddenOnMobile: false
+    }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_adjustments.value = selectedIds;
+    all_selectd.value = selectedIds.length === adjustments.value.length && adjustments.value.length > 0;
+}
 
 async function fetchData(
     page = adjustmentStore.current_page,
@@ -65,38 +80,6 @@ async function fetchData(
     }
 }
 
-// async function deleteData(id) {
-//     confirmStore
-//         .show_box({ message: "Do you want to delete selected Adjustment?" })
-//         .then(async () => {
-//             if (confirmStore.do_action == true) {
-//                 adjustmentStore.deleteAdjustment(id).then(() => {
-//                     adjustmentStore.fetchAdjustments(
-//                         adjustmentStore.current_page,
-//                         adjustmentStore.per_page,
-//                         adjustmentStore.search,
-//                         adjustmentStore.q_status
-//                     );
-
-//                     if (Array.isArray(id)) {
-//                         all_selectd.value = false;
-//                         selected_adjustments.value = [];
-//                     }
-//                 });
-//             }
-//         });
-// }
-
-// function openEditAdjustmentModal(id) {
-//     adjustmentStore.edit_adjustment_id = id;
-//     showEditAdjustment.value = true;
-// }
-
-// function openViewAdjustmentModal(id) {
-//     adjustmentStore.view_adjustment_id = id;
-//     showViewAdjustment.value = true;
-// }
-
 onMounted(() => {
     fetchData(1);
 });
@@ -107,13 +90,6 @@ onMounted(() => {
         <div class="page-top-box mb-2 d-flex flex-wrap">
             <h3 class="h3">{{ t('adjustments.title') }}</h3>
             <div class="page-heading-actions ms-auto">
-                <!-- <BulkDeleteButton
-                    v-if="
-                        selected_adjustments.length > 0 &&
-                        authStore.userCan('delete_account_adjustment')
-                    "
-                    @click="deleteData(selected_adjustments)"
-                /> -->
                 <AddNewButton
                     v-if="authStore.userCan('create_account_adjustment')"
                     @click="showAddAdjustment = true"
@@ -140,79 +116,46 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="adjustments"
+            :columns="tableColumns"
+            :selected-items="selected_adjustments"
+            :has-selection="false"
+            :has-actions="false"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="account.account_number"
+            :mobile-visible-fields="3"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <!-- <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th> -->
-                        <th>{{ t('accounts.bank_name') }}</th>
-                        <th>{{ t('accounts.branch_name') }}</th>
-                        <th>{{ t('adjustments.adjustment_number') }}</th>
-                        <th>{{ t('adjustments.type') }}</th>
-                        <th>{{ t('adjustments.amount') }}</th>
-                        <!-- <th class="table-action-col">Action</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="adjustment in adjustments" :key="adjustment.id">
-                        <!-- <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_adjustments"
-                                :value="adjustment.id"
-                            />
-                        </td> -->
-                        <td>{{ adjustment.account.bank_name }}</td>
-                        <td>{{ adjustment.account.branch_name }}</td>
-                        <td>{{ adjustment.account.account_number }}</td>
-                        <td>
-                            <span
-                                class="badge-sqaure text-uppercase"
-                                :class="[
-                                    adjustment.type == 'add'
-                                        ? 'btn-outline-success'
-                                        : '',
-                                    adjustment.type == 'subtract'
-                                        ? 'btn-outline-danger'
-                                        : '',
-                                ]"
-                            >
-                                {{ adjustment.type }}
-                            </span>
-                        </td>
-                        <td>{{ adjustment.amount }}</td>
+            <!-- Custom cell renderers -->
+            <template #cell-type="{ item }">
+                <span
+                    class="badge-sqaure text-uppercase"
+                    :class="[
+                        item.type == 'add'
+                            ? 'btn-outline-success'
+                            : '',
+                        item.type == 'subtract'
+                            ? 'btn-outline-danger'
+                            : '',
+                    ]"
+                >
+                    {{ item.type }}
+                </span>
+            </template>
 
-                        <!-- <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewAdjustmentModal(adjustment.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_adjustment')"
-                                color="#739EF1"
-                                @click="openEditAdjustmentModal(adjustment.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_adjustment')"
-                                color="#FF7474"
-                                @click="deleteData(adjustment.id)"
-                            />
-                        </td> -->
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.account.bank_name }}
+                </div>
+                <div class="card-subtitle" v-if="item.account.account_number">
+                    {{ item.account.account_number }}
+                </div>
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && adjustments.length > 0"
             :total_pages="adjustmentStore.total_pages"
@@ -230,17 +173,30 @@ onMounted(() => {
                 @close="showAddAdjustment = false"
                 @refreshData="fetchData(1)"
             />
-            <!-- <EditAdjustment
-                v-if="showEditAdjustment"
-                :adjustment_id="adjustmentStore.edit_adjustment_id"
-                @close="showEditAdjustment = false"
-                @refreshData="fetchData(adjustmentStore.current_page)"
-            />
-            <ViewAdjustment
-                v-if="showViewAdjustment"
-                :adjustment_id="adjustmentStore.view_adjustment_id"
-                @close="showViewAdjustment = false"
-            /> -->
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

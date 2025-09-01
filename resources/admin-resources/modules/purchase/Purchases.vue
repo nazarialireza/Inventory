@@ -4,6 +4,7 @@ import axios from "axios";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
 import EditSvgIcon from "../../assets/icons/edit-svg-icon.vue";
@@ -29,6 +30,63 @@ const current_page = ref(1);
 const selected_purchases = ref([]);
 const all_selectd = ref(false);
 
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'invoice_date',
+        label: t('purchases.date'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'invoice_ref',
+        label: t('purchases.reference'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'supplier',
+        label: t('purchases.supplier'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'warehouse',
+        label: t('purchases.warehouse'),
+        hiddenOnMobile: true
+    },
+    {
+        key: 'total_amount',
+        label: t('purchases.total'),
+        hiddenOnMobile: false,
+        cellClass: 'currency-value'
+    },
+    {
+        key: 'paid_amount',
+        label: t('purchases.paid'),
+        hiddenOnMobile: true,
+        cellClass: 'currency-value'
+    },
+    {
+        key: 'due_amount',
+        label: t('purchases.due'),
+        hiddenOnMobile: false,
+        cellClass: 'currency-value'
+    },
+    {
+        key: 'invoice_status',
+        label: t('purchases.purchase_status'),
+        hiddenOnMobile: true
+    },
+    {
+        key: 'payment_status',
+        label: t('purchases.payment_status'),
+        hiddenOnMobile: false
+    }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_purchases.value = selectedIds;
+    // Note: Purchases component doesn't currently support bulk selection in the original code
+}
 
 async function fetchData(
     page = current_page.value,
@@ -69,6 +127,15 @@ function openPaymentModal(invoice_id,due_amount) {
     paymentInfo.due_amount = due_amount;
 }
 
+// Format status badges for mobile view
+function formatInvoiceStatus(status) {
+    return t(`purchases.${status}`);
+}
+
+function formatPaymentStatus(status) {
+    return t(`payments.${status}`);
+}
+
 onMounted(() => {
     fetchData(1);
 });
@@ -107,110 +174,79 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="purchases"
+            :columns="tableColumns"
+            :selected-items="selected_purchases"
+            :has-selection="false"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="invoice_ref"
+            title-column-key="supplier"
+            :mobile-visible-fields="4"
+            :view-more-text="t('general.view') + ' ' + t('general.details')"
+            :view-less-text="t('general.close')"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <!-- <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th> -->
-                        <th class="min100">{{ t('purchases.date') }}</th>
-                        <th class="min100">{{ t('purchases.reference') }}</th>
-                        <th class="min100">{{ t('purchases.supplier') }}</th>
-                        <th class="min100">{{ t('purchases.warehouse') }}</th>
-                        <th class="min100">{{ t('purchases.total') }}</th>
-                        <th class="min100">{{ t('purchases.paid') }}</th>
-                        <th class="min100">{{ t('purchases.due') }}</th>
-                        <th class="">{{ t('purchases.purchase_status') }}</th>
-                        <th class="">{{ t('purchases.payment_status') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="purchase in purchases" :key="purchase.id">
-                        <!-- <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </td> -->
-                        <td>{{ purchase.invoice_date }}</td>
-                        <td>{{ purchase.invoice_ref }}</td>
-                        <td>{{ purchase.supplier }}</td>
-                        <td>{{ purchase.warehouse }}</td>
-                        <td>{{ purchase.total_amount }}</td>
-                        <td>{{ purchase.paid_amount }}</td>
-                        <td>{{ purchase.due_amount }}</td>
-                        <td>
-                            <span
-                                class="badge-sqaure text-capitalize"
-                                :class="[
-                                    purchase.invoice_status == 'received'
-                                        ? 'btn-outline-success'
-                                        : '',
-                                    purchase.invoice_status == 'ordered'
-                                        ? 'btn-outline-primary'
-                                        : '',
-                                    purchase.invoice_status == 'pending'
-                                        ? 'btn-outline-danger'
-                                        : '',
-                                ]"
-                            >
-                                {{ t(`purchases.${purchase.invoice_status}`) }}
-                            </span>
-                        </td>
-                        <td>
-                            <span
-                                class="badge py-1 px-2 text-capitalize"
-                                :class="[
-                                    purchase.payment_status == 'paid'
-                                        ? 'bg-success'
-                                        : '',
-                                    purchase.payment_status == 'unpaid'
-                                        ? 'bg-danger'
-                                        : '',
-                                    purchase.payment_status == 'partial'
-                                        ? 'bg-primary'
-                                        : '',
-                                ]"
-                            >
-                                {{ t(`payments.${purchase.payment_status}`) }}
-                            </span>
-                        </td>
-                        <td class="table-action-btns sm">
-                            <!-- <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewTaxModal(purchase.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_purchase')"
-                                color="#739EF1"
-                                @click="openEditTaxModal(purchase.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_purchase')"
-                                color="#FF7474"
-                                @click="deleteData(purchase.id)"
-                            /> -->
-                            <WalletSvgIcon
-                                v-if="authStore.userCan('create_payment')"
-                                @click="openPaymentModal(purchase.id,purchase.due_amount)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Custom cell renderers -->
+            <template #cell-invoice_status="{ item }">
+                <span
+                    class="badge-sqaure text-capitalize"
+                    :class="[
+                        item.invoice_status == 'received'
+                            ? 'btn-outline-success'
+                            : '',
+                        item.invoice_status == 'ordered'
+                            ? 'btn-outline-primary'
+                            : '',
+                        item.invoice_status == 'pending'
+                            ? 'btn-outline-danger'
+                            : '',
+                    ]"
+                >
+                    {{ t(`purchases.${item.invoice_status}`) }}
+                </span>
+            </template>
+
+            <template #cell-payment_status="{ item }">
+                <span
+                    class="badge py-1 px-2 text-capitalize"
+                    :class="[
+                        item.payment_status == 'paid'
+                            ? 'bg-success'
+                            : '',
+                        item.payment_status == 'unpaid'
+                            ? 'bg-danger'
+                            : '',
+                        item.payment_status == 'partial'
+                            ? 'bg-primary'
+                            : '',
+                    ]"
+                >
+                    {{ t(`payments.${item.payment_status}`) }}
+                </span>
+            </template>
+
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.supplier }}
+                </div>
+                <div class="card-subtitle">
+                    {{ item.invoice_ref }} - {{ item.invoice_date }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <WalletSvgIcon
+                    v-if="authStore.userCan('create_payment')"
+                    @click="openPaymentModal(item.id,item.due_amount)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && purchases.length > 0"
             :total_pages="total_pages"
@@ -230,3 +266,37 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.currency-value {
+    font-weight: 500;
+    color: #059669;
+}
+
+.number-value {
+    font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+    font-weight: 500;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>

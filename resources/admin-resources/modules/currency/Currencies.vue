@@ -3,6 +3,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import { useAuthStore } from "../../stores/authStore";
 import Loader from "../../components/shared/loader/Loader.vue";
 import Pagination from "../../components/shared/pagination/Pagination.vue";
+import ResponsiveDataTable from "../../components/ResponsiveDataTable.vue";
 import { useConfirmStore } from "../../components/shared/confirm-alert/confirmStore.js";
 import { useCurrencyStore } from "./currencyStore";
 import BinSvgIcon from "../../assets/icons/bin-svg-icon.vue";
@@ -30,6 +31,36 @@ const { t } = useI18n();
 const q_name = ref("");
 const selected_currencies = ref([]);
 const all_selectd = ref(false);
+
+// Table columns configuration
+const tableColumns = computed(() => [
+    {
+        key: 'id',
+        label: t('general.id'),
+        hiddenOnMobile: true
+    },
+    {
+        key: 'name',
+        label: t('currencies.currency_name'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'code',
+        label: t('currencies.currency_code'),
+        hiddenOnMobile: false
+    },
+    {
+        key: 'symbol',
+        label: t('currencies.currency_symbol'),
+        hiddenOnMobile: false
+    }
+]);
+
+// Handle selection changes
+function onSelectionChange(selectedIds) {
+    selected_currencies.value = selectedIds;
+    all_selectd.value = selectedIds.length === currencies.value.length && currencies.value.length > 0;
+}
 
 function select_all() {
     if (all_selectd.value == false) {
@@ -134,62 +165,48 @@ onMounted(() => {
         </div>
 
         <Loader v-if="loading" />
-        <div
-            class="table-responsive bg-white shadow-sm"
+        <ResponsiveDataTable
             v-if="loading == false"
+            :data="currencies"
+            :columns="tableColumns"
+            :selected-items="selected_currencies"
+            :has-selection="authStore.userCan('delete_currency')"
+            :has-actions="true"
+            :actions-label="t('general.action')"
+            id-key="id"
+            primary-column-key="id"
+            title-column-key="name"
+            :mobile-visible-fields="3"
+            @selection-change="onSelectionChange"
         >
-            <table class="table mb-0 table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                @click="select_all"
-                                v-model="all_selectd"
-                            />
-                        </th>
-                        <th>{{ t('general.id') }}</th>
-                        <th>{{ t('currencies.currency_name') }}</th>
-                        <th>{{ t('currencies.currency_code') }}</th>
-                        <th>{{ t('currencies.currency_symbol') }}</th>
-                        <th class="table-action-col">{{ t('general.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="currency in currencies" :key="currency.id">
-                        <td>
-                            <input
-                                type="checkbox"
-                                class="form-check-input"
-                                v-model="selected_currencies"
-                                :value="currency.id"
-                            />
-                        </td>
-                        <td>{{ currency.id }}</td>
-                        <td>{{ currency.name }}</td>
-                        <td>{{ currency.code }}</td>
-                        <td>{{ currency.symbol }}</td>
-                        <td class="table-action-btns">
-                            <ViewSvgIcon
-                                color="#00CFDD"
-                                @click="openViewCurrencyModal(currency.id)"
-                            />
-                            <EditSvgIcon
-                                v-if="authStore.userCan('update_currency')"
-                                color="#739EF1"
-                                @click="openEditCurrencyModal(currency.id)"
-                            />
-                            <BinSvgIcon
-                                v-if="authStore.userCan('delete_currency')"
-                                color="#FF7474"
-                                @click="deleteData(currency.id)"
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+            <!-- Mobile card header -->
+            <template #card-header="{ item }">
+                <div class="card-title-mobile">
+                    {{ item.name }}
+                </div>
+                <div class="card-subtitle" v-if="item.code">
+                    {{ item.code }}
+                </div>
+            </template>
+
+            <!-- Action buttons -->
+            <template #actions="{ item }">
+                <ViewSvgIcon
+                    color="#00CFDD"
+                    @click="openViewCurrencyModal(item.id)"
+                />
+                <EditSvgIcon
+                    v-if="authStore.userCan('update_currency')"
+                    color="#739EF1"
+                    @click="openEditCurrencyModal(item.id)"
+                />
+                <BinSvgIcon
+                    v-if="authStore.userCan('delete_currency')"
+                    color="#FF7474"
+                    @click="deleteData(item.id)"
+                />
+            </template>
+        </ResponsiveDataTable>
         <Pagination
             v-if="loading == false && currencies.length > 0"
             :total_pages="currencyStore.total_pages"
@@ -220,3 +237,27 @@ onMounted(() => {
         </div>
     </div>
 </template>
+
+<style scoped>
+.card-title-mobile {
+    font-weight: 600;
+    font-size: 16px;
+    color: #111827;
+    margin-bottom: 4px;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* RTL support */
+.rtl .card-title-mobile {
+    text-align: right;
+}
+
+.rtl .card-subtitle {
+    text-align: right;
+}
+</style>
