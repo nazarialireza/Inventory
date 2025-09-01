@@ -28,7 +28,7 @@ onMounted(async () => {
 </script>
 <template>
     <div>
-        <div v-if="adminReady == false" class="pt-5">
+        <div v-if="adminReady == false " class="pt-5">
             <Loader />
         </div>
         <div
