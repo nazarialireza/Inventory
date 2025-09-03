@@ -1,12 +1,12 @@
 
-## This Project is Under Development.
+## This Project is Under Development and it copy of https://github.com/efthakhar/invextry.git
 
 
-## Invextry
+## Inventory
 
 Inventory Management System With Laravel & Vue JS
 
-![Open Source Income Expense Tracker](https://raw.githubusercontent.com/efthakhar/invextry/master/public/img/invextry-ss1.png)
+![Open Source Income Expense Tracker](https://raw.githubusercontent.com/nazarialireza/Inventory/master/public/img/invextry-ss1.png)
 
 
 # Installation Guide
@@ -27,7 +27,7 @@ Make sure you have the following installed:
 
 1. **Clone the GitHub repository**
    ```sh
-   git clone https://github.com/efthakhar/invextry.git
+   git clone https://github.com/nazarialireza/Inventory.git
    
 2. **Install Composer packages:**
    ```sh
@@ -75,12 +75,12 @@ Now you're all set up! Access your application through the specified APP_URL.
 
 ## Contributor
 
-- [Efthakhar Bin Alam](https://github.com/efthakhar). (efthakharbin@gmail.com)
+- [Alireza Nazari](https://github.com/nazarialireza). (alireza.ginbox@gmail.com)
    
 
 ## License
-- Copyright © 2023 Invextry
-- **Invextry is open-sourced software licensed under the MIT license**
+- Copyright © 2025 Inventory
+- **Inventory is open-sourced software licensed under the MIT license**
 
 ## Acknowledgments
 
@@ -90,3 +90,4 @@ This project wouldn't be possible without the amazing contributions of the follo
 - [voler](https://github.com/zuramai/voler): Bootstrap5 Admin Template 
 - [apexcharts/vue3-apexcharts](https://github.com/apexcharts/vue3-apexcharts): Vue-3 component for ApexCharts 
 - [RemixIcon](https://github.com/Remix-Design/RemixIcon): Open source neutral style icon system 
+- [Invextry](https://github.com/efthakhar/invextry.git): Open source Inventory Management System With Laravel & Vue JS

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed, watch, nextTick } from "vue";
 import Loader from "../../components/shared/loader/Loader.vue";
 import axios from "axios";
 import CartSvgIcon from "../../assets/icons/cart-svg-icon.vue";
@@ -13,19 +13,76 @@ import { useI18n } from "../../composables/useI18n.js";
 
 const loading = ref(false);
 const data = ref({});
-const { t } = useI18n();
+const { t, isCurrentLocaleRTL } = useI18n();
 
+// Chart references
+const weeklySalePurchaseChartRef = ref(null);
+const weeklyPaymentChartRef = ref(null);
+const topSellingProductChartRef = ref(null);
+
+// Computed property to check if we're in RTL mode
+const isRTL = computed(() => isCurrentLocaleRTL.value);
+console.log('check if we are in RTL mode '+isRTL.value);
+
+// Initialize chart configurations with proper RTL support
 let weeklySalePurchaseChartData = ref({
     chartOptions: {
         title: {
             text: t("dashboard.weekly_sale_purchase"),
-            align: "rithg",
+            align: "center",
             style: { color: "#475f7b" },
+            offsetX: 0,
+            offsetY: 0,
         },
-        chart: { id: "weeklySalePurchase" },
-        xaxis: { categories: [] },
+        chart: { 
+            id: "weeklySalePurchase",
+            locales: [
+                {
+                    name: isRTL.value ? 'prs' : 'en',
+                    options: {
+                        toolbar: {
+                            exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
+                            exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
+                            exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
+                            menu: isRTL.value ? 'منو' : 'Menu',
+                        }
+                    }
+                }
+            ],
+            defaultLocale: isRTL.value ? 'prs' : 'en',
+            fontFamily: 'Poppins, sans-serif',
+        },
+        xaxis: { 
+            categories: [],
+            labels: {
+                style: {
+                    cssClass: isRTL.value ? 'rtl-text' : '',
+                    fontFamily: 'Poppins, sans-serif'
+                }
+            }
+        },
+        yaxis: {
+            reversed: isRTL.value, // For RTL layout in horizontal bar charts
+            labels: {
+                align: isRTL.value ? 'right' : 'left',
+                offsetX: isRTL.value ? -10 : 0,
+                style: {
+                    cssClass: isRTL.value ? 'rtl-text' : '',
+                    fontFamily: 'Poppins, sans-serif'
+                }
+            }
+        },
         dataLabels: { enabled: false },
         colors: ["#41b1f9", "#3366CC"],
+        legend: {
+            horizontalAlign: isRTL.value ? "right" : "left",
+            position: isRTL.value ? "top" : "top",
+        },
+        tooltip: {
+            style: {
+                fontFamily: 'Poppins, sans-serif'
+            }
+        }
     },
     series: [
         { name: t("dashboard.sale"), data: [] },
@@ -37,18 +94,47 @@ let topSellingProductChartData = ref({
     chartOptions: {
         title: {
             text: t("dashboard.top_selling_products"),
-            align: "rithg",
+            align: "center", // Use center alignment to fix positioning issues
             style: { color: "#475f7b" },
+            offsetX: 0,
+            offsetY: 0,
         },
-        chart: { id: "topSellingProduct" },
+        chart: { 
+            id: "topSellingProduct",
+            locales: [
+                {
+                    name: isRTL.value ? 'prs' : 'en',
+                    options: {
+                        toolbar: {
+                            exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
+                            exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
+                            exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
+                            menu: isRTL.value ? 'منو' : 'Menu',
+                        }
+                    }
+                }
+            ],
+            defaultLocale: isRTL.value ? 'prs' : 'en',
+            fontFamily: 'Poppins, sans-serif',
+        },
         labels: [],
-        dataLabels: { enabled: true },
+        dataLabels: { 
+            enabled: true,
+            style: {
+                fontFamily: 'Poppins, sans-serif'
+            }
+        },
         colors: ["#41b1f9", "#8390FA", "#3366CC"],
         legend: {
             show: true,
-            position: "bottom",
-            horizontalAlign: "center",
+            position: isRTL.value ? "bottom" : "bottom",
+            horizontalAlign: isRTL.value ? "right" : "left",
         },
+        tooltip: {
+            style: {
+                fontFamily: 'Poppins, sans-serif'
+            }
+        }
     },
     series: [],
 });
@@ -57,15 +143,51 @@ let weeklyPaymentChartData = ref({
     chartOptions: {
         title: {
             text: t("dashboard.payment_send_received_week"),
-            align: "rithg",
+            align: "center", // Use center alignment to fix positioning issues
             style: { color: "#475f7b" },
+            offsetX: 0,
+            offsetY: 0,
         },
         chart: {
             id: "weeklyPayment",
             zoom: { enabled: false },
             selection: { enabled: false },
+            locales: [
+                {
+                    name: isRTL.value ? 'prs' : 'en',
+                    options: {
+                        toolbar: {
+                            exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
+                            exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
+                            exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
+                            menu: isRTL.value ? 'منو' : 'Menu',
+                        }
+                    }
+                }
+            ],
+            defaultLocale: isRTL.value ? 'prs' : 'en',
+            fontFamily: 'Poppins, sans-serif',
         },
-        xaxis: { categories: [] },
+        xaxis: { 
+            categories: [],
+            labels: {
+                style: {
+                    cssClass: isRTL.value ? 'rtl-text' : '',
+                    fontFamily: 'Poppins, sans-serif'
+                }
+            }
+        },
+        yaxis: {
+            reversed: isRTL.value, // For RTL layout in horizontal bar charts
+            labels: {
+                align: isRTL.value ? 'right' : 'left',
+                offsetX: isRTL.value ? -10 : 0,
+                style: {
+                    cssClass: isRTL.value ? 'rtl-text' : '',
+                    fontFamily: 'Poppins, sans-serif'
+                }
+            }
+        },
         dataLabels: { enabled: false },
         colors: ["#41b1f9", "#3366CC"],
         stroke: {
@@ -74,12 +196,143 @@ let weeklyPaymentChartData = ref({
         markers: {
             size: 6,
         },
+        legend: {
+            horizontalAlign: isRTL.value ? "right" : "left",
+            position: isRTL.value ? "top" : "top",
+        },
+        tooltip: {
+            style: {
+                fontFamily: 'Poppins, sans-serif'
+            }
+        }
     },
     series: [
         { name: t("dashboard.payment_send"), data: [] },
         { name: t("dashboard.payment_received"), data: [] },
     ],
 });
+
+// Watch for RTL changes and update chart options
+function updateChartOptionsForRTL() {
+    // Update weekly sale/purchase chart
+    if (weeklySalePurchaseChartRef.value) {
+        weeklySalePurchaseChartRef.value.updateOptions({
+            yaxis: {
+                reversed: isRTL.value
+            },
+            title: {
+                text: t("dashboard.weekly_sale_purchase"),
+                align: "center",
+            },
+            chart: {
+                locales: [
+                    {
+                        name: isRTL.value ? 'prs' : 'en',
+                        options: {
+                            toolbar: {
+                                exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
+                                exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
+                                exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
+                                menu: isRTL.value ? 'منو' : 'Menu',
+                            }
+                        }
+                    }
+                ],
+                defaultLocale: isRTL.value ? 'prs' : 'en'
+            },
+            legend: {
+                horizontalAlign: isRTL.value ? "right" : "left"
+            },
+            yaxis: {
+                labels: {
+                    align: isRTL.value ? 'right' : 'left',
+                    offsetX: isRTL.value ? -10 : 0
+                }
+            }
+        });
+    }
+    
+    // Update weekly payment chart
+    if (weeklyPaymentChartRef.value) {
+        weeklyPaymentChartRef.value.updateOptions({
+            yaxis: {
+                reversed: isRTL.value
+            },
+            title: {
+                text: t("dashboard.payment_send_received_week"),
+                align: "center" // Keep center alignment
+            },
+            chart: {
+                locales: [
+                    {
+                        name: isRTL.value ? 'prs' : 'en',
+                        options: {
+                            toolbar: {
+                                exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
+                                exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
+                                exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
+                                menu: isRTL.value ? 'منو' : 'Menu',
+                            }
+                        }
+                    }
+                ],
+                defaultLocale: isRTL.value ? 'prs' : 'en'
+            },
+            legend: {
+                horizontalAlign: isRTL.value ? "right" : "left"
+            },
+            yaxis: {
+                labels: {
+                    align: isRTL.value ? 'right' : 'left',
+                    offsetX: isRTL.value ? -10 : 0
+                }
+            }
+        });
+    }
+    
+    // Update top selling products chart
+    if (topSellingProductChartRef.value) {
+        topSellingProductChartRef.value.updateOptions({
+            title: {
+                text: t("dashboard.top_selling_products"),
+                align: "center" // Keep center alignment
+            },
+            chart: {
+                locales: [
+                    {
+                        name: isRTL.value ? 'prs' : 'en',
+                        options: {
+                            toolbar: {
+                                exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
+                                exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
+                                exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
+                                menu: isRTL.value ? 'منو' : 'Menu',
+                            }
+                        }
+                    }
+                ],
+                defaultLocale: isRTL.value ? 'prs' : 'en'
+            },
+            legend: {
+                horizontalAlign: isRTL.value ? "right" : "left"
+            }
+        });
+    }
+}
+
+// Watch for language changes
+watch(() => isCurrentLocaleRTL.value, () => {
+    nextTick(() => {
+        updateChartOptionsForRTL();
+    });
+});
+
+// Watch for translation changes
+watch(t, () => {
+    nextTick(() => {
+        updateChartOptionsForRTL();
+    });
+}, { deep: true });
 
 async function fetchData() {
     loading.value = true;
@@ -141,15 +394,24 @@ async function fetchData() {
                 );
 
             loading.value = false;
+            
+            // Update chart options for RTL after data is loaded
+            nextTick(() => {
+                updateChartOptionsForRTL();
+            });
         })
         .catch((errors) => {
-            console.log(errors);
+            console.log("fetch chart data is not possible errors: " + errors);
             loading.value = false;
         });
 }
 
 onMounted(() => {
-    fetchData();
+    // Initialize charts with correct language settings
+    nextTick(() => {
+        updateChartOptionsForRTL();
+        fetchData();
+    });
 });
 </script>
 
@@ -234,6 +496,7 @@ onMounted(() => {
             <div class="dashboard-charts my-3 row">
                 <div class="col-md-8 p-1">
                     <VueApexCharts
+                        ref="weeklySalePurchaseChartRef"
                         class="bg-white shadow px-1 py-3 rounded-2"
                         width="100%"
                         height="350"
@@ -244,6 +507,7 @@ onMounted(() => {
                 </div>
                 <div class="col-md-4 p-1">
                     <VueApexCharts
+                        ref="topSellingProductChartRef"
                         class="bg-white shadow px-1 py-3 rounded-5"
                         style="height: 100%"
                         width="100%"
@@ -257,6 +521,7 @@ onMounted(() => {
             <div class="dashboard-charts my-3 row">
                 <div class="col-md-12 p-1">
                     <VueApexCharts
+                        ref="weeklyPaymentChartRef"
                         class="bg-white shadow px-1 py-3 rounded-2"
                         width="100%"
                         height="350"
@@ -278,5 +543,41 @@ onMounted(() => {
     font-size: 20px;
     font-weight: 600;
     color:#475f7b;
+}
+
+/* RTL support for chart text */
+.rtl-text {
+    direction: rtl;
+    text-align: right;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Fix for chart legend alignment in RTL */
+.rtl .apexcharts-legend {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Fix for chart tooltip in RTL */
+.rtl .apexcharts-tooltip {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Fix for chart data labels in RTL */
+.rtl .apexcharts-datalabels {
+    direction: rtl;
+}
+
+/* Fix for chart axis labels in RTL */
+.rtl .apexcharts-xaxis-label,
+.rtl .apexcharts-yaxis-label {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Ensure proper text rendering in charts */
+.apexcharts-text {
+    font-family: 'Poppins', sans-serif !important;
 }
 </style>
