@@ -31,20 +31,20 @@ class RolePermissionSeeder extends Seeder
 
     public function run(): void
     {
-        // create a general role 'subscriber' for all registered user
-        Role::create(['name' => 'subscriber']);
-
+        
         // get super-admin role. if not found create super-admin role
         $super_admin = Role::where('name', 'super-admin')->first();
         if (empty($super_admin)) {
             $super_admin = Role::create(['name' => 'super-admin']);
         }
-
+        
         // give all permission to superadmin
         foreach ($this->permissions as $permission) {
             Permission::create(['name' => $permission]);
             $super_admin->givePermissionTo($permission);
         }
-
+        
+        // create a general role 'subscriber' for all registered user
+        Role::create(['name' => 'subscriber']);
     }
 }

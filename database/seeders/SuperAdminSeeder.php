@@ -15,8 +15,8 @@ class SuperAdminSeeder extends Seeder
         $super_admin_user = User::create([
             'name' => 'super admin',
             'user_name' => 'superadmin',
-            'email' => 'superadmin@invextry.com',
-            'password' => Hash::make('**invextry**'),
+            'email' => 'superadmin@inv.com',
+            'password' => Hash::make('**inv**'),
         ]);
 
         // assing this super admin to super-admin role
@@ -24,11 +24,11 @@ class SuperAdminSeeder extends Seeder
 
         // make super admin logged in
         Auth::attempt([
-            'email' => 'superadmin@invextry.com',
-            'password' => '**invextry**',
+            'email' => 'superadmin@inv.com',
+            'password' => '**inv**',
         ], 100);
     }
 }
 
-// email: superadmin@invextry.com
-// password: **invextry**
+// email: superadmin@inv.com
+// password: **inv**

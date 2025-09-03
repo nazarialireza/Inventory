@@ -5,17 +5,21 @@ namespace App\Services;
 use App\Models\Invoice\Invoice;
 use App\Models\Invoice\InvoiceItem;
 use App\Models\Product\Product;
+use App\Services\PurchasePaymentNotificationService;
 
 class PurchaseService
 {
     protected $stockService;
 
     protected $paymentService;
+    
+    protected $notificationService;
 
     public function __construct(StockService $stockService, PaymentService $paymentService)
     {
         $this->stockService = $stockService;
         $this->paymentService = $paymentService;
+        $this->notificationService = new PurchasePaymentNotificationService();
     }
 
     public function create($data)
@@ -90,6 +94,11 @@ class PurchaseService
             'date' => $data['invoice_date'],
             'note' => $data['payment_note'] ?? '',
         ]);
+        
+        // Send notification for unpaid purchases
+        if (in_array($purchase->payment_status, ['unpaid', 'partial']) && $purchase->due_amount > 0) {
+            $this->notificationService->sendNewUnpaidPurchaseNotification($purchase);
+        }
 
         return $purchase;
     }
