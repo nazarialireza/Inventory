@@ -62,7 +62,6 @@ let weeklySalePurchaseChartData = ref({
             }
         },
         yaxis: {
-            reversed: isRTL.value, // For RTL layout in horizontal bar charts
             labels: {
                 align: isRTL.value ? 'right' : 'left',
                 offsetX: isRTL.value ? -10 : 0,
@@ -178,7 +177,6 @@ let weeklyPaymentChartData = ref({
             }
         },
         yaxis: {
-            reversed: isRTL.value, // For RTL layout in horizontal bar charts
             labels: {
                 align: isRTL.value ? 'right' : 'left',
                 offsetX: isRTL.value ? -10 : 0,
@@ -217,9 +215,6 @@ function updateChartOptionsForRTL() {
     // Update weekly sale/purchase chart
     if (weeklySalePurchaseChartRef.value) {
         weeklySalePurchaseChartRef.value.updateOptions({
-            yaxis: {
-                reversed: isRTL.value
-            },
             title: {
                 text: t("dashboard.weekly_sale_purchase"),
                 align: "center",
@@ -255,9 +250,6 @@ function updateChartOptionsForRTL() {
     // Update weekly payment chart
     if (weeklyPaymentChartRef.value) {
         weeklyPaymentChartRef.value.updateOptions({
-            yaxis: {
-                reversed: isRTL.value
-            },
             title: {
                 text: t("dashboard.payment_send_received_week"),
                 align: "center" // Keep center alignment
