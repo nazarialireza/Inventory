@@ -74,6 +74,7 @@ let weeklySalePurchaseChartData = ref({
         dataLabels: { enabled: false },
         colors: ["#41b1f9", "#3366CC"],
         legend: {
+            show: false, 
             horizontalAlign: isRTL.value ? "right" : "left",
             position: isRTL.value ? "top" : "top",
         },
@@ -125,8 +126,8 @@ let topSellingProductChartData = ref({
         },
         colors: ["#41b1f9", "#8390FA", "#3366CC"],
         legend: {
-            show: true,
-            position: isRTL.value ? "bottom" : "bottom",
+            show: false,
+            position: "bottom",
             horizontalAlign: isRTL.value ? "right" : "left",
         },
         tooltip: {
@@ -195,6 +196,7 @@ let weeklyPaymentChartData = ref({
             size: 6,
         },
         legend: {
+            show: false,
             horizontalAlign: isRTL.value ? "right" : "left",
             position: isRTL.value ? "top" : "top",
         },
@@ -234,9 +236,6 @@ function updateChartOptionsForRTL() {
                     }
                 ],
                 defaultLocale: isRTL.value ? 'prs' : 'en'
-            },
-            legend: {
-                horizontalAlign: isRTL.value ? "right" : "left"
             },
             yaxis: {
                 labels: {
@@ -305,9 +304,6 @@ function updateChartOptionsForRTL() {
                 ],
                 defaultLocale: isRTL.value ? 'prs' : 'en'
             },
-            legend: {
-                horizontalAlign: isRTL.value ? "right" : "left"
-            }
         });
     }
 }
