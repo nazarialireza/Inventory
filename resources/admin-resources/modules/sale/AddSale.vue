@@ -226,13 +226,13 @@ onMounted(async () => {
 </script>
 <template>
     <div class="add-invoice-page">
-        <div class="page-top-box d-flex flex-wrap align-items-center">
+        <div class="page-top-box align-items-center">
             <h3 class="h5">{{ t('sales.add_new_sale') }}</h3>
         </div>
         <div class="add-invoice-contents bg-white p-3 my-3 rounded-3 shadow">
             <!-- Product, warehouse, customer selection -->
-            <div class="d-flex flex-wrap">
-                <div class="p-1 min150">
+            <div class="row p-2">
+                <div class="col-12 col-md-3 p-1">
                     <label class="my-1">{{ t('sales.date') }}</label>
                     <input
                         type="date"
@@ -243,7 +243,7 @@ onMounted(async () => {
                         {{ validation_errors.invoice_date }}
                     </span>
                 </div>
-                <div class="p-1 dropdown-search-select-box min100 max200">
+                <div class="col-12 col-md-3 p-1 dropdown-search-select-box ">
                     <label class="my-1">{{ t('sales.customer') }}</label>
                     <input
                         type="text"
@@ -269,7 +269,7 @@ onMounted(async () => {
                         {{ validation_errors.party_id }}
                     </span>
                 </div>
-                <div class="p-1 min150">
+                <div class="col-12 col-md-3 p-1 ">
                     <label class="my-1">{{ t('sales.warehouse') }}</label>
                     <select
                         class="form-select form-select-sm"
@@ -286,7 +286,7 @@ onMounted(async () => {
                         {{ validation_errors.warehouse_id }}
                     </span>
                 </div>
-                <div class="p-1 dropdown-search-select-box">
+                <div class="col-12 col-md-9 p-1 dropdown-search-select-box">
                     <label class="my-1">{{ t('sales.search_product') }}</label>
                     <input
                         :disabled="!selected_warehouse"
@@ -314,17 +314,17 @@ onMounted(async () => {
             <!-- invoice items -->
             <div class="table-responsive">
                 <table
-                    class="table bg-white table-bordered my-3 p-1 table-responsive"
+                    class="table bg-white table-bordered my-1 p-1 table-responsive "
                 >
-                    <thead>
+                    <thead class="rounded-top">
                         <tr class="bg-ass text-secondary">
-                            <th class="min150">{{ t('sales.product') }}</th>
+                            <th class="rounded-start min150">{{ t('sales.product') }}</th>
                             <th class="min100">{{ t('sales.unit_price') }}</th>
                             <th class="">{{ t('sales.stock') }}</th>
                             <th class="min100">{{ t('sales.quantity') }}</th>
                             <th class="min100">{{ t('sales.tax') }}</th>
                             <th class="min100">{{ t('sales.subtotal') }}</th>
-                            <th class="min100">{{ t('sales.action') }}</th>
+                            <th class="rounded-end min100">{{ t('sales.action') }}</th>
                         </tr>
                     </thead>
                     <tbody v-if="selected_items.length > 0">
@@ -389,32 +389,32 @@ onMounted(async () => {
                 {{ validation_errors.items }}
             </span>
             <!-- Order Summary -->
-            <div class="mt-1 4-3">
-                <div class="invoice_summary mb-3 max250 ms-auto">
-                    <li class="list-group-item bg-ass text-secondary">
+            <div class="row mt-1 4-3">
+                <div class=" col-12 col-md-5 invoice_summary mb-3 ms-auto">
+                    <li class=" list-group-item bg-ass text-secondary">
                         {{ t('sales.order_summary') }}
                     </li>
-                    <li class="list-group-item">
+                    <li class=" list-group-item">
                         <span class="text-primary">{{ t('sales.order_tax_label') }}</span>
                         {{ total_invoice_tax.toFixed(2) }}
                     </li>
-                    <li class="list-group-item">
+                    <li class=" list-group-item">
                         <span class="text-primary">{{ t('sales.discount_label') }}</span>
                         {{ discount.toFixed(2) }}
                     </li>
-                    <li class="list-group-item">
+                    <li class=" list-group-item">
                         <span class="text-primary">{{ t('sales.shipping_label') }}</span>
                         {{ shipping_cost.toFixed(2) }}
                     </li>
-                    <li class="list-group-item">
+                    <li class=" list-group-item">
                         <span class="text-primary">{{ t('sales.paid_label') }}</span>
                         {{ paid_amount.toFixed(2) }}
                     </li>
-                    <li class="list-group-item">
+                    <li class=" list-group-item">
                         <span class="text-primary">{{ t('sales.due_label') }}</span>
                         {{ (invoice_grand_total - paid_amount).toFixed(2) }}
                     </li>
-                    <li class="list-group-item bg-ass text-secondary">
+                    <li class=" list-group-item bg-ass text-secondary">
                         <span class="bold h6">{{ t('sales.grand_total_label') }}</span>
                         {{ invoice_grand_total.toFixed(2) }}
                     </li>
@@ -423,56 +423,58 @@ onMounted(async () => {
 
             <!-- invoice tax, discount, shipping-->
             <div class="row">
-                <div class="input-group input-group-sm my-1 max250">
-                    <span class="input-group-text bg-ass text-secondary"
-                        >{{ t('sales.order_tax') }}</span
-                    >
-                    <input
-                        type="number"
-                        class="form-control"
-                        min="0"
-                        v-model="invoice_tax_rate"
-                        @input="calculateGrandTotal()"
-                    />
-                    <span class="input-group-text bg-ass text-secondary"
-                        >%</span
-                    >
-                </div>
-                <div class="input-group input-group-sm my-1 max250">
-                    <span class="input-group-text bg-ass text-secondary"
-                        >{{ t('sales.discount') }}</span
-                    >
-                    <input
-                        type="number"
-                        class="form-control"
-                        min="0"
-                        v-model="discount"
-                        @input="calculateGrandTotal()"
-                    />
-                    <span class="input-group-text bg-ass text-secondary"
-                        >$</span
-                    >
-                </div>
-                <div class="input-group input-group-sm my-1 max250">
-                    <span class="input-group-text bg-ass text-secondary"
-                        >{{ t('sales.shipping') }}</span
-                    >
-                    <input
-                        type="number"
-                        class="form-control"
-                        min="0"
-                        v-model="shipping_cost"
-                        @input="calculateGrandTotal()"
-                    />
-                    <span class="input-group-text bg-ass text-secondary"
-                        >$</span
-                    >
+                <div class="col-12 col-md-5">
+                    <div class="input-group input-group-sm my-1 ">
+                        <span class="input-group-text bg-ass text-secondary"
+                            >{{ t('sales.order_tax') }}</span
+                        >
+                        <input
+                            type="number"
+                            class="form-control"
+                            min="0"
+                            v-model="invoice_tax_rate"
+                            @input="calculateGrandTotal()"
+                        />
+                        <span class="input-group-text bg-ass text-secondary"
+                            >%</span
+                        >
+                    </div>
+                    <div class="input-group input-group-sm my-1 ">
+                        <span class="input-group-text bg-ass text-secondary"
+                            >{{ t('sales.discount') }}</span
+                        >
+                        <input
+                            type="number"
+                            class="form-control"
+                            min="0"
+                            v-model="discount"
+                            @input="calculateGrandTotal()"
+                        />
+                        <span class="input-group-text bg-ass text-secondary"
+                            >$</span
+                        >
+                    </div>
+                    <div class="input-group input-group-sm my-1 ">
+                        <span class="input-group-text bg-ass text-secondary"
+                            >{{ t('sales.shipping') }}</span
+                        >
+                        <input
+                            type="number"
+                            class="form-control"
+                            min="0"
+                            v-model="shipping_cost"
+                            @input="calculateGrandTotal()"
+                        />
+                        <span class="input-group-text bg-ass text-secondary"
+                            >$</span
+                        >
+                    </div>
                 </div>
             </div>
 
             <!-- Sale status and Payment Status -->
             <div class="row my-3">
-                <div class="p-2 max200">
+                <div class="col-12 col-md-3 p-2">
                     <label class="my-1">{{ t('sales.sale_status') }}</label>
                     <select
                         class="form-select form-select-sm"
@@ -483,7 +485,7 @@ onMounted(async () => {
                         <option value="ordered">{{ t('sales.status.ordered') }}</option>
                     </select>
                 </div>
-                <div class="p-2 max200">
+                <div class="col-12 col-md-3 p-2">
                     <label class="my-1">{{ t('sales.payment_status') }}</label>
                     <select
                         class="form-select form-select-sm"
@@ -494,17 +496,17 @@ onMounted(async () => {
                         <option value="paid">{{ t('sales.status.paid') }}</option>
                     </select>
                 </div>
-                <div class="p-2 max200">
+                <div class="col-12 col-md-3 p-2">
                     <label class="my-1">{{ t('sales.paid_amount') }}</label>
                     <input
                         type="number"
-                        class="form-control"
+                        class="form-control form-control-sm"
                         min="0"
                         v-model="paid_amount"
                         @input="calculateGrandTotal()"
                     />
                 </div>
-                <div class="p-2 max200">
+                <div class="col-12 col-md-3 p-2 ">
                     <label class="my-1">{{ t('sales.select_account') }}</label>
                     <select
                         class="form-select form-select-sm"
@@ -519,7 +521,7 @@ onMounted(async () => {
                         {{ validation_errors.account_id }}
                     </span>
                 </div>
-                <div class="p-2 max200">
+                <div class="col-12 col-md-3 p-2">
                     <label class="my-1">{{ t('sales.payment_method') }}</label>
                     <select
                         class="form-select form-select-sm"
