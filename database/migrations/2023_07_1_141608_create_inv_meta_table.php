@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('invextry_meta', function (Blueprint $table) {
+        Schema::create('inv_meta', function (Blueprint $table) {
             $table->id();
             $table->string('meta_key');
             $table->text('meta_value');
@@ -18,6 +18,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('invextry_meta');
+        Schema::dropIfExists('inv_meta');
     }
 };

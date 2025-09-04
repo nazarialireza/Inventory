@@ -44,6 +44,15 @@ Route::get('/locale', function () {
     ]);
 });
 
+// User notification routes
+Route::middleware('auth')->group(function () {
+    Route::get('/user/notifications', [UserController::class, 'getNotifications']);
+    Route::patch('/user/notifications/{id}/read', [UserController::class, 'markNotificationAsRead']);
+    Route::patch('/user/notifications/mark-all-read', [UserController::class, 'markAllNotificationsAsRead']);
+    Route::delete('/user/notifications/{id}', [UserController::class, 'deleteNotification']);
+    Route::delete('/user/notifications/clear-all', [UserController::class, 'clearAllNotifications']);
+});
+
 Route::middleware('auth')->get('/user', function (Request $request) {
     return $request->user();
 });
