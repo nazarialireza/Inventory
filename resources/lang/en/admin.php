@@ -449,6 +449,11 @@ return [
         'purchase' => 'purchase',
         'payment_send' => 'Payment Send',
         'payment_received' => 'Payment Received',
+        // Chart toolbar translations
+        'download_svg' => 'Download SVG',
+        'download_png' => 'Download PNG',
+        'download_csv' => 'Download CSV',
+        'menu' => 'Menu',
     ],
 
     // Account Adjustments

@@ -449,6 +449,11 @@ return [
         'purchase' => 'خرید',
         'payment_send' => 'پرداختی',
         'payment_received' => 'دریافتی',
+        // Chart toolbar translations
+        'download_svg' => 'دانلود SVG',
+        'download_png' => 'دانلود PNG',
+        'download_csv' => 'دانلود CSV',
+        'menu' => 'منو',
     ],
 
     // Account Adjustments

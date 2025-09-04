@@ -41,10 +41,10 @@ let weeklySalePurchaseChartData = ref({
                     name: isRTL.value ? 'prs' : 'en',
                     options: {
                         toolbar: {
-                            exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
-                            exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
-                            exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
-                            menu: isRTL.value ? 'منو' : 'Menu',
+                            exportToSVG: t('dashboard.download_svg'),
+                            exportToPNG: t('dashboard.download_png'),
+                            exportToCSV: t('dashboard.download_csv'),
+                            menu: t('dashboard.menu'),
                         }
                     }
                 }
@@ -106,10 +106,10 @@ let topSellingProductChartData = ref({
                     name: isRTL.value ? 'prs' : 'en',
                     options: {
                         toolbar: {
-                            exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
-                            exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
-                            exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
-                            menu: isRTL.value ? 'منو' : 'Menu',
+                            exportToSVG: t('dashboard.download_svg'),
+                            exportToPNG: t('dashboard.download_png'),
+                            exportToCSV: t('dashboard.download_csv'),
+                            menu: t('dashboard.menu'),
                         }
                     }
                 }
@@ -157,10 +157,10 @@ let weeklyPaymentChartData = ref({
                     name: isRTL.value ? 'prs' : 'en',
                     options: {
                         toolbar: {
-                            exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
-                            exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
-                            exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
-                            menu: isRTL.value ? 'منو' : 'Menu',
+                            exportToSVG: t('dashboard.download_svg'),
+                            exportToPNG: t('dashboard.download_png'),
+                            exportToCSV: t('dashboard.download_csv'),
+                            menu: t('dashboard.menu'),
                         }
                     }
                 }
@@ -227,10 +227,10 @@ function updateChartOptionsForRTL() {
                         name: isRTL.value ? 'prs' : 'en',
                         options: {
                             toolbar: {
-                                exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
-                                exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
-                                exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
-                                menu: isRTL.value ? 'منو' : 'Menu',
+                                exportToSVG: t('dashboard.download_svg'),
+                                exportToPNG: t('dashboard.download_png'),
+                                exportToCSV: t('dashboard.download_csv'),
+                                menu: t('dashboard.menu'),
                             }
                         }
                     }
@@ -259,10 +259,10 @@ function updateChartOptionsForRTL() {
                         name: isRTL.value ? 'prs' : 'en',
                         options: {
                             toolbar: {
-                                exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
-                                exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
-                                exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
-                                menu: isRTL.value ? 'منو' : 'Menu',
+                                exportToSVG: t('dashboard.download_svg'),
+                                exportToPNG: t('dashboard.download_png'),
+                                exportToCSV: t('dashboard.download_csv'),
+                                menu: t('dashboard.menu'),
                             }
                         }
                     }
@@ -294,10 +294,10 @@ function updateChartOptionsForRTL() {
                         name: isRTL.value ? 'prs' : 'en',
                         options: {
                             toolbar: {
-                                exportToSVG: isRTL.value ? 'دانلود SVG' : 'Download SVG',
-                                exportToPNG: isRTL.value ? 'دانلود PNG' : 'Download PNG',
-                                exportCSV: isRTL.value ? 'دانلود CSV' : 'Download CSV',
-                                menu: isRTL.value ? 'منو' : 'Menu',
+                                exportToSVG: t('dashboard.download_svg'),
+                                exportToPNG: t('dashboard.download_png'),
+                                exportToCSV: t('dashboard.download_csv'),
+                                menu: t('dashboard.menu'),
                             }
                         }
                     }
