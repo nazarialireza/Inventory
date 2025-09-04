@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNotificationStore } from "../../components/shared/notification/notificationStore";
 import formatValidationErrors from "../../utils/format-validation-errors";
 import { useI18n } from "../../composables/useI18n";
+
 const warehouses = ref([]);
 const items = ref([]);
 const selected_items = ref([]);
@@ -224,6 +225,7 @@ onMounted(async () => {
     await fetchAccounts();
 });
 </script>
+
 <template>
     <div class="add-invoice-page">
         <div class="page-top-box align-items-center">
@@ -311,86 +313,194 @@ onMounted(async () => {
                     </ul>
                 </div>
             </div>
-            <!-- invoice items -->
-            <div class="table-responsive">
-                <table
-                    class="table bg-white table-bordered my-1 p-1 table-responsive "
+            
+            <!-- Mobile Card View -->
+            <div class="d-block d-md-none">
+                <div 
+                    v-for="p in selected_items" 
+                    :key="p.id"
+                    class="card mb-3 border"
                 >
-                    <thead class="rounded-top">
-                        <tr class="bg-ass text-secondary">
-                            <th class="rounded-start min150">{{ t('sales.product') }}</th>
-                            <th class="min100">{{ t('sales.unit_price') }}</th>
-                            <th class="">{{ t('sales.stock') }}</th>
-                            <th class="min100">{{ t('sales.quantity') }}</th>
-                            <th class="min100">{{ t('sales.tax') }}</th>
-                            <th class="min100">{{ t('sales.subtotal') }}</th>
-                            <th class="rounded-end min100">{{ t('sales.action') }}</th>
-                        </tr>
-                    </thead>
-                    <tbody v-if="selected_items.length > 0">
-                        <tr v-for="p in selected_items">
-                            <td>{{ p.name }}</td>
-                            <td>{{ p.sale_price }}</td>
-                            <td>
-                                <input
-                                    type="number"
-                                    class="max100 form-control"
-                                    :value="p.stock_quantity"
-                                    disabled
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="number"
-                                    class="max100 form-control"
-                                    min="1"
-                                    v-model="p.quantity"
-                                    @input="calculateGrandTotal()"
-                                />
-                            </td>
-                            <td>
-                                {{
-                                    p.tax_type == "exclusive"
-                                        ? (
-                                              p.quantity *
-                                              (p.sale_price *
-                                                  (p.tax_rate / 100))
-                                          ).toFixed(2)
-                                        : (
-                                              p.quantity *
-                                              ((((100 - p.tax_rate) *
-                                                  p.sale_price) /
-                                                  100) *
-                                                  (p.tax_rate / 100))
-                                          ).toFixed(2)
-                                }}
-                                $
-                            </td>
-                            <td>
-                                {{
-                                    p.tax_type == "exclusive"
-                                        ? p.quantity *
-                                          (p.sale_price * (p.tax_rate / 100) +
-                                              p.sale_price)
-                                        : p.quantity * p.sale_price
-                                }}
-                            </td>
-                            <td>
-                                <CrossSvgIcon
-                                    @click="removeSelected(p.id)"
-                                    color="red"
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h6 class="card-title mb-0">{{ p.name }}</h6>
+                            <CrossSvgIcon
+                                @click="removeSelected(p.id)"
+                                color="red"
+                                class="cursor-pointer"
+                            />
+                        </div>
+                        
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <small class="text-muted d-block pb-1">{{ t('sales.unit_price') }}</small>
+                                <div class="fw-bold">{{ p.sale_price }}</div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block  pb-1">{{ t('sales.stock') }}</small>
+                                <div>
+                                    <input
+                                        type="number"
+                                        class="form-control form-control-sm"
+                                        :value="p.stock_quantity"
+                                        disabled
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div class="col-6">
+                                <small class="text-muted d-block pb-1">{{ t('sales.tax') }}</small>
+                                <div>
+                                    {{
+                                        p.tax_type == "exclusive"
+                                            ? (
+                                                  p.quantity *
+                                                  (p.sale_price *
+                                                      (p.tax_rate / 100))
+                                              ).toFixed(2)
+                                            : (
+                                                  p.quantity *
+                                                  ((((100 - p.tax_rate) *
+                                                      p.sale_price) /
+                                                      100) *
+                                                      (p.tax_rate / 100))
+                                              ).toFixed(2)
+                                    }}
+                                    $
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block pb-1">{{ t('sales.quantity') }}</small>
+                                <div>
+                                    <input
+                                        type="number"
+                                        class="form-control form-control-sm"
+                                        min="1"
+                                        v-model="p.quantity"
+                                        @input="calculateGrandTotal()"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 mt-2">
+                                <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded">
+                                    <small class="text-muted mb-0">{{ t('sales.subtotal') }}</small>
+                                    <div class="fw-bold h6 mb-0">
+                                        {{
+                                            p.tax_type == "exclusive"
+                                                ? p.quantity *
+                                                  (p.sale_price * (p.tax_rate / 100) +
+                                                      p.sale_price)
+                                                : p.quantity * p.sale_price
+                                        }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Message when no items selected -->
+                <div v-if="selected_items.length === 0" class="text-center py-5">
+                    <div class="py-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-cart-x text-muted mb-3" viewBox="0 0 16 16">
+                          <path d="M7.354 5.646a.5.5 0 1 0-.708.708L7.793 7.5 6.646 8.646a.5.5 0 1 0 .708.708L8.5 8.207l1.146 1.147a.5.5 0 0 0 .708-.708L9.207 7.5l1.147-1.146a.5.5 0 0 0-.708-.708L8.5 6.793 7.354 5.646z"/>
+                          <path d="M.5 1a.5.5 0 0 0 0 1h1.11l.401 1.607 1.498 7.985A.5.5 0 0 0 4 12h1a2 2 0 1 0 0 4 2 2 0 0 0 0-4h7a2 2 0 1 0 0 4 2 2 0 0 0 0-4h1a.5.5 0 0 0 .491-.408l1.5-8A.5.5 0 0 0 14.5 3H2.89l-.405-1.621A.5.5 0 0 0 2 1H.5zm3.915 10L3.102 4h10.796l-1.313 7h-8.17zM6 14a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm7 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0z"/>
+                        </svg>
+                        <p class="text-muted mb-0">{{ t('sales.no_items_selected') }}</p>
+                        <p class="text-muted small">{{ t('sales.add_products_to_get_started') }}</p>
+                    </div>
+                </div>
             </div>
+            
+            <!-- Desktop Table View -->
+            <div class="d-none d-md-block">
+                <div class="table-responsive">
+                    <table
+                        class="table bg-white table-bordered my-3 p-1"
+                    >
+                        <thead>
+                            <tr class="bg-ass text-secondary">
+                                <th class="min150">{{ t('sales.product') }}</th>
+                                <th class="min100">{{ t('sales.unit_price') }}</th>
+                                <th class="">{{ t('sales.stock') }}</th>
+                                <th class="min100">{{ t('sales.quantity') }}</th>
+                                <th class="min100">{{ t('sales.tax') }}</th>
+                                <th class="min100">{{ t('sales.subtotal') }}</th>
+                                <th class="min100">{{ t('sales.action') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody v-if="selected_items.length > 0">
+                            <tr v-for="p in selected_items" :key="p.id">
+                                <td>{{ p.name }}</td>
+                                <td>{{ p.sale_price }}</td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="max100 form-control form-control-sm"
+                                        :value="p.stock_quantity"
+                                        disabled
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        class="max100 form-control form-control-sm"
+                                        min="1"
+                                        v-model="p.quantity"
+                                        @input="calculateGrandTotal()"
+                                    />
+                                </td>
+                                <td>
+                                    {{
+                                        p.tax_type == "exclusive"
+                                            ? (
+                                                  p.quantity *
+                                                  (p.sale_price *
+                                                      (p.tax_rate / 100))
+                                              ).toFixed(2)
+                                            : (
+                                                  p.quantity *
+                                                  ((((100 - p.tax_rate) *
+                                                      p.sale_price) /
+                                                      100) *
+                                                      (p.tax_rate / 100))
+                                              ).toFixed(2)
+                                    }}
+                                    $
+                                </td>
+                                <td>
+                                    {{
+                                        p.tax_type == "exclusive"
+                                            ? p.quantity *
+                                              (p.sale_price * (p.tax_rate / 100) +
+                                                  p.sale_price)
+                                            : p.quantity * p.sale_price
+                                    }}
+                                </td>
+                                <td>
+                                    <CrossSvgIcon
+                                        @click="removeSelected(p.id)"
+                                        color="red"
+                                        class="cursor-pointer"
+                                    />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Message when no items selected -->
+                <div v-if="selected_items.length === 0" class="text-center py-4">
+                    <p class="text-muted">{{ t('sales.no_items_selected') }}</p>
+                </div>
+            </div>
+            
             <span class="v-error" v-if="validation_errors.items">
                 {{ validation_errors.items }}
             </span>
             <!-- Order Summary -->
             <div class="row mt-1 4-3">
-                <div class=" col-12 col-md-5 invoice_summary mb-3 ms-auto">
+                <div class="col-12 col-md-5 invoice_summary mb-3 ms-auto">
                     <li class=" list-group-item bg-ass text-secondary">
                         {{ t('sales.order_summary') }}
                     </li>
@@ -545,7 +655,7 @@ onMounted(async () => {
             </div>
             <!-- Sale Note -->
             <div class="row my-1">
-                <div>
+                <div class="col-12">
                     <label class="my-2">{{ t('sales.sale_note') }}</label>
                     <textarea
                         v-model="note"
@@ -554,9 +664,9 @@ onMounted(async () => {
                     ></textarea>
                 </div>
             </div>
-            <div class="puchase_save my-4">
+            <div class="purchase_save my-4 text-center">
                 <button
-                    class="btn btn-sm btn-primary d-inline"
+                    class="btn btn-sm btn-primary px-4 py-2"
                     @click="saveSale()"
                 >
                     {{ t('sales.save_sale') }}
@@ -565,3 +675,7 @@ onMounted(async () => {
         </div>
     </div>
 </template>
+
+<style scoped>
+/* Add any component-specific styles here if needed */
+</style>
